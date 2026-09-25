@@ -10,7 +10,7 @@
 <style>
 :root{
   --bg:#E6ECF1;--ui:#FFFFFF;--paper:#FFFFFF;--ink:#000000;--muted:#55616C;--line:#C9D3DB;--hi:#F2B705;--hi-soft:#FFF3C4;
-  --c0:#2F6FDE;--c1:#D7263D;--c2:#2A9D5C;--c3:#E9A800;--c4:#7B4FC9;
+  --c0:#2F6FDE;--c1:#D7263D;--c2:#2A9D5C;--c3:#E9A800;--c4:#7B4FC9;--c5:#E76F1C;--c6:#1A9BA8;--c7:#8A5A2B;--c8:#C2185B;--c9:#5C6BC0;
   box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light;
 }
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
@@ -124,6 +124,29 @@ label.lab{font-weight:700;display:block;margin-bottom:6px}
 .tok{display:flex;align-items:center;gap:8px;border:3px solid var(--line);border-radius:12px;background:var(--paper);padding:4px 14px 4px 6px;touch-action:none;font-size:18px;font-weight:700;--s:42px}
 .tok[aria-pressed="true"]{border-color:var(--ink);background:var(--hi-soft)}
 .tok .it{cursor:grab}
+.padd{display:flex;gap:6px;align-items:center}
+.padd input{width:170px;border:2px solid var(--line);border-radius:10px;padding:7px 10px;font-size:17px;background:var(--paper)}
+.zone.qedit{outline:calc(var(--u)*.5) dashed var(--c1);outline-offset:calc(var(--u)*.6)}
+.it.pic img{width:100%;height:100%;object-fit:contain;pointer-events:none;display:block}
+.zone.arrow .it.pic{background:#fff;border-radius:18%;padding:6%}
+.btn.big{font-size:20px;padding:12px 18px;border-color:var(--ink);font-weight:700;margin:4px 0 8px}
+.nico{border:2px solid var(--line);background:var(--paper);border-radius:10px;padding:4px;--s:46px;flex:none}
+.modal{position:fixed;top:0;left:0;right:0;bottom:0;z-index:50;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px}
+.modal[hidden]{display:none}
+.mbox{background:var(--ui);border-radius:18px;width:min(1100px,100%);max-height:100%;min-height:min(560px,100%);overflow:auto;padding:16px 18px}
+.mhead{display:flex;align-items:center;gap:12px;justify-content:space-between;position:sticky;top:-16px;background:var(--ui);padding:6px 0;z-index:1}
+.mhead h2{margin:0}
+#psearch{width:100%;font-size:24px;border:3px solid var(--ink);border-radius:12px;padding:10px 14px;margin:8px 0;background:var(--paper)}
+.cats{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.cats .chip{height:44px;font-size:17px}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:10px;margin-bottom:10px}
+.tile{border:3px solid var(--line);background:var(--paper);border-radius:14px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;--s:64px;font-size:16px;line-height:1.2;position:relative;cursor:pointer}
+.tile .it{cursor:pointer}
+.tile.has{border-color:var(--c2);background:var(--hi-soft)}
+.tile.has::after{content:"✓";position:absolute;top:4px;right:6px;background:var(--c2);color:#fff;border-radius:99px;width:26px;height:26px;display:grid;place-items:center;font-weight:700}
+.webbar{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
+.empty{color:var(--muted);margin:6px 0;grid-column:1/-1}
+.credit{color:var(--muted);font-size:13px;margin:10px 0 0}
 .calc{display:flex;gap:12px;flex-wrap:wrap;background:var(--ui);border-radius:14px;padding:10px 12px;align-items:center}
 .calc label{font-weight:700;display:flex;align-items:center;gap:8px;flex:1;min-width:240px}
 .calc input{flex:1;min-width:0;border:2px solid var(--line);border-radius:10px;padding:8px 12px;font-size:24px;background:var(--paper)}
@@ -140,13 +163,19 @@ label.lab{font-weight:700;display:block;margin-bottom:6px}
   <header class="top">
     <div class="brand">
       <svg viewBox="0 0 104 60" aria-hidden="true"><rect x="4" y="12" width="34" height="34" rx="5" class="zs" style="stroke-width:6"/><polygon class="inkf" points="42,22 62,22 62,14 76,29 62,44 62,36 42,36"/><rect x="72" y="12" width="28" height="34" rx="5" class="zs" style="stroke-width:6;display:none"/><rect x="78" y="12" width="22" height="34" rx="5" class="zs" style="stroke-width:6"/></svg>
-      Adaptproblème
+      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 4</small>
     </div>
     <nav class="steps" id="steps" aria-label="Étapes"></nav>
     <button class="btn" id="reset">Nouveau problème</button>
   </header>
   <main id="main"></main>
 </div>
+<div class="modal" id="picker" hidden role="dialog" aria-modal="true" aria-labelledby="ptitle"><div class="mbox">
+ <div class="mhead"><h2 id="ptitle">Touche les objets du problème</h2><button class="btn primary" data-act="pdone">Terminé</button></div>
+ <input id="psearch" type="search" placeholder="🔎 Cherche : vache, pomme, bus, crayon…" autocomplete="off">
+ <div class="cats" id="pcats"></div><div class="pgrid" id="pgrid"></div><div id="pweb"></div>
+ <p class="credit">Images d'Internet : pictogrammes ARASAAC (auteur Sergio Palao, Gouvernement d'Aragon), licence CC BY-NC-SA.</p>
+</div></div>
 <script>
 "use strict";
 const SCH={
@@ -191,42 +220,83 @@ function suggest(name){const toks=(name||"").split(/[\s'’\-,.;:!?]+/).map(norm
  for(const t of toks)for(const [ks,em] of NDICT)if(ks.some(k=>t===k||(k.length>=4&&t.startsWith(k)&&t.length-k.length<=3)))em.forEach(x=>{if(!out.includes(x))out.push(x)});
  return out}
 
+const DBRAW={
+"Ferme":"🐄 vache|veau,génisse;🐂 taureau|boeuf;🐖 cochon|porc;🐷 tête de cochon|cochon;🐑 mouton|brebis,agneau;🐐 chèvre|bouc,chevreau;🐔 poule|poulet;🐓 coq;🐤 poussin;🦆 canard;🦃 dinde;🐴 cheval|poney,jument;🐇 lapin;🐕 chien|chiot;🐈 chat|chaton;🐁 souris;🥚 œuf|oeuf",
+"Animaux sauvages":"🦁 lion;🐯 tigre;🐘 éléphant;🦒 girafe;🦓 zèbre;🐒 singe;🦍 gorille;🐻 ours;🐼 panda;🐨 koala;🦊 renard;🐺 loup;🦌 cerf|biche;🐿️ écureuil;🦔 hérisson;🦇 chauve-souris;🐊 crocodile;🦛 hippopotame;🦏 rhinocéros;🐪 chameau|dromadaire;🦘 kangourou;🐍 serpent;🐢 tortue;🦎 lézard;🐸 grenouille",
+"Mer et oiseaux":"🐟 poisson;🐠 poisson tropical|poisson;🐬 dauphin;🐳 baleine;🦈 requin;🐙 pieuvre|poulpe;🦀 crabe;🦞 homard;🐚 coquillage;🐧 pingouin|manchot;🐦 oiseau|moineau,pigeon;🕊️ colombe;🦉 hibou|chouette;🦅 aigle;🦜 perroquet;🦢 cygne",
+"Petites bêtes":"🐝 abeille;🐞 coccinelle;🦋 papillon;🐜 fourmi;🐌 escargot;🐛 chenille;🕷️ araignée;🦗 sauterelle|criquet;🦟 moustique",
+"Fruits et légumes":"🍎 pomme;🍏 pomme verte|pomme;🍐 poire;🍊 orange|clémentine,mandarine;🍋 citron;🍌 banane;🍉 pastèque;🍇 raisin;🍓 fraise;🍒 cerise;🍑 pêche;🍍 ananas;🥝 kiwi;🥥 noix de coco;🍅 tomate;🥕 carotte;🥔 pomme de terre|patate;🌽 maïs|épi;🥒 concombre;🥦 brocoli;🥬 salade|laitue;🧅 oignon;🍄 champignon;🌰 châtaigne|marron;🥜 cacahuète",
+"Nourriture":"🍞 pain;🥖 baguette;🥐 croissant;🧀 fromage;🍕 pizza|part de pizza;🍔 hamburger;🍟 frite;🍪 biscuit|cookie,gâteau sec;🍰 part de gâteau|gâteau;🧁 petit gâteau|muffin,gâteau;🎂 gâteau d'anniversaire|gâteau;🍩 beignet|donut;🍫 chocolat|tablette;🍬 bonbon;🍭 sucette;🍦 glace;🥛 verre de lait|lait,verre;🧃 jus de fruit|jus,brique;🍼 biberon;🥤 boisson|soda,gobelet;🍯 pot de miel|miel;🥧 tarte;🧇 gaufre;🥞 crêpe",
+"École":"✏️ crayon;🖍️ crayon de couleur|craie;🖊️ stylo|feutre;🖌️ pinceau;📏 règle;📐 équerre;✂️ ciseaux;📒 cahier;📕 livre|album;📚 pile de livres|livres;🎒 cartable|sac;🧮 boulier;📎 trombone;📌 punaise;🗂️ classeur;🧽 éponge;🏫 école;🪑 chaise|place,siège,banc;💻 ordinateur",
+"Personnes":"🧒 enfant|élève,camarade,ami,copain,copine,joueur;👧 fille|fillette;👦 garçon;🧑 personne|gens,adulte,client,invité,voyageur;🧍 passager|voyageur,personne debout;👩 femme|dame,maîtresse,maman;👨 homme|monsieur,maître,papa;👶 bébé;👴 grand-père|papi;👵 grand-mère|mamie;🏃 coureur|sportif;👮 policier",
+"Transports":"🚗 voiture|auto;🚌 bus|car,autobus;🚐 minibus;🚚 camion;🚜 tracteur;🚲 vélo|bicyclette;🛴 trottinette;🏍️ moto;🚆 train;🚃 wagon;🚇 métro;🚊 tramway|tram;✈️ avion;🚁 hélicoptère;⛵ voilier|bateau;🚤 bateau|vedette;🚀 fusée;🚒 camion de pompiers|pompier;🚑 ambulance;🚕 taxi",
+"Argent":"🪙 pièce|euro,centime,monnaie;💶 billet|euro,argent;💰 sac d'argent|argent,trésor;👛 porte-monnaie;🎟️ ticket|entrée,place;🛒 chariot|caddie,courses",
+"Jouets et jeux":"⚽ ballon de foot|ballon,balle;🏀 ballon de basket|ballon;🎈 ballon de baudruche|ballon;🧸 nounours|peluche,ours;🪀 yo-yo;🪁 cerf-volant;🎲 dé;🧩 pièce de puzzle|puzzle;🃏 carte|carte à jouer,vignette,image;🎁 cadeau|paquet;🪆 poupée;🎮 jeu vidéo|manette;🔵 bille|perle;🥏 frisbee",
+"Nature":"🌸 fleur;🌷 tulipe;🌹 rose;🌻 tournesol;🌳 arbre;🌲 sapin;🍂 feuille morte;🍃 feuille;🌵 cactus;🪨 caillou|pierre;☀️ soleil;🌙 lune;⭐ étoile;☁️ nuage;💧 goutte d'eau|eau",
+"Maison":"🏠 maison;🏢 immeuble;🚪 porte;🛏️ lit;🛋️ canapé;💡 ampoule|lampe;🕯️ bougie;🔑 clé;📦 carton|boîte,colis,caisse;🧺 panier;🍽️ assiette;🥄 cuillère;🍴 couverts|fourchette;🍾 bouteille;⏰ réveil;📱 téléphone",
+"Vêtements":"👕 tee-shirt|t-shirt,maillot,vêtement;👖 pantalon|jean;👗 robe;🧥 manteau|veste;🧦 chaussette;👟 basket|chaussure;👞 chaussure;👢 botte;🧢 casquette;🎩 chapeau;🧤 gant;🧣 écharpe;👓 lunettes",
+"Jetons et formes":"⚪ jeton blanc|jeton,point;🔴 jeton rouge|jeton;🔵 jeton bleu|jeton;🟢 jeton vert|jeton;🟡 jeton jaune|jeton;🟥 carré rouge|carré;🟦 carré bleu|carré;❤️ cœur|coeur;🔺 triangle"
+};
+const STOP=["de","du","des","la","le","les","un","une","d","l","a","au","aux","en"];
+const DB=[];const CATS=Object.keys(DBRAW);
+CATS.forEach(c=>DBRAW[c].split(";").forEach(e=>{const sp=e.indexOf(" "),icon=e.slice(0,sp),rest=e.slice(sp+1).split("|"),name=rest[0],syn=rest[1]?rest[1].split(","):[];
+ const keys=[];[name,...syn].forEach(w=>{const full=norm(w);if(full)keys.push(full);w.split(/[\s'’\-]+/).map(norm).filter(t=>t.length>1&&!STOP.includes(t)).forEach(t=>keys.push(t))});
+ DB.push({icon,name,cat:c,keys})}));
+function searchLocal(q){const toks=q.split(/[\s'’\-,]+/).map(norm).filter(t=>t.length>1&&!STOP.includes(t));if(!toks.length)return[];
+ const hit=(e,t)=>e.keys.some(k=>k.startsWith(t)||(t.length>=4&&t.startsWith(k)&&t.length-k.length<=3));
+ const uniq=l=>{const seen=new Set();return l.filter(e=>!seen.has(e.icon)&&seen.add(e.icon))};
+ const all=uniq(DB.filter(e=>toks.every(t=>hit(e,t))));return all.length?all:uniq(DB.filter(e=>toks.some(t=>hit(e,t))))}
+
 const $=s=>document.querySelector(s);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const col=n=>`var(--c${n%5})`;
-function fresh(){return{screen:"choose",schema:null,enonce:"",nouns:[{name:"",icon:null,auto:true}],zones:{},parts:4,sign:"+",stage:"img",showNums:false,group10:false,sel:0,calc:"",rep:""}}
+const col=n=>`var(--c${n%10})`;
+const isImg=ic=>typeof ic==="string"&&ic.startsWith("img:");
+function icoHTML(ic,cls,extra){return isImg(ic)?`<span class="it pic ${cls||""}" ${extra||""}><img src="${esc(ic.slice(4))}" alt="" draggable="false"></span>`:`<span class="it emo ${cls||""}" ${extra||""}>${ic}</span>`}
+const MAXN=10;
+function fresh(){return{screen:"choose",schema:null,enonce:"",nouns:[],zones:{},n:1,signs:{},qset:{},qmode:false,stage:"img",showNums:false,group10:false,sel:0,calc:"",rep:""}}
 let S=load()||fresh();let hist=[];let openMore=-1;
 function save(){try{localStorage.setItem("adaptprobleme",JSON.stringify(S))}catch(e){}}
-function load(){try{const v=JSON.parse(localStorage.getItem("adaptprobleme"));return v&&v.nouns?v:null}catch(e){return null}}
-function push(){hist.push(JSON.stringify({zones:S.zones,parts:S.parts,sign:S.sign}));if(hist.length>60)hist.shift()}
+function load(){try{const v=JSON.parse(localStorage.getItem("adaptprobleme"));if(!v||!v.nouns)return null;
+ if(!v.signs){v.signs={};v.qset={};v.zones={};v.n=v.schema?({trans:1,comp:2,star:4})[SCH[v.schema].kind]:1;v.qmode=false}return v}catch(e){return null}}
+function push(){hist.push(JSON.stringify({zones:S.zones,n:S.n,signs:S.signs,qset:S.qset}));if(hist.length>60)hist.shift()}
 function say(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="fr-FR";const v=speechSynthesis.getVoices().find(v=>v.lang&&v.lang.toLowerCase().startsWith("fr"));if(v)u.voice=v;u.rate=.9;speechSynthesis.speak(u)}catch(e){}}
 
 /* ---------- Géométrie des schémas (repère 1000 × 620) ---------- */
-function layout(id,N){
- const k=SCH[id],Z=[];let svg="",branch=null;
+const DEFN={trans:1,comp:2,star:4},RANGE={trans:[1,4],comp:[2,5],star:[2,10]},STEPLAB={trans:"Changements",comp:"Parties",star:"Parts"};
+function defQ(id,zid,N){const k=SCH[id];
+ if(k.kind==="trans"){if(k.q==="fin")return zid==="s"+N;if(k.q==="debut")return zid==="s0";return zid==="a"+(N-1)}
+ if(k.kind==="comp")return k.q==="tout"?zid==="tout":zid==="p0";
+ if(k.q==="nombre")return false;if(zid==="centre")return true;return k.q==="pareil"&&zid!=="p0"}
+function layout(id,N,live){
+ const k=SCH[id],Z=[],signs=[];let svg="",branch=null;
+ const Q=zid=>(live&&S.qset&&zid in S.qset)?S.qset[zid]:defQ(id,zid,N);
  if(k.kind==="trans"){
-  svg='<polygon class="inkf" points="335,240 598,240 598,190 688,310 598,430 598,380 335,380"/>';
-  Z.push({id:"debut",name:"Au début",x:40,y:190,w:275,h:240,q:k.q==="debut"});
-  Z.push({id:"change",name:"Ce qui change",x:345,y:250,w:245,h:120,q:k.q==="change",arrow:1});
-  Z.push({id:"fin",name:"À la fin",x:705,y:190,w:275,h:240,q:k.q==="fin"});
+  const T=960,wb=Math.min(275,T/((N+1)+.9*N)),wa=(T-(N+1)*wb)/N,h=Math.min(260,wb*1.35),cy=320;
+  for(let i=0;i<=N;i++){const x=20+i*(wb+wa);
+   Z.push({id:"s"+i,name:i===0?"Au début":i===N?"À la fin":"Après le changement "+i,x,y:cy-h/2,w:wb,h,q:Q("s"+i)});
+   if(i<N){const x0=x+wb,m=wa*.05,sh=Math.min(62,h*.28),hh=Math.min(sh*1.7,h*.5),xs=x0+m,xh=x0+wa*.7,xe=x0+wa-m;
+    svg+=`<polygon class="inkf" points="${xs},${cy-sh} ${xh},${cy-sh} ${xh},${cy-hh} ${xe},${cy} ${xh},${cy+hh} ${xh},${cy+sh} ${xs},${cy+sh}"/>`;
+    Z.push({id:"a"+i,name:"Changement "+(i+1),x:xs+4,y:cy-sh+5,w:(xh-xs)+(xe-xh)*.35,h:2*sh-10,q:Q("a"+i),arrow:1});
+    signs.push({id:"a"+i,x:x0+wa*.45,y:Math.max(28,cy-h/2-40)});}
+  }
  }else if(k.kind==="comp"){
   svg='<path class="lns" d="M478,36 C530,36 512,100 512,160 L512,262 C512,296 522,306 552,310 C522,314 512,324 512,358 L512,460 C512,520 530,584 478,584"/>';
-  Z.push({id:"p1",name:"Première partie",x:180,y:40,w:275,h:245,q:k.q==="p1"});
-  Z.push({id:"p2",name:"Deuxième partie",x:180,y:335,w:275,h:245,q:false});
-  Z.push({id:"tout",name:"Le tout",x:600,y:160,w:320,h:300,q:k.q==="tout"});
+  const g=22,ph=(560-g*(N-1))/N,pw=N<=2?275:N<=3?300:340;
+  for(let i=0;i<N;i++)Z.push({id:"p"+i,name:"Partie "+(i+1),x:455-pw,y:30+i*(ph+g),w:pw,h:ph,q:Q("p"+i)});
+  Z.push({id:"tout",name:"Le tout",x:600,y:160,w:320,h:300,q:Q("tout")});
  }else{
   const cx=500,cy=325,r=118,w=N<=4?235:N<=6?190:N<=8?150:125,h=Math.round(w*.84),rx=335,ry=210;
   const start=k.q==="nombre"?270+180/N:135,parts=[];
   for(let i=0;i<N;i++){const a=(start+i*360/N)*Math.PI/180,px=cx+rx*Math.cos(a),py=cy+ry*Math.sin(a);
    svg+=`<line class="lns" x1="${cx}" y1="${cy}" x2="${px.toFixed(1)}" y2="${py.toFixed(1)}"/>`;
-   parts.push({id:"p"+i,name:"Part "+(i+1),x:px-w/2,y:py-h/2,w,h,q:k.q==="pareil"&&i>0});}
+   parts.push({id:"p"+i,name:"Part "+(i+1),x:px-w/2,y:py-h/2,w,h,q:Q("p"+i)});}
   if(k.q==="nombre"){svg+=`<line class="lns" x1="${cx}" y1="${cy}" x2="${cx+6}" y2="100"/>`;branch={x:cx+8,y:55}}
-  Z.push({id:"centre",name:"Le tout",x:cx-r,y:cy-r,w:2*r,h:2*r,q:k.q!=="nombre",circle:1},...parts);
+  Z.push({id:"centre",name:"Le tout",x:cx-r,y:cy-r,w:2*r,h:2*r,q:Q("centre"),circle:1},...parts);
  }
- return{Z,svg,branch};
+ return{Z,svg,branch,signs};
 }
-function schemaSVG(id,N){
- const L=layout(id,N||4);let s=`<svg viewBox="0 0 1000 620" class="mini" aria-hidden="true">${L.svg}`;
+function schemaSVG(id,N,live){
+ const L=layout(id,N||DEFN[SCH[id].kind],live);let s=`<svg viewBox="0 0 1000 620" class="mini" aria-hidden="true">${L.svg}`;
  for(const z of L.Z){const cx=z.x+z.w/2,cy=z.y+z.h/2,qs=Math.min(z.w,z.h)*.62;
   if(!z.arrow){s+=z.circle?`<circle class="zs" cx="${cx}" cy="${cy}" r="${z.w/2-9}"/>`:`<rect class="zs" x="${z.x+9}" y="${z.y+9}" width="${z.w-18}" height="${z.h-18}" rx="16"/>`}
   if(z.q)s+=`<text class="qt${z.arrow?" inv":""}" x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="central" font-size="${qs}">?</text>`;}
@@ -254,33 +324,25 @@ function renderChoose(){
 /* ---------- Écran 2 ---------- */
 function renderNouns(){
  const k=SCH[S.schema];
- $("#main").innerHTML=`<div class="wrap two"><div class="recap">${schemaSVG(S.schema,S.parts)}<strong>${k.title}</strong><p>${k.desc}</p></div>
+ $("#main").innerHTML=`<div class="wrap two"><div class="recap">${schemaSVG(S.schema,S.n,true)}<strong>${k.title}</strong><p>${k.desc}</p></div>
  <div><label class="lab" for="en">L'énoncé du problème (facultatif)</label><textarea id="en" placeholder="Recopie ou écris le problème ici.">${esc(S.enonce)}</textarea>
- <h2>De quoi parle le problème ?</h2><p class="lead">Écris le nom de ce que l'on compte : des vaches, des euros, des élèves, des passagers… Puis choisis une image.</p>
- <div id="nl"></div><button class="btn" id="addn">+ Ajouter un autre objet</button>
+ <h2>De quoi parle le problème ?</h2><p class="lead">Choisis ce que l'on compte : des animaux, des fruits, des personnes, de l'argent…</p>
+ <div id="nl"></div>${S.nouns.length<MAXN?`<button class="btn big" data-act="openpick">+ Choisir des objets ou des animaux</button>`:""}
  <p class="msg" id="msg"></p><button class="btn primary" data-go="ws">Placer les objets</button></div></div>`;
- const nl=$("#nl");nl.innerHTML=S.nouns.map((n,i)=>`<div class="noun" style="--c:${col(i)}" data-n="${i}"><div class="nr"><input value="${esc(n.name)}" placeholder="ex. vaches" aria-label="Objet ${i+1}" data-in="${i}">${S.nouns.length>1?`<button class="btn" data-del="${i}" aria-label="Supprimer">✕</button>`:""}</div><div class="chips" id="ch${i}"></div></div>`).join("");
- S.nouns.forEach((_,i)=>renderChips(i));
+ $("#nl").innerHTML=S.nouns.map((n,i)=>`<div class="noun" style="--c:${col(i)}"><div class="nr"><button class="nico" data-repl="${i}" aria-label="Changer l'image">${n.icon?icoHTML(n.icon):`<span class="it word" style="--c:${col(i)}">Aa</span>`}</button><input value="${esc(n.name)}" aria-label="Nom de l'objet ${i+1}" data-in="${i}"><button class="btn" data-repl="${i}">Changer l'image</button><button class="btn" data-del="${i}" aria-label="Supprimer">✕</button></div></div>`).join("");
 }
-function renderChips(i){
- const n=S.nouns[i],sg=suggest(n.name),list=[...sg,...GENERIC.filter(g=>!sg.includes(g))].slice(0,12);
- if(n.icon&&!list.includes(n.icon))list.unshift(n.icon);
- let h=list.map(e=>`<button class="chip" data-ic="${i}" data-e="${e}" aria-pressed="${n.icon===e}">${e}</button>`).join("");
- h+=`<button class="chip txt" data-word="${i}" aria-pressed="${!n.icon}">Le mot</button><button class="chip txt" data-more="${i}">${openMore===i?"Moins d'images":"Plus d'images"}</button>`;
- if(openMore===i)h+=`<div class="more">${ALL.map(e=>`<button class="chip" data-ic="${i}" data-e="${e}" aria-pressed="${n.icon===e}">${e}</button>`).join("")}</div>`;
- $("#ch"+i).innerHTML=h;
-}
+function renderChips(){}
 function removeNoun(i){S.nouns.splice(i,1);for(const z in S.zones)S.zones[z]=S.zones[z].filter(v=>v!==i).map(v=>v>i?v-1:v);if(S.sel>=S.nouns.length)S.sel=0}
 function prepNouns(){
  for(let i=S.nouns.length-1;i>=0;i--){const n=S.nouns[i];if(!n.name.trim()&&!n.icon&&S.nouns.length>1)removeNoun(i)}
- if(!validNouns()){const m=$("#msg");if(m)m.textContent="Écris au moins un objet.";return false}
+ if(!validNouns()){const m=$("#msg");if(m)m.textContent="Choisis au moins un objet.";return false}
  if(S.sel>=S.nouns.length)S.sel=0;return true;
 }
 
 /* ---------- Écran 3 ---------- */
 function itemHTML(n,i,d){const o=S.nouns[n];if(!o)return"";
  if(S.stage==="cube")return`<span class="it cube" data-i="${i}" style="--c:${col(n)};--d:${d}"></span>`;
- return o.icon?`<span class="it emo" data-i="${i}" style="--d:${d}">${o.icon}</span>`:`<span class="it word" data-i="${i}" style="--c:${col(n)};--d:${d}">${esc(o.name)}</span>`}
+ return o.icon?icoHTML(o.icon,"",`data-i="${i}" style="--d:${d}"`):`<span class="it word" data-i="${i}" style="--c:${col(n)};--d:${d}">${esc(o.name)}</span>`}
 function itemsHTML(list){
  if(S.stage==="cube"){const srt=list.map((n,i)=>[n,i]).sort((a,b)=>a[0]-b[0]);const c=srt.map(([n,i],j)=>itemHTML(n,i,Math.min(j,40)));
   if(S.group10){let o="";for(let b=0;b<c.length;b+=10)o+=`<span class="bar">${c.slice(b,b+10).join("")}</span>`;return o}return c.join("")}
@@ -290,26 +352,28 @@ function zoneHTML(z){
  const list=S.zones[z.id]||[],m=Math.min(z.w,z.h);
  const st=`left:${z.x/10}%;top:${z.y/6.2}%;width:${z.w/10}%;height:${z.h/6.2}%;--qs:calc(var(--u)*${(m*.062).toFixed(2)});--ns:calc(var(--u)*${(m*(z.arrow?.075:.05)).toFixed(2)})`;
  let inner="";
- if(S.stage==="num"){let t;if(!list.length&&z.q)t="?";else t=String(list.length);if(z.arrow&&t!=="?")t=(S.sign==="+"?"+ ":"− ")+t;inner=`<div class="bignum${t==="?"?" q":""}">${t}</div>`}
+ if(S.stage==="num"){let t;if(!list.length&&z.q)t="?";else t=String(list.length);if(z.arrow&&t!=="?")t=(S.signs[z.id]==="-"?"− ":"+ ")+t;inner=`<div class="bignum${t==="?"?" q":""}">${t}</div>`}
  else{if(z.q)inner+='<div class="qm">?</div>';inner+=`<div class="items">${itemsHTML(list)}</div>`;if(S.showNums&&list.length)inner+=`<span class="badge">${list.length}</span>`}
- return`<div class="zone${z.circle?" circle":""}${z.arrow?" arrow":""}${z.arrow&&S.sign==="-"?" minus":""}" data-z="${z.id}" style="${st}" tabindex="0" role="button" aria-label="${esc(z.name)}${z.q?", ce que je cherche":""}">${inner}</div>`;
+ return`<div class="zone${z.circle?" circle":""}${z.arrow?" arrow":""}${z.arrow&&S.signs[z.id]==="-"?" minus":""}${S.qmode?" qedit":""}" data-z="${z.id}" style="${st}" tabindex="0" role="button" aria-label="${esc(z.name)}${z.q?", ce que je cherche":""}">${inner}</div>`;
 }
 function stageHTML(){
- const L=layout(S.schema,S.parts);let h=`<svg viewBox="0 0 1000 620" aria-hidden="true">${L.svg}</svg>`+L.Z.map(zoneHTML).join("");
- if(SCH[S.schema].kind==="trans")h+=`<button class="sign" style="left:46.7%;top:${150/6.2}%" data-sign>${S.sign==="+"?"+ on ajoute":"− on enlève"}</button>`;
- if(L.branch){const n=S.stage==="num";h+=`<div class="branchq${n?" n":""}" style="left:${L.branch.x/10}%;top:${L.branch.y/6.2}%">${n?S.parts+" parts":"?"}</div>`}
+ const L=layout(S.schema,S.n,true);let h=`<svg viewBox="0 0 1000 620" aria-hidden="true">${L.svg}</svg>`+L.Z.map(zoneHTML).join("");
+ L.signs.forEach(g=>{const m=S.signs[g.id]==="-";h+=`<button class="sign" style="left:${g.x/10}%;top:${g.y/6.2}%;font-size:calc(var(--u)*${S.n>2?1.7:2.3})" data-sign="${g.id}">${m?"− on enlève":"+ on ajoute"}</button>`});
+ if(L.branch){const n=S.stage==="num";h+=`<div class="branchq${n?" n":""}" style="left:${L.branch.x/10}%;top:${L.branch.y/6.2}%">${n?S.n+" parts":"?"}</div>`}
  return h;
 }
 function paletteHTML(){
- return S.nouns.map((o,i)=>{const ic=S.stage==="cube"?`<span class="it cube" style="--c:${col(i)}"></span>`:(o.icon?`<span class="it emo">${o.icon}</span>`:`<span class="it word" style="--c:${col(i)}">${esc(o.name.slice(0,3))}</span>`);
+ return S.nouns.map((o,i)=>{const ic=S.stage==="cube"?`<span class="it cube" style="--c:${col(i)}"></span>`:(o.icon?icoHTML(o.icon):`<span class="it word" style="--c:${col(i)}">${esc(o.name.slice(0,3))}</span>`);
   return`<button class="tok" data-tok="${i}" aria-pressed="${S.sel===i}">${ic}${esc(o.name)}</button>`}).join("")+
-  `<span class="hint">Touche un objet, puis touche une case pour l'ajouter. Glisse un objet hors des cases pour l'enlever.</span>`;
+  (S.nouns.length<MAXN?`<button class="btn" data-act="openpick">+ Ajouter un objet</button>`:"")+
+  `<span class="hint">${S.qmode?"Touche une case pour y mettre ou enlever le point d'interrogation.":"Fais glisser un objet dans une case, ou touche un objet puis une case. Glisse un objet hors des cases pour l'enlever."}</span>`;
 }
 function toolsHTML(){
  const k=SCH[S.schema];let h=`<button class="btn" data-act="undo">↶ Annuler</button><button class="btn" data-act="clear">Tout effacer</button>`;
  if(S.stage!=="num")h+=`<button class="btn${S.showNums?" on":""}" data-act="nums" aria-pressed="${S.showNums}">Voir combien</button>`;
  if(S.stage==="cube")h+=`<button class="btn${S.group10?" on":""}" data-act="g10" aria-pressed="${S.group10}">Ranger par 10</button>`;
- if(k.kind==="star")h+=`<span class="stepper">Parts <button data-act="pminus" aria-label="Une part de moins">−</button><b>${S.parts}</b><button data-act="pplus" aria-label="Une part de plus">+</button></span>`;
+ h+=`<span class="stepper">${STEPLAB[k.kind]} <button data-act="nminus" aria-label="Enlever une case">−</button><b>${S.n}</b><button data-act="nplus" aria-label="Ajouter une case">+</button></span>`;
+ if(S.stage!=="num")h+=`<button class="btn${S.qmode?" on":""}" data-act="qmode" aria-pressed="${S.qmode}">Placer le ?</button>`;
  if(k.q==="pareil"&&S.stage!=="num")h+=`<button class="btn" data-act="copy">Recopier la part dans les autres</button>`;
  h+='<span class="grow"></span>';
  if(S.stage==="img")h+=`<button class="btn primary" data-stage="cube">J'ai trouvé : passer aux cubes</button>`;
@@ -344,6 +408,14 @@ function fit(){sizeStage();
 }
 
 /* ---------- Ajouter / déplacer ---------- */
+function tapZone(zid){if(!S.qmode)return addTo(zid);const z=layout(S.schema,S.n,true).Z.find(z=>z.id===zid);if(!z)return;push();S.qset[zid]=!z.q;save();renderStage()}
+function changeN(d){const k=SCH[S.schema].kind,[mn,mx]=RANGE[k],N=S.n,M=N+d;if(M<mn||M>mx)return;push();const Z=S.zones,q=S.qset;
+ const mv=(a,b)=>{if(Z[a])Z[b]=Z[a];else delete Z[b];delete Z[a];if(a in q)q[b]=q[a];else delete q[b];delete q[a]};
+ if(k==="trans"){mv("s"+N,"s"+M);if(d<0){delete Z["a"+M];delete q["a"+M];delete S.signs["a"+M]}}
+ else if(d<0){delete Z["p"+M];delete q["p"+M]}
+ S.n=M;save();renderStage()}
+function addObj(){const inp=$("#newobj");if(!inp)return;const v=inp.value.trim();if(!v||S.nouns.length>=8)return;
+ S.nouns.push({name:v,icon:suggest(v)[0]||null,auto:true});S.sel=S.nouns.length-1;save();$("#pal").innerHTML=paletteHTML();const ni=$("#newobj");if(ni)ni.focus()}
 function addTo(zid){if(!S.nouns[S.sel])return;push();(S.zones[zid]=S.zones[zid]||[]).push(S.sel);save();renderStage(zid)}
 let drag=null;
 function zoneAt(x,y){const e=document.elementFromPoint(x,y);return e?e.closest("#stage .zone"):null}
@@ -359,7 +431,7 @@ function onMove(e){if(!drag)return;if(!drag.moved){if(Math.hypot(e.clientX-drag.
  drag.ghost.style.left=e.clientX+"px";drag.ghost.style.top=e.clientY+"px";hl(zoneAt(e.clientX,e.clientY))}
 function onCancel(){stopListen();if(drag&&drag.ghost)drag.ghost.remove();if(drag&&drag.src.el)drag.src.el.classList.remove("lifted");hl(null);drag=null}
 function onUp(e){stopListen();const d=drag;drag=null;if(!d)return;if(d.ghost)d.ghost.remove();hl(null);
- if(!d.moved){if(d.src.type==="pal"){S.sel=d.src.noun;save();$("#pal").innerHTML=paletteHTML()}else addTo(d.src.zone);return}
+ if(!d.moved){if(d.src.type==="pal"){S.sel=d.src.noun;save();$("#pal").innerHTML=paletteHTML()}else tapZone(d.src.zone);return}
  const z=zoneAt(e.clientX,e.clientY),zid=z&&z.dataset.z;
  if(d.src.type==="pal"){if(zid){S.sel=d.src.noun;addTo(zid);$("#pal").innerHTML=paletteHTML()}return}
  push();const n=S.zones[d.src.zone].splice(d.src.idx,1)[0];if(zid)(S.zones[zid]=S.zones[zid]||[]).push(n);save();renderStage(zid)}
@@ -372,29 +444,42 @@ document.addEventListener("pointerdown",e=>{
  const z=e.target.closest("#stage .zone");if(!z)return;const it=e.target.closest(".it");
  startDrag(e,it?{type:"item",zone:z.dataset.z,idx:+it.dataset.i,el:it}:{type:"tap",zone:z.dataset.z});
 });
-document.addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.matches&&e.target.matches("#stage .zone")&&S.stage!=="num"){e.preventDefault();addTo(e.target.dataset.z)}});
+document.addEventListener("keydown",e=>{
+ if(e.key==="Enter"&&e.target.id==="newobj"){e.preventDefault();addObj();return}
+ if(e.key==="Enter"&&e.target.dataset&&e.target.dataset.in!==undefined){e.preventDefault();e.target.blur();return}
+ if(e.key==="Escape"&&P.open){closePick();return}
+ if(e.key==="Enter"&&e.target.id==="psearch"){e.preventDefault();webSearch();return}
+if((e.key==="Enter"||e.key===" ")&&e.target.matches&&e.target.matches("#stage .zone")&&S.stage!=="num"){e.preventDefault();tapZone(e.target.dataset.z)}});
 document.addEventListener("click",e=>{
  const t=e.target.closest("button");if(!t)return;const d=t.dataset;
  if(d.go){go(d.go);return}
- if(d.pick){if(S.schema!==d.pick){S.schema=d.pick;S.zones={};S.sign="+";S.parts=4;hist=[]}S.screen="nouns";save();render();return}
+ if(d.tile!==undefined){pickTile(d.tile,d.name);return}
+ if(d.cat!==undefined){P.cat=d.cat;P.q="";$("#psearch").value="";renderPick();return}
+ if(d.repl!==undefined){openPick("repl",+d.repl);return}
+ if(d.act==="openpick"){openPick("add");return}
+ if(d.act==="pdone"){closePick();return}
+ if(d.act==="web"){webSearch();return}
+ if(d.act==="useword"){const q=P.q.trim();if(q)pickTile("",q);return}
+ if(d.pick){if(S.schema!==d.pick){S.schema=d.pick;S.zones={};S.signs={};S.qset={};S.qmode=false;S.n=DEFN[SCH[d.pick].kind];hist=[]}S.screen="nouns";save();render();return}
  if(d.say){say(SCH[d.say].title+". "+SCH[d.say].desc);return}
  if("sayen" in d){say(S.enonce);return}
  if(d.ic!==undefined){const n=S.nouns[+d.ic];n.icon=d.e;n.auto=false;save();renderChips(+d.ic);return}
  if(d.word!==undefined){const n=S.nouns[+d.word];n.icon=null;n.auto=false;save();renderChips(+d.word);return}
  if(d.more!==undefined){const i=+d.more;const prev=openMore;openMore=openMore===i?-1:i;if(prev>=0&&prev!==i&&$("#ch"+prev))renderChips(prev);renderChips(i);return}
  if(d.del!==undefined){removeNoun(+d.del);save();renderNouns();return}
- if(t.id==="addn"){if(S.nouns.length>=5)return;S.nouns.push({name:"",icon:null,auto:true});save();renderNouns();const ins=document.querySelectorAll("[data-in]");ins[ins.length-1].focus();return}
+ if(t.id==="addn"){if(S.nouns.length>=MAXN)return;S.nouns.push({name:"",icon:null,auto:true});save();renderNouns();const ins=document.querySelectorAll("[data-in]");ins[ins.length-1].focus();return}
  if(t.id==="reset"){if(confirm("Effacer ce problème et en commencer un nouveau ?")){S=fresh();hist=[];save();render()}return}
  if(d.stage){if(S.stage!==d.stage){S.stage=d.stage;save();renderWS(d.stage!=="num")}return}
- if("sign" in d){push();S.sign=S.sign==="+"?"-":"+";save();renderStage();return}
+ if(d.sign){push();S.signs[d.sign]=S.signs[d.sign]==="-"?"+":"-";save();renderStage();return}
  if(d.act){const a=d.act;
   if(a==="undo"){const h=hist.pop();if(h){Object.assign(S,JSON.parse(h));save();renderStage()}}
   else if(a==="clear"){push();S.zones={};save();renderStage()}
   else if(a==="nums"){S.showNums=!S.showNums;save();renderStage()}
   else if(a==="g10"){S.group10=!S.group10;save();renderStage()}
-  else if(a==="pplus"&&S.parts<10){push();S.parts++;save();renderStage()}
-  else if(a==="pminus"&&S.parts>2){push();delete S.zones["p"+(S.parts-1)];S.parts--;save();renderStage()}
-  else if(a==="copy"){push();for(let i=1;i<S.parts;i++)S.zones["p"+i]=[...(S.zones.p0||[])];save();renderStage()}
+  else if(a==="nplus")changeN(1);else if(a==="nminus")changeN(-1);
+  else if(a==="qmode"){S.qmode=!S.qmode;save();renderStage();$("#pal").innerHTML=paletteHTML()}
+  else if(a==="addobj")addObj();
+  else if(a==="copy"){push();for(let i=1;i<S.n;i++)S.zones["p"+i]=[...(S.zones.p0||[])];save();renderStage()}
  }
 });
 document.addEventListener("input",e=>{
@@ -402,9 +487,44 @@ document.addEventListener("input",e=>{
  if(t.id==="en"){S.enonce=t.value;save();return}
  if(t.id==="calc"){S.calc=t.value;save();return}
  if(t.id==="rep"){S.rep=t.value;save();return}
- if(t.dataset.in!==undefined){const i=+t.dataset.in,n=S.nouns[i];n.name=t.value;if(n.auto){n.icon=suggest(n.name)[0]||null}$("#msg").textContent="";save();renderChips(i);renderSteps()}
+ if(t.dataset.in!==undefined){const i=+t.dataset.in;S.nouns[i].name=t.value;$("#msg").textContent="";save();renderSteps();return}
+ if(t.id==="psearch"){P.q=t.value;renderPick(true);return}
 });
 addEventListener("resize",()=>requestAnimationFrame(fit));
+/* ---------- Choix des objets ---------- */
+const P={open:false,mode:"add",idx:-1,cat:CATS[0],q:"",web:null,webQ:"",webMsg:"",timer:0};
+function openPick(mode,idx){P.open=true;P.mode=mode;P.idx=idx;P.q="";P.web=null;P.webMsg="";const m=$("#picker");m.hidden=false;$("#psearch").value="";
+ $("#ptitle").textContent=mode==="repl"?"Choisis une nouvelle image":"Touche les objets du problème";renderPick();setTimeout(()=>$("#psearch").focus(),50)}
+function closePick(){P.open=false;$("#picker").hidden=true;clearTimeout(P.timer);if(S.screen==="nouns")renderNouns();else if(S.screen==="ws"&&$("#pal")){$("#pal").innerHTML=paletteHTML()}renderSteps()}
+function tileHTML(icon,name){const has=P.mode==="add"&&icon&&S.nouns.some(n=>n.icon===icon);
+ return`<button class="tile${has?" has":""}" data-tile="${esc(icon)}" data-name="${esc(name)}">${icoHTML(icon)}<span>${esc(name)}</span></button>`}
+function renderPick(fromTyping){
+ const q=P.q.trim();$("#pcats").innerHTML=CATS.map(c=>`<button class="chip txt" data-cat="${esc(c)}" aria-pressed="${!q&&P.cat===c}">${DB.find(e=>e.cat===c).icon} ${c}</button>`).join("");
+ let list=q?searchLocal(q):DB.filter(e=>e.cat===P.cat);
+ let h=list.map(e=>tileHTML(e.icon,e.name)).join("");
+ if(q&&!list.length)h=`<p class="empty">« ${esc(q)} » n'est pas dans la banque d'images.</p>`;
+ $("#pgrid").innerHTML=h;
+ let w="";
+ if(q){w+=`<div class="webbar"><button class="btn" data-act="web">🌐 Chercher « ${esc(q)} » sur Internet</button><button class="btn" data-act="useword">Écrire seulement le mot « ${esc(q)} »</button></div>`;
+  if(P.web&&P.webQ===q)w+=P.web.length?`<div class="pgrid">${P.web.map(u=>tileHTML("img:"+u,q)).join("")}</div>`:"";
+  if(P.webMsg&&P.webQ===q)w+=`<p class="empty">${P.webMsg}</p>`}
+ $("#pweb").innerHTML=w;
+ if(fromTyping){clearTimeout(P.timer);if(q.length>=3&&list.length<2&&P.webQ!==q)P.timer=setTimeout(webSearch,700)}
+}
+async function webSearch(){const q=P.q.trim();if(!q)return;clearTimeout(P.timer);P.webQ=q;P.web=null;P.webMsg="Recherche sur Internet…";renderPick();
+ try{const r=await fetch("https://api.arasaac.org/api/pictograms/fr/search/"+encodeURIComponent(q.toLowerCase()));
+  if(P.webQ!==q)return;
+  if(!r.ok){P.web=[];P.webMsg="Aucune image trouvée sur Internet pour ce mot. Essaie au singulier ou un autre mot.";renderPick();return}
+  const js=await r.json();P.web=(Array.isArray(js)?js:[]).slice(0,24).map(p=>`https://static.arasaac.org/pictograms/${p._id}/${p._id}_300.png`);
+  P.webMsg=P.web.length?"":"Aucune image trouvée sur Internet pour ce mot. Essaie au singulier ou un autre mot.";
+ }catch(e){if(P.webQ!==q)return;P.web=[];P.webMsg="Impossible de joindre Internet. Vérifie la connexion."}
+ renderPick()}
+function pickTile(icon,name){icon=icon||null;
+ if(P.mode==="repl"){const n=S.nouns[P.idx];if(n){const old=n.icon;n.icon=icon;const oldName=(DB.find(e=>e.icon===old)||{}).name;if(!n.name.trim()||n.name===oldName||isImg(old))n.name=name}save();closePick();return}
+ const at=icon?S.nouns.findIndex(n=>n.icon===icon):S.nouns.findIndex(n=>!n.icon&&n.name===name);
+ if(at>=0){const used=Object.values(S.zones).some(l=>l.includes(at));if(!used){removeNoun(at);save()}}
+ else{if(S.nouns.length>=MAXN){alert("10 objets au maximum.");return}S.nouns.push({name,icon,auto:false});S.sel=S.nouns.length-1;save()}
+ renderPick()}
 try{speechSynthesis.getVoices()}catch(e){}
 render();
 </script>
