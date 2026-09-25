@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Adaptproblème</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E6ECF1;--ui:#FFFFFF;--paper:#FFFFFF;--ink:#000000;--muted:#55616C;--line:#C9D3DB;--hi:#F2B705;--hi-soft:#FFF3C4;
+  --c0:#2F6FDE;--c1:#D7263D;--c2:#2A9D5C;--c3:#E9A800;--c4:#7B4FC9;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15191D;--ui:#20262C;--paper:#262D34;--ink:#F3F5F7;--muted:#A5B0BA;--line:#3A444D;--hi-soft:#4A3E12;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#15191D;--ui:#20262C;--paper:#262D34;--ink:#F3F5F7;--muted:#A5B0BA;--line:#3A444D;--hi-soft:#4A3E12;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:Andika,"Trebuchet MS",Verdana,sans-serif;font-size:18px;line-height:1.4}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--c0);outline-offset:2px}
+.app{height:100%;display:flex;flex-direction:column}
+header.top{display:flex;align-items:center;gap:14px;padding:10px 16px;flex-wrap:wrap}
+.brand{font-weight:700;font-size:22px;display:flex;align-items:center;gap:10px}
+.brand svg{width:52px;height:30px}
+.steps{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+.steps button{border:2px solid var(--line);background:var(--ui);border-radius:999px;padding:4px 14px;font-size:16px}
+.steps button[aria-current="step"]{border-color:var(--ink);font-weight:700}
+.steps button:disabled{opacity:.45;cursor:default}
+.btn{border:2px solid var(--line);background:var(--ui);border-radius:10px;padding:6px 12px;font-size:17px}
+.btn.on{border-color:var(--ink);background:var(--hi-soft)}
+.btn.primary{background:var(--c0);border-color:var(--c0);color:#fff;font-weight:700;padding:10px 20px}
+.btn:disabled{opacity:.4;cursor:default}
+main{flex:1;min-height:0;overflow:auto;padding:0 16px 16px}
+.wrap{max-width:1300px;margin:0 auto}
+h1{font-size:28px;margin:6px 0 4px;line-height:1.2}
+h2{font-size:22px;margin:18px 0 4px}
+.lead{color:var(--muted);margin:0 0 16px;max-width:62ch}
+.speak{border:2px solid var(--line);background:var(--ui);border-radius:10px;padding:2px 10px;font-size:20px;line-height:1.3;flex:none}
+
+/* Choix du schéma */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.card{background:var(--ui);border:3px solid transparent;border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.card:has(.pick:hover){border-color:var(--line)}
+.card.chosen{border-color:var(--ink)}
+.pick{border:0;background:none;padding:0;text-align:left;display:flex;flex-direction:column;gap:8px}
+.mini{width:100%;height:auto;display:block}
+.pick strong{font-size:19px;line-height:1.25}
+.card .row{display:flex;justify-content:space-between;align-items:flex-end;gap:8px}
+.card p{margin:0;color:var(--muted);font-size:15px}
+
+/* SVG schéma */
+.inkf{fill:var(--ink)}
+.lns{stroke:var(--ink);stroke-width:16;fill:none;stroke-linecap:round}
+.zs{fill:var(--paper);stroke:var(--ink);stroke-width:18}
+.qt{fill:var(--ink);font-family:"Arial Black",Arial,sans-serif;font-weight:900}
+.qt.inv{fill:var(--paper)}
+
+/* Écran objets */
+.two{display:grid;grid-template-columns:minmax(220px,340px) 1fr;gap:24px;align-items:start}
+@media (max-width:760px){.two{grid-template-columns:1fr}}
+.recap{background:var(--ui);border-radius:14px;padding:14px;position:sticky;top:0}
+.recap strong{display:block;font-size:19px;margin-top:8px}
+.recap p{margin:4px 0 0;color:var(--muted);font-size:15px}
+textarea{width:100%;min-height:80px;border:2px solid var(--line);border-radius:10px;padding:10px;background:var(--ui);resize:vertical;font-size:18px}
+label.lab{font-weight:700;display:block;margin-bottom:6px}
+.noun{background:var(--ui);border-radius:14px;padding:12px;margin-bottom:12px;border-left:8px solid var(--c)}
+.nr{display:flex;gap:8px;align-items:center}
+.nr input{flex:1;min-width:0;border:2px solid var(--line);border-radius:10px;padding:8px 12px;font-size:20px;background:var(--paper)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chip{border:3px solid var(--line);background:var(--paper);border-radius:12px;min-width:52px;height:52px;font-size:30px;display:grid;place-items:center;padding:0 8px;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",Andika,sans-serif}
+.chip.txt{font-size:16px;font-family:inherit}
+.chip[aria-pressed="true"]{border-color:var(--ink);background:var(--hi-soft)}
+.more{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;padding-top:8px;border-top:2px dashed var(--line)}
+.more .chip{min-width:44px;height:44px;font-size:24px;border-width:2px}
+.msg{color:var(--c1);font-weight:700;min-height:1.4em}
+
+/* Espace de travail */
+.ws{display:flex;flex-direction:column;height:100%;gap:8px}
+.wsbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.wtitle{font-weight:700;font-size:20px;display:flex;align-items:center;gap:8px}
+.seg{display:inline-flex;background:var(--ui);border-radius:12px;padding:3px;border:2px solid var(--line);margin-left:auto}
+.seg button{border:0;background:transparent;padding:6px 14px;border-radius:9px;font-weight:700;font-size:17px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.enonce{background:var(--ui);border-radius:12px;padding:8px 12px;display:flex;gap:10px;align-items:flex-start;font-size:19px}
+.enonce div{flex:1;white-space:pre-wrap}
+.stagewrap{flex:1;min-height:240px;display:flex;align-items:center;justify-content:center;container-type:size}
+.stage{position:relative;aspect-ratio:1000/620;width:min(100cqw,calc(100cqh * 1000 / 620));container-type:inline-size;user-select:none;-webkit-user-select:none}
+.stage>svg{position:absolute;inset:0;width:100%;height:100%}
+.zone{position:absolute;background:var(--paper);border:1.2cqw solid var(--ink);border-radius:1.6cqw;touch-action:none;cursor:copy;transition:box-shadow .15s}
+.zone.circle{border-radius:50%}
+.zone.arrow{background:transparent;border:0;border-radius:0}
+.zone.over{box-shadow:0 0 0 1cqw var(--hi)}
+.zone.arrow.over{box-shadow:none;outline:1cqw solid var(--hi)}
+.qm{position:absolute;inset:0;display:grid;place-items:center;font:900 var(--qs)/1 "Arial Black",Arial,sans-serif;color:var(--line);pointer-events:none}
+.zone.arrow .qm{color:var(--paper);opacity:.5}
+.items{position:absolute;inset:.9cqw;display:flex;flex-wrap:wrap;align-content:center;align-items:center;justify-content:center;gap:calc(var(--s,40px)*.1);overflow:hidden}
+.zone.circle .items{inset:15%}
+.it{width:var(--s,40px);height:var(--s,40px);display:grid;place-items:center;line-height:1;touch-action:none;cursor:grab;flex:none}
+.it.emo{font-size:calc(var(--s,40px)*.84);font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
+.it.word{width:auto;padding:0 .4em;font-size:calc(var(--s,40px)*.42);border:max(2px,calc(var(--s,40px)*.06)) solid var(--c);border-radius:.5em;background:var(--paper);color:var(--ink);font-weight:700;white-space:nowrap}
+.it.cube{background:var(--c);border-radius:calc(var(--s,40px)*.14);box-shadow:inset calc(var(--s,40px)*-.1) calc(var(--s,40px)*-.1) 0 rgba(0,0,0,.25),inset calc(var(--s,40px)*.07) calc(var(--s,40px)*.07) 0 rgba(255,255,255,.35)}
+.bar{display:flex;flex-direction:column-reverse;gap:1px;padding:1px;background:var(--ink);border-radius:3px}
+.zone.arrow .bar{background:var(--paper)}
+.bar .cube{border-radius:1px}
+.it.lifted{opacity:.25}
+.zone.arrow .it.emo{background:var(--paper);border-radius:50%;font-size:calc(var(--s,40px)*.7)}
+.bignum{position:absolute;inset:0;display:grid;place-items:center;font-weight:700;font-size:var(--ns);pointer-events:none}
+.zone.arrow .bignum{color:var(--paper)}
+.bignum.q{font-family:"Arial Black",Arial,sans-serif}
+.badge{position:absolute;top:-2cqw;right:-2cqw;min-width:4.6cqw;height:4.6cqw;border-radius:99px;background:var(--hi);color:#000;font-weight:700;display:grid;place-items:center;font-size:2.7cqw;padding:0 1cqw;border:.4cqw solid var(--ink);pointer-events:none}
+.sign{position:absolute;transform:translate(-50%,-50%);font-size:2.3cqw;border:.4cqw solid var(--ink);background:var(--paper);border-radius:99px;padding:.3cqw 1.8cqw;font-weight:700;white-space:nowrap}
+.branchq{position:absolute;transform:translate(-50%,-50%);font:900 8cqw/1 "Arial Black",Arial,sans-serif;pointer-events:none}
+.branchq.n{font-family:Andika,sans-serif;font-weight:700;font-size:6cqw}
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.tools .grow{flex:1}
+.stepper{display:inline-flex;align-items:center;gap:6px;background:var(--ui);border:2px solid var(--line);border-radius:10px;padding:2px 6px}
+.stepper button{border:0;background:var(--bg);border-radius:8px;width:34px;height:32px;font-size:20px;font-weight:700}
+.palette{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--ui);border-radius:14px;padding:8px 12px}
+.palette .hint{color:var(--muted);font-size:15px;flex:1;min-width:200px}
+.tok{display:flex;align-items:center;gap:8px;border:3px solid var(--line);border-radius:12px;background:var(--paper);padding:4px 14px 4px 6px;touch-action:none;font-size:18px;font-weight:700;--s:42px}
+.tok[aria-pressed="true"]{border-color:var(--ink);background:var(--hi-soft)}
+.tok .it{cursor:grab}
+.calc{display:flex;gap:12px;flex-wrap:wrap;background:var(--ui);border-radius:14px;padding:10px 12px;align-items:center}
+.calc label{font-weight:700;display:flex;align-items:center;gap:8px;flex:1;min-width:240px}
+.calc input{flex:1;min-width:0;border:2px solid var(--line);border-radius:10px;padding:8px 12px;font-size:24px;background:var(--paper)}
+.ghost{position:fixed;left:0;top:0;pointer-events:none;z-index:99;transform:translate(-50%,-50%) scale(1.15);--s:58px;filter:drop-shadow(0 6px 8px rgba(0,0,0,.3))}
+@keyframes pop{from{transform:scale(.2);opacity:0}to{transform:none;opacity:1}}
+.anim .it{animation:pop .45s cubic-bezier(.3,1.5,.5,1) both;animation-delay:calc(var(--d,0)*18ms)}
+.it.new{animation:pop .25s cubic-bezier(.3,1.5,.5,1) both}
+@media (prefers-reduced-motion:reduce){.anim .it,.it.new{animation:none}}
+@media (max-width:600px){.seg{margin-left:0}.wtitle{font-size:17px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <svg viewBox="0 0 104 60" aria-hidden="true"><rect x="4" y="12" width="34" height="34" rx="5" class="zs" style="stroke-width:6"/><polygon class="inkf" points="42,22 62,22 62,14 76,29 62,44 62,36 42,36"/><rect x="72" y="12" width="28" height="34" rx="5" class="zs" style="stroke-width:6;display:none"/><rect x="78" y="12" width="22" height="34" rx="5" class="zs" style="stroke-width:6"/></svg>
+      Adaptproblème
+    </div>
+    <nav class="steps" id="steps" aria-label="Étapes"></nav>
+    <button class="btn" id="reset">Nouveau problème</button>
+  </header>
+  <main id="main"></main>
+</div>
+<script>
+"use strict";
+const SCH={
+ "t-fin":{kind:"trans",q:"fin",title:"Je cherche la fin",desc:"Au début, il y a des objets. Puis on en ajoute ou on en enlève. Je cherche combien il y en a à la fin."},
+ "t-debut":{kind:"trans",q:"debut",title:"Je cherche le début",desc:"Je sais ce qui a changé et combien il y en a à la fin. Je cherche combien il y en avait au début."},
+ "t-change":{kind:"trans",q:"change",title:"Je cherche ce qui a changé",desc:"Je sais combien il y en avait au début et à la fin. Je cherche combien on en a ajouté ou enlevé."},
+ "c-tout":{kind:"comp",q:"tout",title:"Deux parties : je cherche le tout",desc:"Deux parties forment un tout. Je connais les deux parties. Je cherche le tout."},
+ "c-partie":{kind:"comp",q:"p1",title:"Deux parties : je cherche une partie",desc:"Je connais le tout et une partie. Je cherche l'autre partie."},
+ "s-tout":{kind:"star",q:"centre",title:"Plusieurs parts : je cherche le tout",desc:"Plusieurs parts forment le tout. Je connais toutes les parts. Je cherche le tout."},
+ "s-parts":{kind:"star",q:"pareil",title:"Parts pareilles : je cherche le tout",desc:"Toutes les parts sont pareilles. Je connais une part. Je cherche les autres parts et le tout."},
+ "s-nombre":{kind:"star",q:"nombre",title:"Je cherche le nombre de parts",desc:"Je connais le tout et ce qu'il y a dans une part. Je cherche combien de parts on peut faire."}
+};
+const ORDER=Object.keys(SCH);
+
+const DICT=[
+[["vache","veau","taureau","boeuf"],"🐄 🐮"],[["cochon","porc"],"🐖 🐷"],[["mouton","brebis","agneau"],"🐑"],[["chevre"],"🐐"],
+[["poule","poussin","coq","poulet"],"🐔 🐤"],[["chien","chiot"],"🐕 🐶"],[["chat","chaton"],"🐈 🐱"],[["cheval","chevaux","poney"],"🐎 🐴"],
+[["lapin"],"🐇 🐰"],[["oiseau","oiseaux","pigeon","moineau"],"🐦 🕊️"],[["poisson"],"🐟 🐠"],[["canard"],"🦆"],[["souris"],"🐭"],
+[["grenouille"],"🐸"],[["papillon"],"🦋"],[["abeille"],"🐝"],[["fourmi"],"🐜"],[["escargot"],"🐌"],[["coccinelle"],"🐞"],
+[["animal","animaux","bete"],"🐾 🐄 🐑"],
+[["euro","argent","piece","monnaie","sou","centime","prix","payer","achat","acheter","depense"],"🪙 💶 💰"],[["billet"],"💶 💵"],
+[["eleve","enfant","fille","garcon","ami","copain","copine","camarade","joueur","bebe","frere","soeur"],"🧒 👧 👦"],
+[["personne","gens","passager","voyageur","client","spectateur","invite","adulte","homme","femme","monsieur","dame","maitre","maitresse"],"🧍 🧑 👩 👨"],
+[["bus","car","autocar"],"🧍 🚌"],[["voiture","auto"],"🚗 🚙"],[["camion"],"🚚"],[["velo"],"🚲"],[["train","wagon"],"🚆 🚃"],[["avion"],"✈️"],[["bateau"],"⛵ 🚤"],
+[["chaise","place","siege","banc","table"],"🪑"],
+[["pomme"],"🍎 🍏"],[["banane"],"🍌"],[["orange","clementine","mandarine"],"🍊"],[["fraise"],"🍓"],[["poire"],"🍐"],[["cerise"],"🍒"],[["raisin"],"🍇"],[["citron"],"🍋"],
+[["fruit"],"🍎 🍌 🍐"],[["tomate"],"🍅"],[["carotte"],"🥕"],[["legume","salade"],"🥕 🥬"],
+[["bonbon","sucette","friandise"],"🍬 🍭"],[["gateau","tarte","part"],"🍰 🧁 🎂"],[["biscuit","cookie","gaufre"],"🍪"],[["chocolat"],"🍫"],
+[["oeuf"],"🥚"],[["pain","baguette","croissant"],"🥖 🥐"],[["pizza"],"🍕"],[["glace"],"🍦"],[["bouteille","jus","boisson"],"🧃 🍼"],[["verre","lait"],"🥛"],
+[["fleur","rose","tulipe","bouquet"],"🌸 🌷 🌻"],[["arbre","sapin"],"🌳 🌲"],[["feuille"],"🍃"],
+[["livre","album"],"📕 📚"],[["crayon","stylo","feutre"],"✏️ 🖍️ 🖊️"],[["cahier","carnet"],"📒 📓"],[["regle","gomme","trousse"],"📏"],
+[["bille","perle"],"🔵 🟢 🟣"],[["ballon","balle"],"⚽ 🏀"],[["jouet","peluche","nounours"],"🧸"],
+[["carte","image","vignette","autocollant","timbre"],"🃏 🖼️"],[["cadeau","paquet"],"🎁"],[["etoile"],"⭐"],[["coquillage"],"🐚"],
+[["boite","carton","caisse"],"📦"],[["sac","cartable"],"🎒"],[["chaussure","basket"],"👟"],[["chaussette"],"🧦"],[["vetement","pull","habit"],"👕"],
+[["maison","immeuble"],"🏠"],[["ticket","entree"],"🎟️"],[["jeton","point"],"⚪ 🟡"],[["marron","chataigne"],"🌰"],[["champignon"],"🍄"],[["cle"],"🔑"],[["bougie"],"🕯️"]
+];
+const GENERIC=["⚪","🔵","🟥","⭐","❤️"];
+function norm(w){w=w.toLowerCase().replace(/œ/g,"oe").replace(/æ/g,"ae").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z]/g,"");if(w.length>3&&/[sx]$/.test(w))w=w.slice(0,-1);return w}
+const NDICT=DICT.map(([k,e])=>[k.map(norm),e.split(" ")]);
+const ALL=[...new Set(NDICT.flatMap(d=>d[1]).concat(GENERIC))];
+function suggest(name){const toks=(name||"").split(/[\s'’\-,.;:!?]+/).map(norm).filter(t=>t.length>=2);const out=[];
+ for(const t of toks)for(const [ks,em] of NDICT)if(ks.some(k=>t===k||(k.length>=4&&t.startsWith(k)&&t.length-k.length<=3)))em.forEach(x=>{if(!out.includes(x))out.push(x)});
+ return out}
+
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const col=n=>`var(--c${n%5})`;
+function fresh(){return{screen:"choose",schema:null,enonce:"",nouns:[{name:"",icon:null,auto:true}],zones:{},parts:4,sign:"+",stage:"img",showNums:false,group10:false,sel:0,calc:"",rep:""}}
+let S=load()||fresh();let hist=[];let openMore=-1;
+function save(){try{localStorage.setItem("adaptprobleme",JSON.stringify(S))}catch(e){}}
+function load(){try{const v=JSON.parse(localStorage.getItem("adaptprobleme"));return v&&v.nouns?v:null}catch(e){return null}}
+function push(){hist.push(JSON.stringify({zones:S.zones,parts:S.parts,sign:S.sign}));if(hist.length>60)hist.shift()}
+function say(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="fr-FR";const v=speechSynthesis.getVoices().find(v=>v.lang&&v.lang.toLowerCase().startsWith("fr"));if(v)u.voice=v;u.rate=.9;speechSynthesis.speak(u)}catch(e){}}
+
+/* ---------- Géométrie des schémas (repère 1000 × 620) ---------- */
+function layout(id,N){
+ const k=SCH[id],Z=[];let svg="",branch=null;
+ if(k.kind==="trans"){
+  svg='<polygon class="inkf" points="335,240 598,240 598,190 688,310 598,430 598,380 335,380"/>';
+  Z.push({id:"debut",name:"Au début",x:40,y:190,w:275,h:240,q:k.q==="debut"});
+  Z.push({id:"change",name:"Ce qui change",x:345,y:250,w:245,h:120,q:k.q==="change",arrow:1});
+  Z.push({id:"fin",name:"À la fin",x:705,y:190,w:275,h:240,q:k.q==="fin"});
+ }else if(k.kind==="comp"){
+  svg='<path class="lns" d="M478,36 C530,36 512,100 512,160 L512,262 C512,296 522,306 552,310 C522,314 512,324 512,358 L512,460 C512,520 530,584 478,584"/>';
+  Z.push({id:"p1",name:"Première partie",x:180,y:40,w:275,h:245,q:k.q==="p1"});
+  Z.push({id:"p2",name:"Deuxième partie",x:180,y:335,w:275,h:245,q:false});
+  Z.push({id:"tout",name:"Le tout",x:600,y:160,w:320,h:300,q:k.q==="tout"});
+ }else{
+  const cx=500,cy=325,r=118,w=N<=4?235:N<=6?190:N<=8?150:125,h=Math.round(w*.84),rx=335,ry=210;
+  const start=k.q==="nombre"?270+180/N:135,parts=[];
+  for(let i=0;i<N;i++){const a=(start+i*360/N)*Math.PI/180,px=cx+rx*Math.cos(a),py=cy+ry*Math.sin(a);
+   svg+=`<line class="lns" x1="${cx}" y1="${cy}" x2="${px.toFixed(1)}" y2="${py.toFixed(1)}"/>`;
+   parts.push({id:"p"+i,name:"Part "+(i+1),x:px-w/2,y:py-h/2,w,h,q:k.q==="pareil"&&i>0});}
+  if(k.q==="nombre"){svg+=`<line class="lns" x1="${cx}" y1="${cy}" x2="${cx+6}" y2="100"/>`;branch={x:cx+8,y:55}}
+  Z.push({id:"centre",name:"Le tout",x:cx-r,y:cy-r,w:2*r,h:2*r,q:k.q!=="nombre",circle:1},...parts);
+ }
+ return{Z,svg,branch};
+}
+function schemaSVG(id,N){
+ const L=layout(id,N||4);let s=`<svg viewBox="0 0 1000 620" class="mini" aria-hidden="true">${L.svg}`;
+ for(const z of L.Z){const cx=z.x+z.w/2,cy=z.y+z.h/2,qs=Math.min(z.w,z.h)*.62;
+  if(!z.arrow){s+=z.circle?`<circle class="zs" cx="${cx}" cy="${cy}" r="${z.w/2-9}"/>`:`<rect class="zs" x="${z.x+9}" y="${z.y+9}" width="${z.w-18}" height="${z.h-18}" rx="16"/>`}
+  if(z.q)s+=`<text class="qt${z.arrow?" inv":""}" x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="central" font-size="${qs}">?</text>`;}
+ if(L.branch)s+=`<text class="qt" x="${L.branch.x}" y="${L.branch.y}" text-anchor="middle" dominant-baseline="central" font-size="95">?</text>`;
+ return s+"</svg>";
+}
+
+/* ---------- Navigation ---------- */
+function validNouns(){return S.nouns.some(n=>n.name.trim()||n.icon)}
+function renderSteps(){
+ const st=[["choose","1 Le schéma",true],["nouns","2 Les objets",!!S.schema],["ws","3 Je représente",!!S.schema&&validNouns()]];
+ $("#steps").innerHTML=st.map(([k,l,ok])=>`<button data-go="${k}" ${S.screen===k?'aria-current="step"':""} ${ok?"":"disabled"}>${l}</button>`).join("");
+}
+function go(sc){if(sc==="ws"&&!prepNouns())return;S.screen=sc;save();render()}
+function render(){renderSteps();const m=$("#main");m.scrollTop=0;
+ if(S.screen==="nouns"&&S.schema)renderNouns();else if(S.screen==="ws"&&S.schema&&validNouns())renderWS();else{S.screen="choose";renderSteps();renderChoose()}}
+
+/* ---------- Écran 1 ---------- */
+function renderChoose(){
+ $("#main").innerHTML=`<div class="wrap"><h1>Quel dessin ressemble à ton problème ?</h1><p class="lead">Choisis le schéma. Touche 🔊 pour écouter ce qu'il veut dire.</p>
+ <div class="grid">${ORDER.map(id=>`<div class="card${S.schema===id?" chosen":""}"><button class="pick" data-pick="${id}">${schemaSVG(id)}<strong>${SCH[id].title}</strong></button>
+ <div class="row"><p>${SCH[id].desc}</p><button class="speak" data-say="${id}" aria-label="Écouter">🔊</button></div></div>`).join("")}</div></div>`;
+}
+
+/* ---------- Écran 2 ---------- */
+function renderNouns(){
+ const k=SCH[S.schema];
+ $("#main").innerHTML=`<div class="wrap two"><div class="recap">${schemaSVG(S.schema,S.parts)}<strong>${k.title}</strong><p>${k.desc}</p></div>
+ <div><label class="lab" for="en">L'énoncé du problème (facultatif)</label><textarea id="en" placeholder="Recopie ou écris le problème ici.">${esc(S.enonce)}</textarea>
+ <h2>De quoi parle le problème ?</h2><p class="lead">Écris le nom de ce que l'on compte : des vaches, des euros, des élèves, des passagers… Puis choisis une image.</p>
+ <div id="nl"></div><button class="btn" id="addn">+ Ajouter un autre objet</button>
+ <p class="msg" id="msg"></p><button class="btn primary" data-go="ws">Placer les objets</button></div></div>`;
+ const nl=$("#nl");nl.innerHTML=S.nouns.map((n,i)=>`<div class="noun" style="--c:${col(i)}" data-n="${i}"><div class="nr"><input value="${esc(n.name)}" placeholder="ex. vaches" aria-label="Objet ${i+1}" data-in="${i}">${S.nouns.length>1?`<button class="btn" data-del="${i}" aria-label="Supprimer">✕</button>`:""}</div><div class="chips" id="ch${i}"></div></div>`).join("");
+ S.nouns.forEach((_,i)=>renderChips(i));
+}
+function renderChips(i){
+ const n=S.nouns[i],sg=suggest(n.name),list=[...sg,...GENERIC.filter(g=>!sg.includes(g))].slice(0,12);
+ if(n.icon&&!list.includes(n.icon))list.unshift(n.icon);
+ let h=list.map(e=>`<button class="chip" data-ic="${i}" data-e="${e}" aria-pressed="${n.icon===e}">${e}</button>`).join("");
+ h+=`<button class="chip txt" data-word="${i}" aria-pressed="${!n.icon}">Le mot</button><button class="chip txt" data-more="${i}">${openMore===i?"Moins d'images":"Plus d'images"}</button>`;
+ if(openMore===i)h+=`<div class="more">${ALL.map(e=>`<button class="chip" data-ic="${i}" data-e="${e}" aria-pressed="${n.icon===e}">${e}</button>`).join("")}</div>`;
+ $("#ch"+i).innerHTML=h;
+}
+function removeNoun(i){S.nouns.splice(i,1);for(const z in S.zones)S.zones[z]=S.zones[z].filter(v=>v!==i).map(v=>v>i?v-1:v);if(S.sel>=S.nouns.length)S.sel=0}
+function prepNouns(){
+ for(let i=S.nouns.length-1;i>=0;i--){const n=S.nouns[i];if(!n.name.trim()&&!n.icon&&S.nouns.length>1)removeNoun(i)}
+ if(!validNouns()){const m=$("#msg");if(m)m.textContent="Écris au moins un objet.";return false}
+ if(S.sel>=S.nouns.length)S.sel=0;return true;
+}
+
+/* ---------- Écran 3 ---------- */
+function itemHTML(n,i,d){const o=S.nouns[n];if(!o)return"";
+ if(S.stage==="cube")return`<span class="it cube" data-i="${i}" style="--c:${col(n)};--d:${d}"></span>`;
+ return o.icon?`<span class="it emo" data-i="${i}" style="--d:${d}">${o.icon}</span>`:`<span class="it word" data-i="${i}" style="--c:${col(n)};--d:${d}">${esc(o.name)}</span>`}
+function itemsHTML(list){
+ if(S.stage==="cube"){const srt=list.map((n,i)=>[n,i]).sort((a,b)=>a[0]-b[0]);const c=srt.map(([n,i],j)=>itemHTML(n,i,Math.min(j,40)));
+  if(S.group10){let o="";for(let b=0;b<c.length;b+=10)o+=`<span class="bar">${c.slice(b,b+10).join("")}</span>`;return o}return c.join("")}
+ return list.map((n,i)=>itemHTML(n,i,Math.min(i,40))).join("");
+}
+function zoneHTML(z){
+ const list=S.zones[z.id]||[],m=Math.min(z.w,z.h);
+ const st=`left:${z.x/10}%;top:${z.y/6.2}%;width:${z.w/10}%;height:${z.h/6.2}%;--qs:${(m*.062).toFixed(2)}cqw;--ns:${(m*(z.arrow?.075:.05)).toFixed(2)}cqw`;
+ let inner="";
+ if(S.stage==="num"){let t;if(!list.length&&z.q)t="?";else t=String(list.length);if(z.arrow&&t!=="?")t=(S.sign==="+"?"+ ":"− ")+t;inner=`<div class="bignum${t==="?"?" q":""}">${t}</div>`}
+ else{if(z.q)inner+='<div class="qm">?</div>';inner+=`<div class="items">${itemsHTML(list)}</div>`;if(S.showNums&&list.length)inner+=`<span class="badge">${list.length}</span>`}
+ return`<div class="zone${z.circle?" circle":""}${z.arrow?" arrow":""}${z.arrow&&S.sign==="-"?" minus":""}" data-z="${z.id}" style="${st}" tabindex="0" role="button" aria-label="${esc(z.name)}${z.q?", ce que je cherche":""}">${inner}</div>`;
+}
+function stageHTML(){
+ const L=layout(S.schema,S.parts);let h=`<svg viewBox="0 0 1000 620" aria-hidden="true">${L.svg}</svg>`+L.Z.map(zoneHTML).join("");
+ if(SCH[S.schema].kind==="trans")h+=`<button class="sign" style="left:46.7%;top:${150/6.2}%" data-sign>${S.sign==="+"?"+ on ajoute":"− on enlève"}</button>`;
+ if(L.branch){const n=S.stage==="num";h+=`<div class="branchq${n?" n":""}" style="left:${L.branch.x/10}%;top:${L.branch.y/6.2}%">${n?S.parts+" parts":"?"}</div>`}
+ return h;
+}
+function paletteHTML(){
+ return S.nouns.map((o,i)=>{const ic=S.stage==="cube"?`<span class="it cube" style="--c:${col(i)}"></span>`:(o.icon?`<span class="it emo">${o.icon}</span>`:`<span class="it word" style="--c:${col(i)}">${esc(o.name.slice(0,3))}</span>`);
+  return`<button class="tok" data-tok="${i}" aria-pressed="${S.sel===i}">${ic}${esc(o.name)}</button>`}).join("")+
+  `<span class="hint">Touche un objet, puis touche une case pour l'ajouter. Glisse un objet hors des cases pour l'enlever.</span>`;
+}
+function toolsHTML(){
+ const k=SCH[S.schema];let h=`<button class="btn" data-act="undo">↶ Annuler</button><button class="btn" data-act="clear">Tout effacer</button>`;
+ if(S.stage!=="num")h+=`<button class="btn${S.showNums?" on":""}" data-act="nums" aria-pressed="${S.showNums}">Voir combien</button>`;
+ if(S.stage==="cube")h+=`<button class="btn${S.group10?" on":""}" data-act="g10" aria-pressed="${S.group10}">Ranger par 10</button>`;
+ if(k.kind==="star")h+=`<span class="stepper">Parts <button data-act="pminus" aria-label="Une part de moins">−</button><b>${S.parts}</b><button data-act="pplus" aria-label="Une part de plus">+</button></span>`;
+ if(k.q==="pareil"&&S.stage!=="num")h+=`<button class="btn" data-act="copy">Recopier la part dans les autres</button>`;
+ h+='<span class="grow"></span>';
+ if(S.stage==="img")h+=`<button class="btn primary" data-stage="cube">J'ai trouvé : passer aux cubes</button>`;
+ else if(S.stage==="cube")h+=`<button class="btn primary" data-stage="num">Passer aux nombres</button>`;
+ return h;
+}
+function renderWS(anim){
+ const k=SCH[S.schema];
+ $("#main").innerHTML=`<div class="ws wrap"><div class="wsbar"><div class="wtitle">${k.title}<button class="speak" data-say="${S.schema}" aria-label="Écouter">🔊</button></div>
+ <div class="seg" role="group" aria-label="Représentation">${[["img","Images"],["cube","Cubes"],["num","Nombres"]].map(([v,l])=>`<button data-stage="${v}" aria-pressed="${S.stage===v}">${l}</button>`).join("")}</div></div>
+ ${S.enonce.trim()?`<div class="enonce"><div>${esc(S.enonce)}</div><button class="speak" data-sayen aria-label="Écouter l'énoncé">🔊</button></div>`:""}
+ <div class="stagewrap"><div class="stage${anim?" anim":""}" id="stage">${stageHTML()}</div></div>
+ <div class="tools" id="tools">${toolsHTML()}</div>
+ ${S.stage==="num"?`<div class="calc"><label>Mon calcul <input id="calc" value="${esc(S.calc)}" placeholder="ex. 12 + 5 = 17" inputmode="text"></label><label>Ma réponse <input id="rep" value="${esc(S.rep)}" placeholder="Il y a…"></label></div>`
+ :`<div class="palette" id="pal">${paletteHTML()}</div>`}</div>`;
+ requestAnimationFrame(fit);
+}
+function renderStage(newZone){const st=$("#stage");if(!st)return;st.classList.remove("anim");st.innerHTML=stageHTML();$("#tools").innerHTML=toolsHTML();
+ if(newZone){const its=st.querySelectorAll(`.zone[data-z="${newZone}"] .it`);const l=S.stage==="cube"?[...its].find(e=>+e.dataset.i===S.zones[newZone].length-1):its[its.length-1];if(l)l.classList.add("new")}
+ fit()}
+function fit(){
+ document.querySelectorAll("#stage .items").forEach(box=>{
+  const n=box.querySelectorAll(".it").length;if(!n)return;const W=box.clientWidth,H=box.clientHeight;let s;
+  const bars=box.querySelectorAll(".bar").length;
+  if(bars)s=Math.min(H/10.8,W/(bars*1.3),44);
+  else{const f=box.querySelector(".word")?2.6:1;s=Math.sqrt(W*H/(n*f))*.76;s=Math.min(s,Math.min(W,H)*.8,72)}
+  box.style.setProperty("--s",Math.max(9,Math.floor(s))+"px");
+ });
+}
+
+/* ---------- Ajouter / déplacer ---------- */
+function addTo(zid){if(!S.nouns[S.sel])return;push();(S.zones[zid]=S.zones[zid]||[]).push(S.sel);save();renderStage(zid)}
+let drag=null;
+function zoneAt(x,y){const e=document.elementFromPoint(x,y);return e?e.closest("#stage .zone"):null}
+function hl(z){document.querySelectorAll(".zone.over").forEach(e=>e!==z&&e.classList.remove("over"));if(z)z.classList.add("over")}
+function startDrag(e,src){if(e.button>0)return;e.preventDefault();drag={src,x0:e.clientX,y0:e.clientY,moved:false,ghost:null};
+ addEventListener("pointermove",onMove);addEventListener("pointerup",onUp);addEventListener("pointercancel",onCancel)}
+function stopListen(){removeEventListener("pointermove",onMove);removeEventListener("pointerup",onUp);removeEventListener("pointercancel",onCancel)}
+function onMove(e){if(!drag)return;if(!drag.moved){if(Math.hypot(e.clientX-drag.x0,e.clientY-drag.y0)<9||drag.src.type==="tap")return;
+  drag.moved=true;const g=document.createElement("div");g.className="ghost";
+  if(drag.src.type==="pal"){g.innerHTML=S.stage==="cube"?`<span class="it cube" style="--c:${col(drag.src.noun)}"></span>`:itemHTML(drag.src.noun,0,0)}
+  else{g.innerHTML=drag.src.el.outerHTML;drag.src.el.classList.add("lifted")}
+  document.body.appendChild(g);drag.ghost=g}
+ drag.ghost.style.left=e.clientX+"px";drag.ghost.style.top=e.clientY+"px";hl(zoneAt(e.clientX,e.clientY))}
+function onCancel(){stopListen();if(drag&&drag.ghost)drag.ghost.remove();if(drag&&drag.src.el)drag.src.el.classList.remove("lifted");hl(null);drag=null}
+function onUp(e){stopListen();const d=drag;drag=null;if(!d)return;if(d.ghost)d.ghost.remove();hl(null);
+ if(!d.moved){if(d.src.type==="pal"){S.sel=d.src.noun;save();$("#pal").innerHTML=paletteHTML()}else addTo(d.src.zone);return}
+ const z=zoneAt(e.clientX,e.clientY),zid=z&&z.dataset.z;
+ if(d.src.type==="pal"){if(zid){S.sel=d.src.noun;addTo(zid);$("#pal").innerHTML=paletteHTML()}return}
+ push();const n=S.zones[d.src.zone].splice(d.src.idx,1)[0];if(zid)(S.zones[zid]=S.zones[zid]||[]).push(n);save();renderStage(zid)}
+
+/* ---------- Événements ---------- */
+document.addEventListener("pointerdown",e=>{
+ if(S.screen!=="ws")return;
+ const tok=e.target.closest(".tok");if(tok){startDrag(e,{type:"pal",noun:+tok.dataset.tok});return}
+ if(S.stage==="num")return;
+ const z=e.target.closest("#stage .zone");if(!z)return;const it=e.target.closest(".it");
+ startDrag(e,it?{type:"item",zone:z.dataset.z,idx:+it.dataset.i,el:it}:{type:"tap",zone:z.dataset.z});
+});
+document.addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.matches&&e.target.matches("#stage .zone")&&S.stage!=="num"){e.preventDefault();addTo(e.target.dataset.z)}});
+document.addEventListener("click",e=>{
+ const t=e.target.closest("button");if(!t)return;const d=t.dataset;
+ if(d.go){go(d.go);return}
+ if(d.pick){if(S.schema!==d.pick){S.schema=d.pick;S.zones={};S.sign="+";S.parts=4;hist=[]}S.screen="nouns";save();render();return}
+ if(d.say){say(SCH[d.say].title+". "+SCH[d.say].desc);return}
+ if("sayen" in d){say(S.enonce);return}
+ if(d.ic!==undefined){const n=S.nouns[+d.ic];n.icon=d.e;n.auto=false;save();renderChips(+d.ic);return}
+ if(d.word!==undefined){const n=S.nouns[+d.word];n.icon=null;n.auto=false;save();renderChips(+d.word);return}
+ if(d.more!==undefined){const i=+d.more;const prev=openMore;openMore=openMore===i?-1:i;if(prev>=0&&prev!==i&&$("#ch"+prev))renderChips(prev);renderChips(i);return}
+ if(d.del!==undefined){removeNoun(+d.del);save();renderNouns();return}
+ if(t.id==="addn"){if(S.nouns.length>=5)return;S.nouns.push({name:"",icon:null,auto:true});save();renderNouns();const ins=document.querySelectorAll("[data-in]");ins[ins.length-1].focus();return}
+ if(t.id==="reset"){if(confirm("Effacer ce problème et en commencer un nouveau ?")){S=fresh();hist=[];save();render()}return}
+ if(d.stage){if(S.stage!==d.stage){S.stage=d.stage;save();renderWS(d.stage!=="num")}return}
+ if("sign" in d){push();S.sign=S.sign==="+"?"-":"+";save();renderStage();return}
+ if(d.act){const a=d.act;
+  if(a==="undo"){const h=hist.pop();if(h){Object.assign(S,JSON.parse(h));save();renderStage()}}
+  else if(a==="clear"){push();S.zones={};save();renderStage()}
+  else if(a==="nums"){S.showNums=!S.showNums;save();renderStage()}
+  else if(a==="g10"){S.group10=!S.group10;save();renderStage()}
+  else if(a==="pplus"&&S.parts<10){push();S.parts++;save();renderStage()}
+  else if(a==="pminus"&&S.parts>2){push();delete S.zones["p"+(S.parts-1)];S.parts--;save();renderStage()}
+  else if(a==="copy"){push();for(let i=1;i<S.parts;i++)S.zones["p"+i]=[...(S.zones.p0||[])];save();renderStage()}
+ }
+});
+document.addEventListener("input",e=>{
+ const t=e.target;
+ if(t.id==="en"){S.enonce=t.value;save();return}
+ if(t.id==="calc"){S.calc=t.value;save();return}
+ if(t.id==="rep"){S.rep=t.value;save();return}
+ if(t.dataset.in!==undefined){const i=+t.dataset.in,n=S.nouns[i];n.name=t.value;if(n.auto){n.icon=suggest(n.name)[0]||null}$("#msg").textContent="";save();renderChips(i);renderSteps()}
+});
+addEventListener("resize",()=>requestAnimationFrame(fit));
+try{speechSynthesis.getVoices()}catch(e){}
+render();
+</script>
+</body>
+</html>
