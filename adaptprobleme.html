@@ -144,6 +144,10 @@ label.lab{font-weight:700;display:block;margin-bottom:6px}
 .tile .it{cursor:pointer}
 .tile.has{border-color:var(--c2);background:var(--hi-soft)}
 .tile.has::after{content:"✓";position:absolute;top:4px;right:6px;background:var(--c2);color:#fff;border-radius:99px;width:26px;height:26px;display:grid;place-items:center;font-weight:700}
+.prop{display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:var(--hi-soft);border-radius:14px;padding:10px;margin:0 0 10px}
+.prop .tile{width:112px}
+.tile.off{opacity:.4}
+.ptip{color:var(--muted);font-size:15px;flex:1;min-width:200px}
 .webbar{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
 .empty{color:var(--muted);margin:6px 0;grid-column:1/-1}
 .credit{color:var(--muted);font-size:13px;margin:10px 0 0}
@@ -163,7 +167,7 @@ label.lab{font-weight:700;display:block;margin-bottom:6px}
   <header class="top">
     <div class="brand">
       <svg viewBox="0 0 104 60" aria-hidden="true"><rect x="4" y="12" width="34" height="34" rx="5" class="zs" style="stroke-width:6"/><polygon class="inkf" points="42,22 62,22 62,14 76,29 62,44 62,36 42,36"/><rect x="72" y="12" width="28" height="34" rx="5" class="zs" style="stroke-width:6;display:none"/><rect x="78" y="12" width="22" height="34" rx="5" class="zs" style="stroke-width:6"/></svg>
-      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 4</small>
+      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 5</small>
     </div>
     <nav class="steps" id="steps" aria-label="Étapes"></nav>
     <button class="btn" id="reset">Nouveau problème</button>
@@ -171,8 +175,9 @@ label.lab{font-weight:700;display:block;margin-bottom:6px}
   <main id="main"></main>
 </div>
 <div class="modal" id="picker" hidden role="dialog" aria-modal="true" aria-labelledby="ptitle"><div class="mbox">
- <div class="mhead"><h2 id="ptitle">Touche les objets du problème</h2><button class="btn primary" data-act="pdone">Terminé</button></div>
- <input id="psearch" type="search" placeholder="🔎 Cherche : vache, pomme, bus, crayon…" autocomplete="off">
+ <div class="mhead"><h2 id="ptitle">Touche les objets du problème</h2><button class="btn primary" data-act="pdone">OK</button></div>
+ <input id="psearch" type="search" placeholder="🔎 Écris un ou plusieurs noms : vache, cochon, lion…" autocomplete="off">
+ <div id="pprop"></div>
  <div class="cats" id="pcats"></div><div class="pgrid" id="pgrid"></div><div id="pweb"></div>
  <p class="credit">Images d'Internet : pictogrammes ARASAAC (auteur Sergio Palao, Gouvernement d'Aragon), licence CC BY-NC-SA.</p>
 </div></div>
@@ -237,7 +242,7 @@ const DBRAW={
 "Vêtements":"👕 tee-shirt|t-shirt,maillot,vêtement;👖 pantalon|jean;👗 robe;🧥 manteau|veste;🧦 chaussette;👟 basket|chaussure;👞 chaussure;👢 botte;🧢 casquette;🎩 chapeau;🧤 gant;🧣 écharpe;👓 lunettes",
 "Jetons et formes":"⚪ jeton blanc|jeton,point;🔴 jeton rouge|jeton;🔵 jeton bleu|jeton;🟢 jeton vert|jeton;🟡 jeton jaune|jeton;🟥 carré rouge|carré;🟦 carré bleu|carré;❤️ cœur|coeur;🔺 triangle"
 };
-const STOP=["de","du","des","la","le","les","un","une","d","l","a","au","aux","en"];
+const STOP=["de","du","des","la","le","les","un","une","d","l","a","au","aux","en","et","ou","avec"];
 const DB=[];const CATS=Object.keys(DBRAW);
 CATS.forEach(c=>DBRAW[c].split(";").forEach(e=>{const sp=e.indexOf(" "),icon=e.slice(0,sp),rest=e.slice(sp+1).split("|"),name=rest[0],syn=rest[1]?rest[1].split(","):[];
  const keys=[];[name,...syn].forEach(w=>{const full=norm(w);if(full)keys.push(full);w.split(/[\s'’\-]+/).map(norm).filter(t=>t.length>1&&!STOP.includes(t)).forEach(t=>keys.push(t))});
@@ -448,7 +453,7 @@ document.addEventListener("keydown",e=>{
  if(e.key==="Enter"&&e.target.id==="newobj"){e.preventDefault();addObj();return}
  if(e.key==="Enter"&&e.target.dataset&&e.target.dataset.in!==undefined){e.preventDefault();e.target.blur();return}
  if(e.key==="Escape"&&P.open){closePick();return}
- if(e.key==="Enter"&&e.target.id==="psearch"){e.preventDefault();webSearch();return}
+ if(e.key==="Enter"&&e.target.id==="psearch"){e.preventDefault();closePick(true);return}
 if((e.key==="Enter"||e.key===" ")&&e.target.matches&&e.target.matches("#stage .zone")&&S.stage!=="num"){e.preventDefault();tapZone(e.target.dataset.z)}});
 document.addEventListener("click",e=>{
  const t=e.target.closest("button");if(!t)return;const d=t.dataset;
@@ -457,7 +462,8 @@ document.addEventListener("click",e=>{
  if(d.cat!==undefined){P.cat=d.cat;P.q="";$("#psearch").value="";renderPick();return}
  if(d.repl!==undefined){openPick("repl",+d.repl);return}
  if(d.act==="openpick"){openPick("add");return}
- if(d.act==="pdone"){closePick();return}
+ if(d.act==="pdone"){closePick(true);return}
+ if(d.prop!==undefined){const i=+d.prop;P.skip[i]=!P.skip[i];renderPick();return}
  if(d.act==="web"){webSearch();return}
  if(d.act==="useword"){const q=P.q.trim();if(q)pickTile("",q);return}
  if(d.pick){if(S.schema!==d.pick){S.schema=d.pick;S.zones={};S.signs={};S.qset={};S.qmode=false;S.n=DEFN[SCH[d.pick].kind];hist=[]}S.screen="nouns";save();render();return}
@@ -492,24 +498,48 @@ document.addEventListener("input",e=>{
 });
 addEventListener("resize",()=>requestAnimationFrame(fit));
 /* ---------- Choix des objets ---------- */
-const P={open:false,mode:"add",idx:-1,cat:CATS[0],q:"",web:null,webQ:"",webMsg:"",timer:0};
-function openPick(mode,idx){P.open=true;P.mode=mode;P.idx=idx;P.q="";P.web=null;P.webMsg="";const m=$("#picker");m.hidden=false;$("#psearch").value="";
+const P={open:false,mode:"add",idx:-1,cat:CATS[0],q:"",web:null,webQ:"",webMsg:"",timer:0,props:[],over:{},skip:{},best:{}};
+function bestMatch(w,prefix){const n=norm(w);if(n.length<2)return null;
+ return DB.find(e=>norm(e.name)===n)||DB.find(e=>e.keys.includes(n))||(prefix&&n.length>=3?DB.find(e=>e.keys.some(k=>k.startsWith(n))):null)}
+function parseMulti(q){const out=[];
+ q.split(/[,;\n]+/).forEach(seg=>{seg=seg.trim();if(!seg)return;
+  if(/\s/.test(seg)){const whole=bestMatch(seg,false);if(whole){out.push({w:seg,e:whole});return}
+   seg.split(/\s+/).forEach(w=>{const n=norm(w);if(n.length<2||STOP.includes(n))return;out.push({w,e:bestMatch(w,true)})})}
+  else{const n=norm(seg);if(n.length<2||STOP.includes(n))return;out.push({w:seg,e:bestMatch(seg,true)})}});
+ return out}
+function propsList(){return P.props.map((p,i)=>{const o=P.over[i];if(o)return{icon:o.icon,name:o.name};if(p.e)return{icon:p.e.icon,name:p.e.name};
+  const b=P.best[norm(p.w)];return{icon:b?"img:"+b:null,name:p.w,wait:b===undefined}})}
+async function fetchBest(w){const k=norm(w);if(k in P.best)return;P.best[k]=undefined;
+ try{const r=await fetch("https://api.arasaac.org/api/pictograms/fr/search/"+encodeURIComponent(w.toLowerCase()));const js=r.ok?await r.json():[];
+  P.best[k]=Array.isArray(js)&&js.length?`https://static.arasaac.org/pictograms/${js[0]._id}/${js[0]._id}_300.png`:null}catch(e){P.best[k]=null}
+ if(P.open)renderPick()}
+function openPick(mode,idx){P.open=true;P.props=[];P.over={};P.skip={};P.mode=mode;P.idx=idx;P.q="";P.web=null;P.webMsg="";const m=$("#picker");m.hidden=false;$("#psearch").value="";
  $("#ptitle").textContent=mode==="repl"?"Choisis une nouvelle image":"Touche les objets du problème";renderPick();setTimeout(()=>$("#psearch").focus(),50)}
-function closePick(){P.open=false;$("#picker").hidden=true;clearTimeout(P.timer);if(S.screen==="nouns")renderNouns();else if(S.screen==="ws"&&$("#pal")){$("#pal").innerHTML=paletteHTML()}renderSteps()}
+function closePick(ok){
+ if(ok&&P.mode==="add"){propsList().forEach((p,i)=>{if(P.skip[i]||S.nouns.length>=MAXN)return;
+  if(p.icon?S.nouns.some(n=>n.icon===p.icon):S.nouns.some(n=>!n.icon&&n.name===p.name))return;
+  S.nouns.push({name:p.name,icon:p.icon,auto:false});S.sel=S.nouns.length-1});save()}
+ P.open=false;$("#picker").hidden=true;clearTimeout(P.timer);if(S.screen==="nouns")renderNouns();else if(S.screen==="ws"&&$("#pal")){$("#pal").innerHTML=paletteHTML()}renderSteps()}
 function tileHTML(icon,name){const has=P.mode==="add"&&icon&&S.nouns.some(n=>n.icon===icon);
  return`<button class="tile${has?" has":""}" data-tile="${esc(icon)}" data-name="${esc(name)}">${icoHTML(icon)}<span>${esc(name)}</span></button>`}
 function renderPick(fromTyping){
  const q=P.q.trim();$("#pcats").innerHTML=CATS.map(c=>`<button class="chip txt" data-cat="${esc(c)}" aria-pressed="${!q&&P.cat===c}">${DB.find(e=>e.cat===c).icon} ${c}</button>`).join("");
- let list=q?searchLocal(q):DB.filter(e=>e.cat===P.cat);
+ let list;
+ if(q&&P.mode==="add"){const old=JSON.stringify(P.props.map(p=>p.w));P.props=parseMulti(q);if(JSON.stringify(P.props.map(p=>p.w))!==old){P.over={};P.skip={}}
+  const seen=new Set();list=[];P.props.forEach(p=>searchLocal(p.w).forEach(e=>{if(!seen.has(e.icon)){seen.add(e.icon);list.push(e)}}));
+  P.props.forEach(p=>{if(!p.e&&norm(p.w).length>=3)fetchBest(p.w)});
+ }else{P.props=[];list=q?searchLocal(q):DB.filter(e=>e.cat===P.cat)}
+ const pl=propsList();
+ $("#pprop").innerHTML=pl.length?`<div class="prop"><b>Je vais ajouter :</b>${pl.map((p,i)=>`<button class="tile${P.skip[i]?" off":" has"}" data-prop="${i}" aria-pressed="${!P.skip[i]}">${p.wait?`<span class="it word" style="--c:var(--line)">…</span>`:p.icon?icoHTML(p.icon):`<span class="it word" style="--c:var(--c0)">Aa</span>`}<span>${esc(p.name)}</span></button>`).join("")}<span class="ptip">Touche un dessin pour le retirer. Touche un dessin plus bas pour le remplacer. Puis appuie sur OK.</span></div>`:"";
  let h=list.map(e=>tileHTML(e.icon,e.name)).join("");
  if(q&&!list.length)h=`<p class="empty">« ${esc(q)} » n'est pas dans la banque d'images.</p>`;
  $("#pgrid").innerHTML=h;
  let w="";
- if(q){w+=`<div class="webbar"><button class="btn" data-act="web">🌐 Chercher « ${esc(q)} » sur Internet</button><button class="btn" data-act="useword">Écrire seulement le mot « ${esc(q)} »</button></div>`;
+ if(q&&P.props.length<=1){w+=`<div class="webbar"><button class="btn" data-act="web">🌐 Chercher « ${esc(q)} » sur Internet</button><button class="btn" data-act="useword">Écrire seulement le mot « ${esc(q)} »</button></div>`;
   if(P.web&&P.webQ===q)w+=P.web.length?`<div class="pgrid">${P.web.map(u=>tileHTML("img:"+u,q)).join("")}</div>`:"";
   if(P.webMsg&&P.webQ===q)w+=`<p class="empty">${P.webMsg}</p>`}
  $("#pweb").innerHTML=w;
- if(fromTyping){clearTimeout(P.timer);if(q.length>=3&&list.length<2&&P.webQ!==q)P.timer=setTimeout(webSearch,700)}
+ if(fromTyping){clearTimeout(P.timer);if(P.props.length<=1&&q.length>=3&&list.length<2&&P.webQ!==q)P.timer=setTimeout(webSearch,700)}
 }
 async function webSearch(){const q=P.q.trim();if(!q)return;clearTimeout(P.timer);P.webQ=q;P.web=null;P.webMsg="Recherche sur Internet…";renderPick();
  try{const r=await fetch("https://api.arasaac.org/api/pictograms/fr/search/"+encodeURIComponent(q.toLowerCase()));
@@ -520,6 +550,10 @@ async function webSearch(){const q=P.q.trim();if(!q)return;clearTimeout(P.timer)
  }catch(e){if(P.webQ!==q)return;P.web=[];P.webMsg="Impossible de joindre Internet. Vérifie la connexion."}
  renderPick()}
 function pickTile(icon,name){icon=icon||null;
+ if(P.mode==="add"&&P.props.length&&icon){const e=DB.find(x=>x.icon===icon);let i=-1;
+  if(e)i=P.props.findIndex(p=>{const n=norm(p.w);return e.keys.some(k=>k.startsWith(n)||(n.length>=4&&n.startsWith(k)))});
+  else if(isImg(icon))i=P.props.findIndex(p=>p.w===name);
+  if(i>=0){P.over[i]={icon,name};P.skip[i]=false;renderPick();return}}
  if(P.mode==="repl"){const n=S.nouns[P.idx];if(n){const old=n.icon;n.icon=icon;const oldName=(DB.find(e=>e.icon===old)||{}).name;if(!n.name.trim()||n.name===oldName||isImg(old))n.name=name}save();closePick();return}
  const at=icon?S.nouns.findIndex(n=>n.icon===icon):S.nouns.findIndex(n=>!n.icon&&n.name===name);
  if(at>=0){const used=Object.values(S.zones).some(l=>l.includes(at));if(!used){removeNoun(at);save()}}
