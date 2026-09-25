@@ -167,7 +167,7 @@ label.lab{font-weight:700;display:block;margin-bottom:6px}
   <header class="top">
     <div class="brand">
       <svg viewBox="0 0 104 60" aria-hidden="true"><rect x="4" y="12" width="34" height="34" rx="5" class="zs" style="stroke-width:6"/><polygon class="inkf" points="42,22 62,22 62,14 76,29 62,44 62,36 42,36"/><rect x="72" y="12" width="28" height="34" rx="5" class="zs" style="stroke-width:6;display:none"/><rect x="78" y="12" width="22" height="34" rx="5" class="zs" style="stroke-width:6"/></svg>
-      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 5</small>
+      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 6</small>
     </div>
     <nav class="steps" id="steps" aria-label="Étapes"></nav>
     <button class="btn" id="reset">Nouveau problème</button>
@@ -330,8 +330,7 @@ function renderChoose(){
 function renderNouns(){
  const k=SCH[S.schema];
  $("#main").innerHTML=`<div class="wrap two"><div class="recap">${schemaSVG(S.schema,S.n,true)}<strong>${k.title}</strong><p>${k.desc}</p></div>
- <div><label class="lab" for="en">L'énoncé du problème (facultatif)</label><textarea id="en" placeholder="Recopie ou écris le problème ici.">${esc(S.enonce)}</textarea>
- <h2>De quoi parle le problème ?</h2><p class="lead">Choisis ce que l'on compte : des animaux, des fruits, des personnes, de l'argent…</p>
+ <div><h2 style="margin-top:0">De quoi parle le problème ?</h2><p class="lead">Choisis ce que l'on compte : des animaux, des fruits, des personnes, de l'argent…</p>
  <div id="nl"></div>${S.nouns.length<MAXN?`<button class="btn big" data-act="openpick">+ Choisir des objets ou des animaux</button>`:""}
  <p class="msg" id="msg"></p><button class="btn primary" data-go="ws">Placer les objets</button></div></div>`;
  $("#nl").innerHTML=S.nouns.map((n,i)=>`<div class="noun" style="--c:${col(i)}"><div class="nr"><button class="nico" data-repl="${i}" aria-label="Changer l'image">${n.icon?icoHTML(n.icon):`<span class="it word" style="--c:${col(i)}">Aa</span>`}</button><input value="${esc(n.name)}" aria-label="Nom de l'objet ${i+1}" data-in="${i}"><button class="btn" data-repl="${i}">Changer l'image</button><button class="btn" data-del="${i}" aria-label="Supprimer">✕</button></div></div>`).join("");
@@ -389,7 +388,6 @@ function renderWS(anim){
  const k=SCH[S.schema];
  $("#main").innerHTML=`<div class="ws wrap"><div class="wsbar"><div class="wtitle">${k.title}<button class="speak" data-say="${S.schema}" aria-label="Écouter">🔊</button></div>
  <div class="seg" role="group" aria-label="Représentation">${[["img","Images"],["cube","Cubes"],["num","Nombres"]].map(([v,l])=>`<button data-stage="${v}" aria-pressed="${S.stage===v}">${l}</button>`).join("")}</div></div>
- ${S.enonce.trim()?`<div class="enonce"><div>${esc(S.enonce)}</div><button class="speak" data-sayen aria-label="Écouter l'énoncé">🔊</button></div>`:""}
  <div class="stagewrap"><div class="stage${anim?" anim":""}" id="stage">${stageHTML()}</div></div>
  <div class="tools" id="tools">${toolsHTML()}</div>
  ${S.stage==="num"?`<div class="calc"><label>Mon calcul <input id="calc" value="${esc(S.calc)}" placeholder="ex. 12 + 5 = 17" inputmode="text"></label><label>Ma réponse <input id="rep" value="${esc(S.rep)}" placeholder="Il y a…"></label></div>`
