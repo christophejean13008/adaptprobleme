@@ -160,6 +160,11 @@ label.lab{font-weight:700;display:block;margin-bottom:6px}
 .kwords{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:4px}
 .klab{font-weight:700;width:100%}
 .kw{background:var(--hi-soft);border:2px solid var(--hi);border-radius:99px;padding:2px 12px;font-size:17px;font-weight:700}
+.stepseg{display:inline-flex;align-items:center;gap:4px;font-weight:700;border:2px solid var(--line);border-radius:12px;padding:3px 3px 3px 10px;background:var(--paper)}
+.stepseg button{border:0;background:var(--bg);border-radius:9px;min-width:44px;height:40px;font-weight:700;font-size:20px}
+.stepseg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.ten{display:grid;grid-template-columns:repeat(5,auto);gap:1px;padding:2px;border:2px dashed var(--muted);border-radius:6px}
+.zone.arrow .ten{border-color:var(--paper)}
 .calc{display:flex;gap:12px;flex-wrap:wrap;background:var(--ui);border-radius:14px;padding:10px 12px;align-items:center}
 .calc label{font-weight:700;display:flex;align-items:center;gap:8px;flex:1;min-width:240px}
 .calc input{flex:1;min-width:0;border:2px solid var(--line);border-radius:10px;padding:8px 12px;font-size:24px;background:var(--paper)}
@@ -176,7 +181,7 @@ label.lab{font-weight:700;display:block;margin-bottom:6px}
   <header class="top">
     <div class="brand">
       <svg viewBox="0 0 104 60" aria-hidden="true"><rect x="4" y="12" width="34" height="34" rx="5" class="zs" style="stroke-width:6"/><polygon class="inkf" points="42,22 62,22 62,14 76,29 62,44 62,36 42,36"/><rect x="72" y="12" width="28" height="34" rx="5" class="zs" style="stroke-width:6;display:none"/><rect x="78" y="12" width="22" height="34" rx="5" class="zs" style="stroke-width:6"/></svg>
-      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 9</small>
+      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 10</small>
     </div>
     <nav class="steps" id="steps" aria-label="Étapes"></nav>
     <button class="btn" id="reset">Nouveau problème</button>
@@ -388,7 +393,9 @@ function itemHTML(n,i,d){const o=S.nouns[n];if(!o)return"";
 function itemsHTML(list){
  if(S.stage==="cube"){const srt=list.map((n,i)=>[n,i]).sort((a,b)=>a[0]-b[0]);const c=srt.map(([n,i],j)=>itemHTML(n,i,Math.min(j,40)));
   if(S.group10){let o="";for(let b=0;b<c.length;b+=10)o+=`<span class="bar">${c.slice(b,b+10).join("")}</span>`;return o}return c.join("")}
- return list.map((n,i)=>itemHTML(n,i,Math.min(i,40))).join("");
+ const it=list.map((n,i)=>itemHTML(n,i,Math.min(i,40)));
+ if(S.group10&&list.length>10){let o="";for(let b=0;b<it.length;b+=10)o+=`<span class="ten">${it.slice(b,b+10).join("")}</span>`;return o}
+ return it.join("");
 }
 function zoneHTML(z){
  const list=S.zones[z.id]||[],m=Math.min(z.w,z.h);
@@ -407,13 +414,14 @@ function stageHTML(){
 function paletteHTML(){
  return S.nouns.map((o,i)=>{const ic=S.stage==="cube"?`<span class="it cube" style="--c:${col(i)}"></span>`:(o.icon?icoHTML(o.icon):`<span class="it word" style="--c:${col(i)}">${esc(o.name.slice(0,3))}</span>`);
   return`<button class="tok" data-tok="${i}" aria-pressed="${S.sel===i}">${ic}${esc(o.name)}</button>`}).join("")+
+  `<span class="stepseg" role="group" aria-label="Nombre d'objets posés à chaque fois">Poser :${[1,5,10].map(v=>`<button data-step="${v}" aria-pressed="${(S.step||1)===v}">${v}</button>`).join("")}</span>`+
   (S.nouns.length<MAXN?`<button class="btn" data-act="openpick">+ Ajouter un objet</button>`:"")+
   `<span class="hint">${S.qmode?"Touche une case pour y mettre ou enlever le point d'interrogation.":"Fais glisser un objet dans une case, ou touche un objet puis une case. Glisse un objet hors des cases pour l'enlever."}</span>`;
 }
 function toolsHTML(){
  const k=SCH[S.schema];let h=`<button class="btn" data-act="undo">↶ Annuler</button><button class="btn" data-act="clear">Tout effacer</button>`;
  if(S.stage!=="num")h+=`<button class="btn${S.showNums?" on":""}" data-act="nums" aria-pressed="${S.showNums}">Voir combien</button>`;
- if(S.stage==="cube")h+=`<button class="btn${S.group10?" on":""}" data-act="g10" aria-pressed="${S.group10}">Ranger par 10</button>`;
+ if(S.stage!=="num")h+=`<button class="btn${S.group10?" on":""}" data-act="g10" aria-pressed="${S.group10}">Ranger par 10</button>`;
  if(RANGE[k.kind])h+=`<span class="stepper">${STEPLAB[k.kind]} <button data-act="nminus" aria-label="Enlever une case">−</button><b>${S.n}</b><button data-act="nplus" aria-label="Ajouter une case">+</button></span>`;
  if(S.stage!=="num")h+=`<button class="btn${S.qmode?" on":""}" data-act="qmode" aria-pressed="${S.qmode}">Placer le ?</button>`;
  if(k.q==="pareil"&&S.stage!=="num")h+=`<button class="btn" data-act="copy">Recopier la part dans les autres</button>`;
@@ -432,8 +440,8 @@ function renderWS(anim){
  :`<div class="palette" id="pal">${paletteHTML()}</div>`}</div>`;
  requestAnimationFrame(fit);
 }
-function renderStage(newZone){const st=$("#stage");if(!st)return;st.classList.remove("anim");st.innerHTML=stageHTML();$("#tools").innerHTML=toolsHTML();
- if(newZone){const its=st.querySelectorAll(`.zone[data-z="${newZone}"] .it`);const l=S.stage==="cube"?[...its].find(e=>+e.dataset.i===S.zones[newZone].length-1):its[its.length-1];if(l)l.classList.add("new")}
+function renderStage(newZone,k){k=k||1;const st=$("#stage");if(!st)return;st.classList.remove("anim");st.innerHTML=stageHTML();$("#tools").innerHTML=toolsHTML();
+ if(newZone&&S.zones[newZone]){const L=S.zones[newZone].length;st.querySelectorAll(`.zone[data-z="${newZone}"] .it`).forEach(e=>{if(+e.dataset.i>=L-k)e.classList.add("new")})}
  fit()}
 function sizeStage(){const w=document.querySelector(".stagewrap"),st=$("#stage");if(!w||!st)return;
  const W=w.clientWidth,H=w.clientHeight||W*.62,sw=Math.max(200,Math.min(W,H*1000/620));
@@ -441,8 +449,9 @@ function sizeStage(){const w=document.querySelector(".stagewrap"),st=$("#stage")
 function fit(){sizeStage();
  document.querySelectorAll("#stage .items").forEach(box=>{
   const n=box.querySelectorAll(".it").length;if(!n)return;const W=box.clientWidth,H=box.clientHeight;let s;
-  const bars=box.querySelectorAll(".bar").length;
+  const bars=box.querySelectorAll(".bar").length,tens=box.querySelectorAll(".ten").length;
   if(bars)s=Math.min(H/10.8,W/(bars*1.3),44);
+  else if(tens){const f=box.querySelector(".word")?2.6:1;s=Math.sqrt(W*H/(tens*13*f))*.86;s=Math.min(s,W/5.8,H/2.6,60)}
   else{const f=box.querySelector(".word")?2.6:1;s=Math.sqrt(W*H/(n*f))*.7;s=Math.min(s,Math.min(W,H)*.8,72)}
   box.style.setProperty("--s",Math.max(9,Math.floor(s))+"px");
  });
@@ -462,7 +471,8 @@ function changeN(d){const k=SCH[S.schema].kind;if(!RANGE[k])return;const [mn,mx]
  S.n=M;save();renderStage()}
 function addObj(){const inp=$("#newobj");if(!inp)return;const v=inp.value.trim();if(!v||S.nouns.length>=8)return;
  S.nouns.push({name:v,icon:suggest(v)[0]||null,auto:true});S.sel=S.nouns.length-1;save();$("#pal").innerHTML=paletteHTML();const ni=$("#newobj");if(ni)ni.focus()}
-function addTo(zid){if(!S.nouns[S.sel])return;push();(S.zones[zid]=S.zones[zid]||[]).push(S.sel);save();renderStage(zid)}
+function addTo(zid){if(!S.nouns[S.sel])return;push();const l=(S.zones[zid]=S.zones[zid]||[]);const k=S.step||1;
+ if(l.length+k>200){alert("200 objets au maximum dans une case.");return}for(let i=0;i<k;i++)l.push(S.sel);save();renderStage(zid,k)}
 let drag=null;
 function zoneAt(x,y){const e=document.elementFromPoint(x,y);return e?e.closest("#stage .zone"):null}
 function hl(z){document.querySelectorAll(".zone.over").forEach(e=>e!==z&&e.classList.remove("over"));if(z)z.classList.add("over")}
@@ -503,6 +513,7 @@ document.addEventListener("click",e=>{
  if(d.cat!==undefined){P.cat=d.cat;P.q="";$("#psearch").value="";renderPick();return}
  if(d.repl!==undefined){openPick("repl",+d.repl);return}
  if(d.act==="openpick"){openPick("add");return}
+ if(d.step){S.step=+d.step;save();$("#pal").innerHTML=paletteHTML();return}
  if(d.act==="pdone"){closePick(true);return}
  if(d.prop!==undefined){const i=+d.prop;P.skip[i]=!P.skip[i];renderPick();return}
  if(d.act==="web"){webSearch();return}
