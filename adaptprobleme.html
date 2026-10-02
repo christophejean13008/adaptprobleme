@@ -172,7 +172,8 @@ label.lab{font-weight:700;display:block;margin-bottom:6px}
 .b10 .t,.mini.t{--sh:#9E1428;width:var(--k);height:calc(var(--k)*10);background:repeating-linear-gradient(to bottom,var(--cd) 0,var(--cd) calc(var(--k) - 1px),#1b1b1b calc(var(--k) - 1px),#1b1b1b var(--k))}
 .b10 .h,.mini.h{--sh:#1C6B3E;width:calc(var(--k)*10);height:calc(var(--k)*10);background:repeating-linear-gradient(to bottom,transparent 0,transparent calc(var(--k) - 1px),rgba(0,0,0,.6) calc(var(--k) - 1px),rgba(0,0,0,.6) var(--k)),repeating-linear-gradient(to right,var(--cc) 0,var(--cc) calc(var(--k) - 1px),rgba(0,0,0,.6) calc(var(--k) - 1px),rgba(0,0,0,.6) var(--k))}
 .b10 .u,.mini.u{--sh:#163F9E;width:var(--k);height:var(--k);background:var(--cu)}
-.b10 .uw{display:grid;grid-template-columns:repeat(3,var(--k));gap:calc(var(--k)*.3);align-self:center}
+.b10 .uw{display:grid;grid-template-columns:repeat(3,var(--k));grid-template-rows:repeat(3,var(--k));gap:calc(var(--k)*.45);padding:calc(var(--k)*.45) calc(var(--k)*.55) calc(var(--k)*.35) calc(var(--k)*.35);align-self:center;background:#fff;border:max(2px,calc(var(--k)*.12)) solid #1b1b1b;border-radius:calc(var(--k)*.6)}
+.b10 .ue{width:var(--k);height:var(--k)}
 .legend{gap:22px}.lg{display:flex;align-items:center;gap:10px;font-weight:700;font-size:19px}
 .mini{--k:10px;display:inline-block}.mini.t{--k:5px}.mini.h{--k:4px}.mini.u{--k:18px}
 .anim .b10>span,.anim .uw>span{animation:pop .45s cubic-bezier(.3,1.5,.5,1) both}
@@ -192,7 +193,7 @@ label.lab{font-weight:700;display:block;margin-bottom:6px}
   <header class="top">
     <div class="brand">
       <svg viewBox="0 0 104 60" aria-hidden="true"><rect x="4" y="12" width="34" height="34" rx="5" class="zs" style="stroke-width:6"/><polygon class="inkf" points="42,22 62,22 62,14 76,29 62,44 62,36 42,36"/><rect x="72" y="12" width="28" height="34" rx="5" class="zs" style="stroke-width:6;display:none"/><rect x="78" y="12" width="22" height="34" rx="5" class="zs" style="stroke-width:6"/></svg>
-      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 12</small>
+      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 13</small>
     </div>
     <nav class="steps" id="steps" aria-label="Étapes"></nav>
     <button class="btn" id="reset">Nouveau problème</button>
@@ -357,6 +358,7 @@ const KINDS={
  star:{title:"Partage",desc:"Des parts ou des groupes pareils : on partage, on distribue, on fait des paquets.",
   keys:["chaque","chacun","par","partager","distribuer","répartir","le même nombre","autant","paquets de","boîtes de","rangées de","groupes de","… fois"]}
 };
+const DIE=[null,[4],[2,6],[2,4,6],[0,2,6,8],[0,2,4,6,8],[0,2,3,5,6,8],[0,2,3,4,5,6,8],[0,1,2,3,5,6,7,8],[0,1,2,3,4,5,6,7,8]].map(a=>a&&Array.from({length:9},(_,i)=>a.includes(i)));
 const KFIRST={trans:"t-fin",comp:"c-tout",star:"s-tout",cmp:"k-ecart"};
 function renderCat(){
  $("#main").innerHTML=`<div class="wrap"><h1>De quel type est ton problème ?</h1><p class="lead">Lis le problème et cherche les mots indices. Touche 🔊 pour écouter.</p>
@@ -417,7 +419,7 @@ function zoneHTML(z){
  if(S.stage==="cdu"){const n=list.length;
   if(!n&&z.q)inner='<div class="qm">?</div>';
   else{const c=Math.floor(n/100),d=Math.floor(n%100/10),u=n%10;
-   inner=`<div class="b10" data-c="${c}" data-d="${d}" data-u="${u}">${'<span class="h"></span>'.repeat(c)}${'<span class="t"></span>'.repeat(d)}${u?`<span class="uw">${'<span class="u"></span>'.repeat(u)}</span>`:""}</div>`}
+   inner=`<div class="b10" data-c="${c}" data-d="${d}" data-u="${u}">${'<span class="h"></span>'.repeat(c)}${'<span class="t"></span>'.repeat(d)}${u?`<span class="uw" aria-label="${u} unités">${DIE[u].map(on=>on?'<span class="u"></span>':'<span class="ue"></span>').join("")}</span>`:""}</div>`}
   if(S.showNums&&n)inner+=`<span class="badge">${n}</span>`}
  else if(S.stage==="num"){let t;if(!list.length&&z.q)t="?";else t=String(list.length);if(z.arrow&&t!=="?")t=(S.signs[z.id]==="-"?"− ":"+ ")+t;inner=`<div class="bignum${t==="?"?" q":""}">${t}</div>`}
  else{if(z.q)inner+='<div class="qm">?</div>';inner+=`<div class="items">${itemsHTML(list)}</div>`;if(S.showNums&&list.length)inner+=`<span class="badge">${list.length}</span>`}
@@ -467,7 +469,7 @@ function sizeStage(){const w=document.querySelector(".stagewrap"),st=$("#stage")
  st.style.width=sw+"px";st.style.height=(sw*.62)+"px";st.style.setProperty("--u",(sw/100)+"px")}
 function fit(){sizeStage();
  document.querySelectorAll("#stage .b10").forEach(b=>{const z=b.parentNode,W=z.clientWidth*.86,H=z.clientHeight*.84,c=+b.dataset.c,d=+b.dataset.d,u=+b.dataset.u;
-  const w=c*10.9+d*1.55+(u?Math.min(u,3)*1.3+.4:0)+.4;let s=Math.min(H/10.6,W/w,32);b._k=s});
+  const w=c*10.9+d*1.55+(u?3*1.45+1.4:0)+.4;let s=Math.min(H/10.6,W/w,32);b._k=s});
  {const bs=[...document.querySelectorAll("#stage .b10")];const m=Math.min(...bs.map(b=>b._k));bs.forEach(b=>b.style.setProperty("--k",Math.max(3,Math.floor(m*10)/10)+"px"))}
  document.querySelectorAll("#stage .items").forEach(box=>{
   const n=box.querySelectorAll(".it").length;if(!n)return;const W=box.clientWidth,H=box.clientHeight;let s;
