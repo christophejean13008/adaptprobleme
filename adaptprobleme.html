@@ -173,6 +173,7 @@ a.btn{text-decoration:none;display:inline-block}
 .ph{display:flex;gap:10px;align-items:flex-start}.ph svg{width:96px;flex:none;height:auto}.ph strong{display:block;font-size:18px;line-height:1.25}
 .pic{font-size:40px;line-height:1;flex:none;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
 .pex{color:var(--muted);font-style:italic;font-size:15px;margin-top:4px}.pex .speak{font-size:15px;padding:0 6px;font-style:normal}
+.btn.back{margin:2px 0 10px;font-size:16px}.wsbar .btn.back{margin:0}
 .prow{display:flex;flex-direction:column;align-items:flex-start;gap:4px}.pcount{font-size:13px;color:var(--muted)}
 .mat .mbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.mat .mbar h1{flex:1;margin:0;font-size:26px}
 .mtell{display:flex;gap:10px;align-items:flex-start;background:var(--ui);border-radius:12px;padding:8px 12px;margin:8px 0}
@@ -258,7 +259,7 @@ a.btn{text-decoration:none;display:inline-block}
   <header class="top">
     <div class="brand">
       <svg viewBox="0 0 104 60" aria-hidden="true"><rect x="4" y="12" width="34" height="34" rx="5" class="zs" style="stroke-width:6"/><polygon class="inkf" points="42,22 62,22 62,14 76,29 62,44 62,36 42,36"/><rect x="72" y="12" width="28" height="34" rx="5" class="zs" style="stroke-width:6;display:none"/><rect x="78" y="12" width="22" height="34" rx="5" class="zs" style="stroke-width:6"/></svg>
-      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 22</small>
+      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 2.0</small>
     </div>
     <nav class="steps" id="steps" aria-label="Étapes"></nav>
     <button class="btn" id="reset">Nouveau problème</button>
@@ -463,8 +464,10 @@ function render(){renderSteps();const m=$("#main");m.scrollTop=0;
  if(S.screen==="nouns"&&S.schema)renderNouns();else if(S.screen==="ws"&&S.schema&&validNouns())renderWS();else if(S.screen==="choose"&&S.cat)renderChoose();else if(S.screen==="level"&&S.level)renderLevel();else if(S.screen==="mat"&&MAT.sc)renderMat();else{S.screen="cat";renderSteps();renderCat()}}
 
 /* ---------- Écran 1 ---------- */
+function backBtn(){const t={choose:["cat","Le type"],nouns:S.prog&&S.level&&!isMat(S.level)?["level","Progression "+S.level]:["choose","Le schéma"],ws:["nouns","Les objets"]}[S.screen];
+ return t?`<button class="btn back" data-go="${t[0]}">← Retour : ${t[1]}</button>`:""}
 function renderChoose(){
- $("#main").innerHTML=`<div class="wrap"><h1>${KINDS[S.cat].title} : que cherche-t-on ?</h1><p class="lead">Choisis le schéma qui correspond à la question. Touche 🔊 pour écouter.</p>
+ $("#main").innerHTML=`<div class="wrap">${backBtn()}<h1>${KINDS[S.cat].title} : que cherche-t-on ?</h1><p class="lead">Choisis le schéma qui correspond à la question. Touche 🔊 pour écouter.</p>
  <div class="grid">${ORDER.filter(id=>SCH[id].kind===S.cat).map(id=>`<div class="card${S.schema===id?" chosen":""}"><button class="pick" data-pick="${id}">${schemaSVG(id)}<strong>${SCH[id].title}</strong></button>
  <div class="row"><p>${SCH[id].desc}</p><button class="speak" data-say="${id}" aria-label="Écouter">🔊</button></div></div>`).join("")}</div></div>`;
 }
@@ -472,7 +475,7 @@ function renderChoose(){
 /* ---------- Écran 2 ---------- */
 function renderNouns(){
  const k=SCH[S.schema];
- $("#main").innerHTML=`<div class="wrap two"><div class="recap">${schemaSVG(S.schema,S.n,true)}<strong>${k.title}</strong><p>${k.desc}</p></div>
+ $("#main").innerHTML=`<div class="wrap">${backBtn()}</div><div class="wrap two"><div class="recap">${schemaSVG(S.schema,S.n,true)}<strong>${k.title}</strong><p>${k.desc}</p></div>
  <div><h2 style="margin-top:0">De quoi parle le problème ?</h2><p class="lead">Choisis ce que l'on compte : des animaux, des fruits, des personnes, de l'argent…</p>
  <div id="nl"></div>${S.nouns.length<MAXN?`<button class="btn big" data-act="openpick">+ Choisir des objets ou des animaux</button>`:""}
  <p class="msg" id="msg"></p><button class="btn primary" data-go="ws">Placer les objets</button></div></div>`;
@@ -540,7 +543,7 @@ function toolsHTML(){
 }
 function renderWS(anim){
  const k=SCH[S.schema];
- $("#main").innerHTML=`<div class="ws wrap"><div class="wsbar"><div class="wtitle">${k.title}<button class="speak" data-say="${S.schema}" aria-label="Écouter">🔊</button></div>
+ $("#main").innerHTML=`<div class="ws wrap"><div class="wsbar">${backBtn()}<div class="wtitle">${k.title}<button class="speak" data-say="${S.schema}" aria-label="Écouter">🔊</button></div>
  <div class="seg" role="group" aria-label="Représentation">${[["img","Images"],["cube","Cubes"],["cdu","C D U"],["num","Nombres"]].map(([v,l])=>`<button data-stage="${v}" aria-pressed="${S.stage===v}">${l}</button>`).join("")}</div></div>
  <div class="stagewrap"><div class="stage${anim?" anim":""}" id="stage">${stageHTML()}</div></div>
  <div class="tools" id="tools">${toolsHTML()}</div>
