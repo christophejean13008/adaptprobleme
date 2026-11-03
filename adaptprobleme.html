@@ -161,6 +161,63 @@ label.lab{font-weight:700;display:block;margin-bottom:6px}
 .ttxt span{color:var(--muted);font-size:15px}
 .tbtn{display:flex;gap:8px;flex-wrap:wrap}
 a.btn{text-decoration:none;display:inline-block}
+.lvlsec{margin-top:22px;padding-top:14px;border-top:2px dashed var(--line)}
+.lvls{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:8px}
+.lgroup{background:var(--ui);border-radius:14px;padding:10px 12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.lgroup h3{margin:0 6px 0 0;font-size:16px;color:var(--muted);width:100%}
+.lbtn{font-size:26px;font-weight:700;min-width:86px;height:62px;border:3px solid var(--line);border-radius:14px;background:var(--paper)}
+.lbtn[aria-pressed="true"]{border-color:var(--ink);background:var(--hi-soft)}
+.prog{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.prog li{background:var(--ui);border-radius:14px;padding:12px 12px 12px 54px;display:flex;flex-direction:column;gap:10px;position:relative;justify-content:space-between}
+.pnum{position:absolute;top:12px;left:12px;width:32px;height:32px;border-radius:50%;background:var(--ink);color:var(--paper);display:grid;place-items:center;font-weight:700}
+.ph{display:flex;gap:10px;align-items:flex-start}.ph svg{width:96px;flex:none;height:auto}.ph strong{display:block;font-size:18px;line-height:1.25}
+.pic{font-size:40px;line-height:1;flex:none;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
+.pex{color:var(--muted);font-style:italic;font-size:15px;margin-top:4px}.pex .speak{font-size:15px;padding:0 6px;font-style:normal}
+.prog li>.btn{align-self:flex-start}
+.mat .mbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.mat .mbar h1{flex:1;margin:0;font-size:26px}
+.mtell{display:flex;gap:10px;align-items:flex-start;background:var(--ui);border-radius:12px;padding:8px 12px;margin:8px 0}
+#mtxt{flex:1}#mtxt p{margin:2px 0;font-size:18px;color:var(--muted)}#mtxt p.now{font-size:24px;font-weight:700;color:var(--ink)}
+.mstagewrap{display:flex;justify-content:center}
+.mstage{position:relative;background:#FFFDF7;border:3px solid var(--line);border-radius:18px;width:640px;height:360px;--u:6.4px;overflow:hidden;color:#000}
+.mc{position:absolute;display:flex;flex-direction:column;cursor:default}
+.mlab{text-align:center;font-weight:700;font-size:calc(var(--u)*3.2);line-height:1.2}
+.mitems{flex:1;display:flex;flex-wrap:wrap;align-content:center;align-items:center;justify-content:center;gap:calc(var(--ms,40px)*.12);padding:4%;overflow:hidden;min-height:0}
+.mi{font-size:var(--ms,40px);line-height:1;position:relative;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;animation:pop .3s ease-out}
+.mi.hl{background:#FFE48A;border-radius:30%;box-shadow:0 0 0 calc(var(--ms,40px)*.06) #E0A800}
+.mi b{position:absolute;top:-.25em;right:-.35em;background:#000;color:#fff;font:700 calc(var(--ms,40px)*.42)/1.35 Andika,sans-serif;border-radius:99px;padding:0 .35em}
+.k-box{background:#E9C89A;border:calc(var(--u)*.8) solid #8A5A2B;border-radius:calc(var(--u)*1.5)}
+.k-box .mitems{background:#FBF0DC;margin:4%;border-radius:calc(var(--u)*1)}
+.lid{position:absolute;top:-3%;left:-3%;right:-3%;bottom:-3%;background:repeating-linear-gradient(135deg,#C98F4E 0,#C98F4E calc(var(--u)*2),#BB8040 calc(var(--u)*2),#BB8040 calc(var(--u)*4));border:calc(var(--u)*.8) solid #8A5A2B;border-radius:calc(var(--u)*1.5);display:flex;align-items:center;justify-content:center;font:900 calc(var(--u)*14)/1 "Arial Black",Arial,sans-serif;color:rgba(255,255,255,.75)}
+.k-sac{background:#DCE7F7;border:calc(var(--u)*.6) solid #5C7FB8;border-radius:40% 40% 14% 14%}
+.k-sac.closed .lid{background:#9DB5DE;border-color:#5C7FB8;border-radius:40% 40% 14% 14%;font-size:calc(var(--u)*8)}
+.k-main{background:#FCE6D6;border:calc(var(--u)*.6) solid #C98A5E;border-radius:45% 45% 30% 30%}
+.k-out{border:calc(var(--u)*.5) dashed #9AA5AE;border-radius:calc(var(--u)*2)}
+.k-plate{background:#fff;border:calc(var(--u)*.6) solid #9AA5AE;border-radius:50%;cursor:pointer}
+.k-doll{background:#F3F6FA;border:calc(var(--u)*.5) solid #9AA5AE;border-radius:calc(var(--u)*2);cursor:pointer}
+.k-doll .mlab{font-size:calc(var(--u)*7);font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
+.k-row{flex-direction:row;align-items:center;background:#F3F6FA;border-radius:calc(var(--u)*1.5);cursor:pointer}
+.k-row .mlab{width:16%;font-size:calc(var(--u)*2.8)}
+.k-row .mitems{display:grid;grid-template-columns:repeat(10,1fr);justify-items:center;align-content:center;height:100%;padding:0 1%;gap:0;border-left:2px solid #D5DCE2}
+.k-row .mi{font-size:calc(var(--u)*6)}
+.mminus{position:absolute;top:4px;right:4px;width:calc(var(--u)*6);height:calc(var(--u)*6);min-width:34px;min-height:34px;border-radius:50%;border:3px solid #333;background:#fff;color:#000;font:700 calc(var(--u)*4)/1 Andika,sans-serif;padding:0;cursor:pointer;z-index:2}
+.mtag{position:absolute;top:-14%;left:50%;transform:translateX(-50%);background:#fff;border:3px solid #000;border-radius:99px;padding:0 calc(var(--u)*2);font:700 calc(var(--u)*5)/1.3 Andika,sans-serif}
+.mfly{position:fixed;z-index:80;transform:translate(-50%,-50%);transition:transform .55s ease-in-out;pointer-events:none;line-height:1;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
+.mtrack{position:absolute;left:3%;right:3%;top:50%;height:24%;display:grid;gap:calc(var(--u)*.6)}
+.tcase{position:relative;border:calc(var(--u)*.45) solid #333;border-radius:calc(var(--u)*1);background:#fff;font:700 calc(var(--u)*4)/1 Andika,sans-serif;color:#000;padding:0;cursor:pointer}
+.tcase:nth-child(odd){background:#EAF2FF}.tcase.sel{background:#FFE48A;border-color:#E0A800}
+.pawn{position:absolute;left:50%;bottom:92%;transform:translateX(-50%);font-size:calc(var(--u)*8);line-height:1;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
+.hopn{position:absolute;top:104%;left:50%;transform:translateX(-50%);background:#000;color:#fff;border-radius:99px;padding:0 .4em;font-size:calc(var(--u)*3.4)}
+.mdicebox{position:absolute;left:50%;top:6%;transform:translateX(-50%);font-size:calc(var(--u)*7)}
+.mdie{display:inline-grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:8%;padding:7%;width:1.6em;height:1.6em;background:#fff;border:max(2px,.08em) solid #222;border-radius:20%;vertical-align:middle;box-sizing:border-box;margin:0 .05em}
+.mdie i{border-radius:50%}.mdie i.on{background:#222}
+.mctl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;margin:10px 0}
+.mcards{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;width:100%}
+.mcard{min-width:66px;height:92px;border:3px solid var(--line);border-radius:14px;background:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:4px 6px}
+.mcard b{font-size:30px;line-height:1}.mcard .mdd{font-size:13px;white-space:nowrap}.mcard.sel{border-color:var(--ink);background:var(--hi-soft)}
+.btn.mbig{font-size:22px;padding:12px 26px}
+.mmsg{width:100%;text-align:center;font-size:22px;font-weight:700;margin:0}.mmsg.ok{color:var(--c2)}
+.mhint{font-size:20px;margin:0;color:var(--muted)}
+.mreal{background:var(--ui);border-radius:12px;padding:8px 12px;margin-top:6px}.mreal summary{font-weight:700;cursor:pointer}.mreal p{margin:6px 0 0}
 .kgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
 .kcard{position:relative;padding:16px}
 .kcard .speak{position:absolute;top:12px;right:12px}
@@ -201,7 +258,7 @@ a.btn{text-decoration:none;display:inline-block}
   <header class="top">
     <div class="brand">
       <svg viewBox="0 0 104 60" aria-hidden="true"><rect x="4" y="12" width="34" height="34" rx="5" class="zs" style="stroke-width:6"/><polygon class="inkf" points="42,22 62,22 62,14 76,29 62,44 62,36 42,36"/><rect x="72" y="12" width="28" height="34" rx="5" class="zs" style="stroke-width:6;display:none"/><rect x="78" y="12" width="22" height="34" rx="5" class="zs" style="stroke-width:6"/></svg>
-      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 18</small>
+      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 20</small>
     </div>
     <nav class="steps" id="steps" aria-label="Étapes"></nav>
     <button class="btn" id="reset">Nouveau problème</button>
@@ -225,6 +282,7 @@ const SCH={
  "c-partie":{kind:"comp",q:"p1",title:"Deux parties : je cherche une partie",desc:"Je connais le tout et une partie. Je cherche l'autre partie."},
  "s-tout":{kind:"star",q:"centre",title:"Plusieurs parts : je cherche le tout",desc:"Plusieurs parts forment le tout. Je connais toutes les parts. Je cherche le tout."},
  "s-parts":{kind:"star",q:"pareil",title:"Parts pareilles : je cherche le tout",desc:"Toutes les parts sont pareilles. Je connais une part. Je cherche les autres parts et le tout."},
+ "s-part":{kind:"star",q:"part",title:"Je cherche ce qu'il y a dans une part",desc:"Je connais le tout et le nombre de parts pareilles. Je cherche ce qu'il y a dans chaque part."},
  "s-nombre":{kind:"star",q:"nombre",title:"Je cherche le nombre de parts",desc:"Je connais le tout et ce qu'il y a dans une part. Je cherche combien de parts on peut faire."},
  "k-ecart":{kind:"cmp",q:"ecart",title:"Je cherche la différence",desc:"Je connais les deux quantités. Je cherche combien il y en a de plus ou de moins."},
  "k-comp":{kind:"cmp",q:"p1",title:"Je cherche la quantité comparée",desc:"Je connais la première quantité et la différence. Je cherche la deuxième quantité."},
@@ -295,7 +353,7 @@ const col=n=>`var(--c${n%10})`;
 const isImg=ic=>typeof ic==="string"&&ic.startsWith("img:");
 function icoHTML(ic,cls,extra){return isImg(ic)?`<span class="it pic ${cls||""}" ${extra||""}><img src="${esc(ic.slice(4))}" alt="" draggable="false"></span>`:`<span class="it emo ${cls||""}" ${extra||""}>${ic}</span>`}
 const MAXN=10;
-function fresh(){return{screen:"cat",cat:null,schema:null,enonce:"",nouns:[],zones:{},n:1,signs:{},qset:{},qmode:false,stage:"img",showNums:false,group10:false,sel:0,calc:"",rep:""}}
+function fresh(){return{screen:"cat",level:null,cat:null,schema:null,enonce:"",nouns:[],zones:{},n:1,signs:{},qset:{},qmode:false,stage:"img",showNums:false,group10:false,sel:0,calc:"",rep:""}}
 let S=load()||fresh();let hist=[];let openMore=-1;
 function save(){try{localStorage.setItem("adaptprobleme",JSON.stringify(S))}catch(e){}}
 function load(){try{const v=JSON.parse(localStorage.getItem("adaptprobleme"));if(!v||!v.nouns)return null;
@@ -310,7 +368,7 @@ function defQ(id,zid,N){const k=SCH[id];
  if(k.kind==="trans"){if(k.q==="fin")return zid==="s"+N;if(k.q==="debut")return zid==="s0";return zid==="a"+(N-1)}
  if(k.kind==="comp")return k.q==="tout"?zid==="tout":zid==="p0";
  if(k.kind==="cmp")return zid===k.q;
- if(k.q==="nombre")return false;if(zid==="centre")return true;return k.q==="pareil"&&zid!=="p0"}
+ if(k.q==="nombre")return false;if(k.q==="part")return zid!=="centre";if(zid==="centre")return true;return k.q==="pareil"&&zid!=="p0"}
 function layout(id,N,live){
  const k=SCH[id],Z=[],signs=[];let svg="",branch=null;
  const Q=zid=>(live&&S.qset&&zid in S.qset)?S.qset[zid]:defQ(id,zid,N);
@@ -368,16 +426,18 @@ const KINDS={
 };
 const DIE=[null,[4],[2,6],[2,4,6],[0,2,6,8],[0,2,4,6,8],[0,2,3,5,6,8],[0,2,3,4,5,6,8],[0,1,2,3,5,6,7,8],[0,1,2,3,4,5,6,7,8]].map(a=>a&&Array.from({length:9},(_,i)=>a.includes(i)));
 const KFIRST={trans:"t-fin",comp:"c-tout",star:"s-tout",cmp:"k-ecart"};
+const FICHES_TXT="2 fiches A4 (2 types par fiche, recto-verso dans une seule pochette) avec le schéma vierge, une case « Calcul » et des lignes « Réponse ». Les cases grises en pointillés servent si besoin : 2e changement, 3e quantité, parts en plus. À glisser sous pochette plastique : l'élève écrit au feutre ardoise.";
 const FICHES_PDF="data:application/pdf;base64,JVBERi0xLjQKJZOMi54gUmVwb3J0TGFiIEdlbmVyYXRlZCBQREYgZG9jdW1lbnQgKG9wZW5zb3VyY2UpCjEgMCBvYmoKPDwKL0YxIDIgMCBSIC9GMiAzIDAgUgo+PgplbmRvYmoKMiAwIG9iago8PAovQmFzZUZvbnQgL0hlbHZldGljYSAvRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZyAvTmFtZSAvRjEgL1N1YnR5cGUgL1R5cGUxIC9UeXBlIC9Gb250Cj4+CmVuZG9iagozIDAgb2JqCjw8Ci9CYXNlRm9udCAvSGVsdmV0aWNhLUJvbGQgL0VuY29kaW5nIC9XaW5BbnNpRW5jb2RpbmcgL05hbWUgL0YyIC9TdWJ0eXBlIC9UeXBlMSAvVHlwZSAvRm9udAo+PgplbmRvYmoKNCAwIG9iago8PAovQ29udGVudHMgOSAwIFIgL01lZGlhQm94IFsgMCAwIDU5NS4yNzU2IDg0MS44ODk4IF0gL1BhcmVudCA4IDAgUiAvUmVzb3VyY2VzIDw8Ci9Gb250IDEgMCBSIC9Qcm9jU2V0IFsgL1BERiAvVGV4dCAvSW1hZ2VCIC9JbWFnZUMgL0ltYWdlSSBdCj4+IC9Sb3RhdGUgMCAvVHJhbnMgPDwKCj4+IAogIC9UeXBlIC9QYWdlCj4+CmVuZG9iago1IDAgb2JqCjw8Ci9Db250ZW50cyAxMCAwIFIgL01lZGlhQm94IFsgMCAwIDU5NS4yNzU2IDg0MS44ODk4IF0gL1BhcmVudCA4IDAgUiAvUmVzb3VyY2VzIDw8Ci9Gb250IDEgMCBSIC9Qcm9jU2V0IFsgL1BERiAvVGV4dCAvSW1hZ2VCIC9JbWFnZUMgL0ltYWdlSSBdCj4+IC9Sb3RhdGUgMCAvVHJhbnMgPDwKCj4+IAogIC9UeXBlIC9QYWdlCj4+CmVuZG9iago2IDAgb2JqCjw8Ci9QYWdlTW9kZSAvVXNlTm9uZSAvUGFnZXMgOCAwIFIgL1R5cGUgL0NhdGFsb2cKPj4KZW5kb2JqCjcgMCBvYmoKPDwKL0F1dGhvciAoQWRhcHRwcm9ibFwzNTBtZSkgL0NyZWF0aW9uRGF0ZSAoRDoyMDI2MTEwMzExNTIxMiswMScwMCcpIC9DcmVhdG9yIChhbm9ueW1vdXMpIC9LZXl3b3JkcyAoKSAvTW9kRGF0ZSAoRDoyMDI2MTEwMzExNTIxMiswMScwMCcpIC9Qcm9kdWNlciAoUmVwb3J0TGFiIFBERiBMaWJyYXJ5IC0gXChvcGVuc291cmNlXCkpIAogIC9TdWJqZWN0ICh1bnNwZWNpZmllZCkgL1RpdGxlIChGaWNoZXMgZGUgcmVjaGVyY2hlIC0gcHJvYmxcMzUwbWVzKSAvVHJhcHBlZCAvRmFsc2UKPj4KZW5kb2JqCjggMCBvYmoKPDwKL0NvdW50IDIgL0tpZHMgWyA0IDAgUiA1IDAgUiBdIC9UeXBlIC9QYWdlcwo+PgplbmRvYmoKOSAwIG9iago8PAovRmlsdGVyIFsgL0FTQ0lJODVEZWNvZGUgL0ZsYXRlRGVjb2RlIF0gL0xlbmd0aCAxNzIwCj4+CnN0cmVhbQpHYiIvZzlvZzhPJjtLWlEnZz1xb0wkUW8oKiMkLlxMXlRdXyJWK0JzNkRDKC1PRlpvck9hSElGRF5IU1ksYjJxRjQ0Qjc6P0lzdGlHME9KaTBoIjNSRHMlclpUQWlyMEBSUSpPKEQtZnJUIl45Q1NBSzFGOGgtNE5FTXBQZjkkZnQwZ3MscEdrRj4zQ25GYzFsRTYocEYzRmpxcStvRCRrZiNHYzQkKzRIclM9cmZ0R1dOa3U6MmNjXl1SK1lxcEFGal89MTorcWBtYTZ1SElQMElOZlJJUUthXWduQzQlK3ByPWkzLjNGTWI7QCFpdEtwN0pmSV9iQ1tEYEtqYChSTlBPRW5KaXIjT0xGRmomIVJjMzooKmlIVE9kSVk1YV51JSMwPlRaKDYiKGFXJ3EycU0zT1syQV9OanJcQz4wbTlYJmY0J0NDPlk8My02ND1lMkZvSzxiMWUkc0FQZGIhbV4pRDpyN0hCYV9cMWEsXzlAbTc6PzFFW2FrSyFpcDkmN2srclIuNkg5I2BYRi9pKVlfO3VUSzBMJlxVcFwiXF9rR2FKUSdDM04iTkEkRnVJclhmUm9xMFBSQ2wiTSxGcSNENy9nSUB1VlVCL1dtRCxfaS5Ha0poQlZtVGgkQDA+OUwpQT1XQSUyXXQyPmhGL2YvNEpJNGBbXjxOTzRBLVUvPUk0NkNGWV4kJ3VNcU89STE+PGpUKj5TYzA7SEc1S0g+WSEmZzM7O1dPWWtWJmdSPCZxS3BcIV1cV0lra3JHTD88JlRgQnBPW1poVUxibVB0TmdMXF44WnFCcEk1S0A6LEE1SXE7cWRESlhPP1NNQTUwMkdxXy1RJjVsaFg9VkknLShtRl4ocTtVJCpAWHIkP05COFFrW1czLz41bnRHZ09LdDVNYjBrQCQvQXAycDwxTTpTUz5QOkZSSUVMVjs1NlprK1h1OkFbJUFbMSMnbSxBNSdJWlwkWihaMmhONlJKXyIiamxyKSdlUFhCQEInbEEwLyktKCszOVZJWz5iKjhmLFRkVD1mXFdqcTZgTi9UJ1JVPUxCSyw8LGM4J2g8Zl5IaSIhdTAnPWdudSRwMG1GMW42L2M1Lik2YFZqUzg8PENgR2BOXkk6Pmc5bko1UC9YNVc3TENKWD1eS1psR2tCWj9DJmRfVktzOGxVVWQwRGNdLSgxUlhsTnU4SDFIQD9ybi04XysuSEZOJjFfNDsrKVYtOCImXDA5UXA7QyNtP0ZsUDtvV0ZvJlooczsoWE87KGltSzgsIjpdV24ncGNTLTdEKV0oJkhpSmdaXSZdblM8Tj1AV0llJSJSTERjXE89XVopKSdOaDRmbzEjW2ZnczA2Qj8kOkdsPFNjNWQ6U1gnQmlqJDlOOV9RZ25dZ0lHXTNqdGAiSS9ldXB1MVEzPEJ0NHQ4QSIyKiwiX2wtUXNLPyNgQVkqRFZyPllJW2w4YzpUbWw7PElsVU4sY1NcSF5cTlJePElKPCRhYmdLJkJPWDM9WjhQMilNY0guYTZeZmZTTHFGI01MTGgnJlVYQCpfZDwoZkdtLVc6WT5lRHVdSGVjN0VyU0RxXCQxXEpgU0BlOUFSbS9hSGxmIipQJyMtTS04RzlMSmgvSnRmQnBQJGpzOVxvOVFYTzA4IlVISzlmMGBwMDJnK0woZUw5K18qIklcYSMpPF5da0JnSUUkWyZmTi5lOEUwP1BubjJsTCYlW1M+cUQ3IVtUKHRKZjUnWShBPzxMRWc3bUEoMktDTnBiUC87M1Q0LTE9OUYyR2UpK1EoQGRROm1ZbDpLWCQtZz8tdSlXMDw+ZS1iN2tXKjZxSyFIViVbMkU+PjZfL2YxYS9zXFs8PlBfYU9YI1k8XmZdbCpPQXJvWSlBZzQqaFxSKmtNaVZRbkhsdE9ZTiFfWlNnbFQlUztkLy5UTDtNK2xLYDw4XCQtXWc3M0xzNkppS11CYCQqTC1qLXEmVWpEbldZTCk9ST4rNUM4PDNBQUdiImI7b2puUkpXQjIlXi04TTsjUUQjWHMnQ0s1XlZ1Mk5JLThgP1FZSl40ZlY6Z19wX2xraXFdVT9HJ0xJbVMrX1EtTTtZbEsvY0FJV1NPZiFUI2olO2NSPjswWnNoSCpiU004UmBqMidFWzI6Lj5YXTJOUURAKmkoWmwzQk5DaStfPmg2I0lFKWwrdHJZQTdQW29wbyJELVNzJ3QhZUEpTWh1IyFQdSxxM11SbFMlSD89MjtcO0heJ1teNjFJZEJRa11mOV5wOm4+NUlFWEx1W0RzVlNpRDRAKT0pXH4+ZW5kc3RyZWFtCmVuZG9iagoxMCAwIG9iago8PAovRmlsdGVyIFsgL0FTQ0lJODVEZWNvZGUgL0ZsYXRlRGVjb2RlIF0gL0xlbmd0aCAyMzE1Cj4+CnN0cmVhbQpHYiIvaDlvaVB1JVlqYE4ucidAT19SS0c/P1MkZ1AmbjhcSmJSUmE2JU0xbicnKm9gW3JgLE1sWkpGYVZPaV45dCxaMi8hVU1jRnNnLTJGV05BOEJkbmJAU3FgVkInYHJxP2VaOEZjRG9MXVMzLV5QXFpATD5OJ148JilxYFBQLzwyNW84ZCozc0NeRDh1X0AqZkBNW21AP3IrW0BDQUZqQXRScipbNSJzUF9IXzArVipMcj1uYipbc29AXjFuWUJSMj1JZkI7cmI+Ny1iMENlYlhwZl1fbUY3VXBzQlNlSWFeVlZxZWA+JCZ0KHIkSXJJZ0h0NGhxJ051YkNHOG0+JlI4a0o8SkUsJD0mYSJtWF45XTlrXT5VSzpLR0FPVEh0MzpORCZVPiljYF9ROlg+PlFjIyZuJVohXjkxN2pvLCw3Zm4mQFBlJUttL2FIbltjU0ROIjFSKDBYczgjXC9MWE9OR0szYDhDMGZsNWVuPkZVS3I3YDdXQUlQLmhMcWZUSD4sdSU7U0FHWWU1alsnKDZJK2cua1JfJFtkSmhiLFxVSXAoK2A5Q29nPD8pRSYmcWIxK1AvY2M7cz1ZMCdrRHFzLiUoSUtwcFJgWUxUJFo2Y2w9OkdrbENPLzdjT2E+XElnLVRiQz1cJ2lIT2NqZF50cU5aOm1cOl5hYiMiMjImXS1yTUsjKT1oSEQ3aUc0JyhZKTgkVHBNJ24mdVpUcFYuV0wpVlpdb14+alpqcmRcK2dcNiguIztGcmQhT10xZi9pXTRXbzhbQkIlK0NOUFZQR0JcXkArbTRtVSdFbyg8Y0FfLzFcPVtcWkVIYTpDLzNJOVRTXDcjNjBSR3FgR0hVSE1cXitaWzwyYHBpPUclSCptRmVoPF9OLkxMQVdmK1YyVCx1ZWFPInRmJF44Uj9QT0JmXCJYJU05TCgnMmpKUTE6S00jRyMpMWNgXCFEKV1MMlRxVk8uV2xGYS9Zc1Z1Qlg6ZGcvLjheXkRXcCwqTFciaGglKWxuImgxTWRycE9IWCdPbGQ/VjBlTnAmQzhpSDlAZmNIcjVCVmNQRDhYPTJxZHQnKSE+KDVsTGMhWmlHTlY/VlU4JUBmbkVnP3BpUEouY3JcUTVBbiFPOD46Il82KmpEdFdbXDE8cDBSYj0qOikyLygkP19UTExjaFxsSCUiai10dDM7WEdoJE05TD0/YnMhV0thM21xaV9CJSxBVzxMIS4vMEIxJy5rPEsqSS1Baz8pJmlpTk1dRChLYUlvX3A3VDpkSElsY1EpMSdIWVtpJWhqUCJOL0BBIiEzNkNOXCRxTnRvN2k/Oy50PitWZWhIPGozUkoySHQoZU5ncT1zQWk4LlRRIkg1bkgyIWxhQClCL1hWQDwqV0QocCFfZW5bOWFLQ0FPJGNUUWFSW1FRO2Q/JV9bTm5hcEd1VTtkZCI2LWAiRz9bWHUzQ18mKihVbCgyP0Y6SytCW1RVdC4lT3BRUVBHNSZyPEM3Sy5NRj1mKyZFSEJwWS5yJz9yKjQlSzguQDxgPkRqWDI8ImBqIiZcITZyQ2pFVT0yVCU5OC8paz9IN2I0MEcyJlZbUVZIIUdUTjE0YEdqMCxYbXJyMGYoNjZQbXAnQW4yTkdudEFjcEYpKlpIUG9bMThBXGgqOkZgZkk0Wyd0XmVbPC0qWiZeQFErOHQqUyptaT5GU11uZ15IaTsiQE1dX0E0Ll5PYVA8dUc6NG5KIUUwP2w8aDdnXldZJ2JuYXA0X1loMl1lUVhMLCxhXEFDaEhsUnRmT3I8MVE7c2VAWl1EXkxhYUF0cFBbdVIoOC9ZM2tgQk1HTVBvQ187SlciKnNtdTNlTDknNUs8KSxyQDoqbVpiYUJpKyVqLSpdMilXdCFXIl5rZzVsUFwmcFxWXTlqOz08MVZsKD1kXlhLTnIpTWwlPi9ESHJbVFtQUUYhSDBvIVBxZFloN1BBR1dNNkFVXnFZOUlDZSZca1ApY29YYEBaLE0pdUstaDQ0J1QmP09TVmdAUy9TWj83c1wiT00oTyUpZmNBUFJCZ1ZDbFVoWzhTMDtsS1lFSzRdYE9vM0w3ayRIYDstWDwtO2JJRl5scEdbQjxBNmxaS0NWZGBOVFg0UyQhYz02PTcnUjh0a1kpWSJTPTEvUTY3Zi9pUjNLa3A6ZmNBQCheXFFcL3EhK2Y4PjR0KEVZWTA+Ry0xOUZaZFkhZFxXW0JANzNUJDwpQFxqaCtNZipCajs7ZEpfNVdOT2RNOUlqLmxGQDkrZkF1W0BbPy4/SCNWYG0pamVROFpbPGhoRlA9TEc8TVdHXXBaR0FLYUVlaHVgLl1jTFtkMnMrbDhhV1gqRzI9MGlJVWVdZzRtNlRIYjptblxpSnM2SjlNJ21Ha2ItbXJvRiwnOUxfaVEuKmoqT0VeUkQoM1coPi4tXTdKPU8tTzU3MlZjSz5AczxQPXQzRGRhNiNEYD4lND1CNzwnLnQmSHAjckUsUD8qWzdYMTcmLFRXWzNZXEhgdUU3Jycub2YtYyUsOVQoT2ctLkAoMFFFdGAlSS83T0g0QT02OSQ8KXFCT2s1KEFQRmpsTUlaKUhVcm1aZ1AuT1VPN11EMDVIPl9rLiFyIlFvbE5TJ0AiT2FOWkZqRiFBVFlKR003LC5NNzloQnEwQDM4XXAnJUgoN2BzQDJgY1FOYlZrP1YhPFNxYyRacC1DNjJxOz0uMWotJiF0QT0pZCxAQDYoLlNcNDE2PjJsUGZIKD9COjU2ZExbbEFxbEo6Mi1bUkhyQGssajA0NFkkMytXI18zYkszKCctJlMiI0MwPl0wb2ooJjo6UkAyQWxeMExoPHBIMWVXLSc+TiZTM1I+YGA+JzY+cEkpN2w5PE8wLjM0TicrI0pwSjNiSV9nZG0mO0NCS1pcN24wLUZGVElBTDFwYzNwZDIuS2t0QzxrK2YmbV1EYGBmPVVrN0NBcitHMWhHZklmRTxMbHIraElaPy4sRXA/dWhiaHE/XlJTPzc0J2EpQCZMbj9xLHNoW1dnUHMxPE9sYFlOTTUkJjA3PENgOj9ISCdTPExBblQ4QG05LkBeciNibzBVQ1t+PmVuZHN0cmVhbQplbmRvYmoKeHJlZgowIDExCjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDA2MSAwMDAwMCBuIAowMDAwMDAwMTAyIDAwMDAwIG4gCjAwMDAwMDAyMDkgMDAwMDAgbiAKMDAwMDAwMDMyMSAwMDAwMCBuIAowMDAwMDAwNTI0IDAwMDAwIG4gCjAwMDAwMDA3MjggMDAwMDAgbiAKMDAwMDAwMDc5NiAwMDAwMCBuIAowMDAwMDAxMDkwIDAwMDAwIG4gCjAwMDAwMDExNTUgMDAwMDAgbiAKMDAwMDAwMjk2NiAwMDAwMCBuIAp0cmFpbGVyCjw8Ci9JRCAKWzw5NTIzNGU1YWIzOWY0MTI0MWQ0MDMzNDEwZTRkOGQ1YT48OTUyMzRlNWFiMzlmNDEyNDFkNDAzMzQxMGU0ZDhkNWE+XQolIFJlcG9ydExhYiBnZW5lcmF0ZWQgUERGIGRvY3VtZW50IC0tIGRpZ2VzdCAob3BlbnNvdXJjZSkKCi9JbmZvIDcgMCBSCi9Sb290IDYgMCBSCi9TaXplIDExCj4+CnN0YXJ0eHJlZgo1MzczCiUlRU9GCg==";
 function fichesBlob(){const bin=atob(FICHES_PDF.split(",")[1]),a=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return URL.createObjectURL(new Blob([a],{type:"application/pdf"}))}
 function renderCat(){
  $("#main").innerHTML=`<div class="wrap"><div class="teach"><div class="tprev">${["t-fin","c-tout","k-ecart","s-tout"].map(id=>schemaSVG(id)).join("")}</div>
- <div class="ttxt"><strong>Pour l'enseignant : fiches de recherche à imprimer</strong><span>2 fiches A4 (2 types par fiche, recto-verso dans une seule pochette) avec le schéma vierge, une case « Calcul » et des lignes « Réponse ». Les cases grises en pointillés servent si besoin : 2e changement, 3e quantité, parts en plus. À glisser sous pochette plastique : l'élève écrit au feutre ardoise.</span></div>
+ <div class="ttxt"><strong>Pour l'enseignant : fiches de recherche à imprimer</strong><span>${FICHES_TXT}</span></div>
  <div class="tbtn"><a class="btn primary" href="${FICHES_PDF}" download="fiches-problemes.pdf">⬇ Télécharger le PDF</a><button class="btn" data-act="printfiches">🖨 Imprimer</button></div></div><h1>De quel type est ton problème ?</h1><p class="lead">Lis le problème et cherche les mots indices. Touche 🔊 pour écouter.</p>
  <div class="kgrid">${Object.keys(KINDS).map(k=>{const K=KINDS[k];return`<div class="card kcard${S.cat===k?" chosen":""}"><button class="pick" data-kind="${k}">${schemaSVG(KFIRST[k])}<strong class="ktitle">${K.title}</strong><span class="kdesc">${K.desc}</span></button>
  <div class="kwords"><span class="klab">Mots indices :</span>${K.keys.map(w=>`<span class="kw">${esc(w)}</span>`).join("")}</div>
  <button class="speak" data-sayk="${k}" aria-label="Écouter">🔊</button></div>`}).join("")}</div>
- <p class="lead" style="margin-top:14px">Attention : les mots indices aident à reconnaître l'histoire, pas à choisir l'opération. « Il gagne » peut cacher une soustraction ! Il faut toujours bien comprendre l'histoire.</p></div>`;
+ <p class="lead" style="margin-top:14px">Attention : les mots indices aident à reconnaître l'histoire, pas à choisir l'opération. « Il gagne » peut cacher une soustraction ! Il faut toujours bien comprendre l'histoire.</p>
+ <section class="lvlsec"><h2>Suivre une progression : choisis le niveau</h2><p class="lead">Une progression par niveau, de la PS au CM2, issue des programmes 2025, pour garder la même continuité dans toute l'école. Tu peux aussi continuer à utiliser l'application librement avec tes propres problèmes.</p><div class="lvls">${LVGROUPS.map(([g,ls])=>`<div class="lgroup"><h3>${g}</h3>${ls.map(l=>`<button class="lbtn" data-level="${l}" aria-pressed="${S.level===l}">${l}</button>`).join("")}</div>`).join("")}</div></section></div>`;
 }
 function renderSteps(){
  const st=[["cat","1 Le type",true],["choose","2 Le schéma",!!S.cat],["nouns","3 Les objets",!!S.schema],["ws","4 Je représente",!!S.schema&&validNouns()]];
@@ -385,7 +445,7 @@ function renderSteps(){
 }
 function go(sc){if(sc==="ws"&&!prepNouns())return;S.screen=sc;save();render()}
 function render(){renderSteps();const m=$("#main");m.scrollTop=0;
- if(S.screen==="nouns"&&S.schema)renderNouns();else if(S.screen==="ws"&&S.schema&&validNouns())renderWS();else if(S.screen==="choose"&&S.cat)renderChoose();else{S.screen="cat";renderSteps();renderCat()}}
+ if(S.screen==="nouns"&&S.schema)renderNouns();else if(S.screen==="ws"&&S.schema&&validNouns())renderWS();else if(S.screen==="choose"&&S.cat)renderChoose();else if(S.screen==="level"&&S.level)renderLevel();else if(S.screen==="mat"&&MAT.sc)renderMat();else{S.screen="cat";renderSteps();renderCat()}}
 
 /* ---------- Écran 1 ---------- */
 function renderChoose(){
@@ -565,7 +625,7 @@ document.addEventListener("click",e=>{
  if(d.more!==undefined){const i=+d.more;const prev=openMore;openMore=openMore===i?-1:i;if(prev>=0&&prev!==i&&$("#ch"+prev))renderChips(prev);renderChips(i);return}
  if(d.del!==undefined){removeNoun(+d.del);save();renderNouns();return}
  if(t.id==="addn"){if(S.nouns.length>=MAXN)return;S.nouns.push({name:"",icon:null,auto:true});save();renderNouns();const ins=document.querySelectorAll("[data-in]");ins[ins.length-1].focus();return}
- if(t.id==="reset"){if(confirm("Effacer ce problème et en commencer un nouveau ?")){S=fresh();hist=[];save();render()}return}
+ if(t.id==="reset"){if(confirm("Effacer ce problème et en commencer un nouveau ?")){const lv=S.level;S=fresh();S.level=lv;hist=[];save();render()}return}
  if(d.stage){if(S.stage!==d.stage){S.stage=d.stage;save();renderWS(d.stage!=="num")}return}
  if(d.sign){push();S.signs[d.sign]=S.signs[d.sign]==="-"?"+":"-";save();renderStage();return}
  if(d.act){const a=d.act;
@@ -587,6 +647,241 @@ document.addEventListener("input",e=>{
  if(t.dataset.in!==undefined){const i=+t.dataset.in;S.nouns[i].name=t.value;$("#msg").textContent="";save();renderSteps();return}
  if(t.id==="psearch"){P.q=t.value;renderPick(true);return}
 });
+/* ---------- Niveaux et progressions (programmes 2025) ---------- */
+const MATL=["PS","MS","GS"];
+const LVGROUPS=[["Maternelle",["PS","MS","GS"]],["Cycle 2",["CP","CE1","CE2"]],["Cycle 3",["CM1","CM2"]]];
+const P_ADD=[
+ {t:"Ajouter ou enlever : trouver la fin",sch:"t-fin"},
+ {t:"Réunir deux parties : trouver le tout",sch:"c-tout"},
+ {t:"Trouver une partie",sch:"c-partie"},
+ {t:"Trouver le début ou ce qui a changé",sch:"t-debut"}];
+const LEVELS={
+ PS:{info:"Avant 4 ans · petites quantités (jusqu'à 5) · une seule étape · on agit avec du matériel figuratif, on anticipe, puis on vérifie.",steps:["ajout","retrait","greli"]},
+ MS:{info:"À partir de 4 ans · quantités jusqu'à 10 · ajout et retrait, déplacement sur une piste, groupements, partage équitable.",steps:["ajout","retrait","piste","groupes","partage"]},
+ GS:{info:"À partir de 5 ans · quantités jusqu'à 10 · trois parties, quantité ajoutée, position de départ, écart (de plus / de moins), groupements, partage avec reste.",steps:["reunir3","retrait","manquant","pisteDebut","ecart","groupes","partageReste"]},
+ CP:{info:"Nombres jusqu'à 100 (jusqu'à 30 pour les problèmes en deux étapes et multiplicatifs) · au moins 10 problèmes par semaine.",kinds:["trans","comp","star"],steps:[
+  {t:"Ajouter ou enlever : trouver la fin",sch:"t-fin",ex:"Léo a 8 billes. Il en gagne 5. Combien en a-t-il maintenant ?"},
+  {t:"Réunir deux parties : trouver le tout",sch:"c-tout",ex:"Dans la classe, il y a 12 filles et 11 garçons. Combien d'élèves en tout ?"},
+  {t:"Trouver une partie",sch:"c-partie",ex:"Il y a 25 élèves dont 12 filles. Combien de garçons ?"},
+  {t:"Trouver le début ou ce qui a changé",sch:"t-debut",ex:"5 personnes sont montées dans le bus. Maintenant il y en a 14. Combien y en avait-il avant ?"},
+  {t:"Deux étapes (jusqu'à 30)",sch:"t-fin",n:2,ex:"Dans le bus, il y a 12 personnes. 5 montent, puis 3 descendent. Combien de personnes maintenant ?"},
+  {t:"Groupements : trouver le tout (jusqu'à 30)",sch:"s-parts",n:3,ex:"Il y a 3 boîtes de 6 œufs. Combien d'œufs en tout ?"},
+  {t:"Partage équitable : la part de chacun (jusqu'à 30)",sch:"s-part",n:3,ex:"On partage 12 bonbons entre 3 enfants. Combien chacun en reçoit-il ?"},
+  {t:"Partage : le nombre de parts (jusqu'à 30)",sch:"s-nombre",n:3,ex:"On range 15 œufs dans des boîtes de 5. Combien de boîtes faut-il ?"}]},
+ CE1:{info:"Nombres jusqu'à 1 000 · au moins 10 problèmes par semaine · schéma en barre si utile.",kinds:["trans","comp","cmp","star"],steps:[
+  {t:"Parties-tout : ajout, retrait, réunion",sch:"t-fin",ex:"Le fermier a 128 moutons. Il en vend 45. Combien lui en reste-t-il ?"},
+  {t:"Parties-tout : trouver une partie",sch:"c-partie",ex:"Sur 250 élèves, 130 mangent à la cantine. Combien n'y mangent pas ?"},
+  {t:"Comparaison : trouver l'écart",sch:"k-ecart",ex:"Léa a 45 images, Tom en a 32. Combien Léa en a-t-elle de plus ?"},
+  {t:"Comparaison : trouver une quantité",sch:"k-comp",ex:"Tom a 32 images. Léa en a 13 de plus que lui. Combien Léa en a-t-elle ?"},
+  {t:"Additifs en deux étapes",sch:"t-fin",n:2,ex:"Dans le bus, il y a 35 passagers. 12 descendent, puis 8 montent. Combien de passagers maintenant ?"},
+  {t:"Multiplicatifs : trouver le tout",sch:"s-parts",n:6,ex:"Il y a 6 rangées de 8 chaises. Combien de chaises ?"},
+  {t:"Partage équitable : la part de chacun",sch:"s-part",n:4,ex:"On partage 40 cartes entre 4 joueurs. Combien chacun en a-t-il ?"},
+  {t:"Partage : le nombre de parts",sch:"s-nombre",n:4,ex:"On fait des paquets de 6 avec 42 gâteaux. Combien de paquets ?"},
+  {t:"Problèmes mixtes en deux étapes",sch:"s-parts",n:3,ex:"Paul achète 3 paquets de 10 billes. Il en perd 7. Combien lui en reste-t-il ? (un schéma par étape)"}]},
+ CE2:{info:"Nombres jusqu'à 10 000 · au moins 10 problèmes par semaine · schémas en barres.",kinds:["trans","comp","cmp","star"],other:"produits cartésiens",steps:[
+  {t:"Parties-tout en une étape",sch:"c-partie",ex:"Une école a 412 élèves dont 198 filles. Combien de garçons ?"},
+  {t:"Comparaison : trouver l'écart",sch:"k-ecart",ex:"Un camion pèse 3 500 kg, une voiture 1 200 kg. Combien le camion pèse-t-il de plus ?"},
+  {t:"Comparaison : trouver la quantité de départ",sch:"k-ref",ex:"Léa a 245 perles. C'est 30 de plus que Tom. Combien Tom en a-t-il ?"},
+  {t:"Additifs en deux étapes",sch:"t-fin",n:2,ex:"Un libraire a 1 250 livres. Il en vend 380, puis en reçoit 500. Combien en a-t-il ?"},
+  {t:"Multiplicatifs : tout, part ou nombre de parts",sch:"s-part",n:4,ex:"On partage 96 billes entre 4 enfants. Combien chacun en reçoit-il ?"},
+  {t:"Comparaison multiplicative",sch:"s-parts",n:3,ex:"Tom a 16 billes. Léa en a 3 fois plus. Combien Léa en a-t-elle ?"},
+  {t:"Problèmes mixtes en deux ou trois étapes",sch:"t-fin",n:3,ex:"Zoé a 50 €. Elle achète 3 livres à 8 €, puis reçoit 10 €. Combien a-t-elle ? (un schéma par étape)"}]},
+ CM1:{info:"Nombres jusqu'à 999 999, décimaux et fractions · au moins 10 problèmes par semaine · schémas en barres, symbole pour le nombre inconnu.",kinds:["trans","comp","cmp","star"],other:"dénombrement, optimisation",steps:[
+  {t:"Additifs en une étape : parties-tout et comparaison",sch:"k-comp",ex:"Un TGV transporte 512 voyageurs, c'est 186 de plus qu'un TER. Combien de voyageurs dans le TER ?"},
+  {t:"Additifs en deux ou trois étapes",sch:"t-fin",n:3,ex:"Un cinéma a 450 places. 128 personnes entrent, puis 96, puis 75 sortent. Combien de spectateurs ?"},
+  {t:"Multiplicatifs parties-tout en une étape",sch:"s-nombre",n:4,ex:"On range 1 200 œufs par boîtes de 12. Combien de boîtes ?"},
+  {t:"Comparaison multiplicative",sch:"s-parts",n:4,ex:"Un vélo coûte 145 €. Un scooter coûte 4 fois plus. Quel est son prix ?"},
+  {t:"Fraction d'une quantité",sch:"s-part",n:3,ex:"Un tiers des 12 billes sont rouges. Combien de billes rouges ?"},
+  {t:"Problèmes mixtes en deux ou trois étapes",sch:"s-parts",n:3,ex:"3 classes de 26 élèves vont au musée. 12 adultes les accompagnent. Combien de personnes ? (un schéma par étape)"}]},
+ CM2:{info:"Nombres jusqu'à 999 999 999, décimaux et fractions · au moins 10 problèmes par semaine · schémas en barres pour tous, matériel si besoin.",kinds:["trans","comp","cmp","star"],other:"dénombrement, optimisation, algorithmes",steps:[
+  {t:"Additifs en une ou plusieurs étapes",sch:"t-fin",n:2,ex:"Une ville a 48 250 habitants. 1 380 partent, puis 2 145 arrivent. Combien d'habitants ?"},
+  {t:"Comparaison : trouver la quantité de départ",sch:"k-ref",ex:"Le mont Blanc mesure 4 806 m, c'est 1 402 m de plus que le Pic du Midi. Quelle hauteur pour le Pic du Midi ?"},
+  {t:"Multiplicatifs parties-tout en une étape",sch:"s-part",n:5,ex:"5 amis partagent un voyage de 675 €. Combien chacun paie-t-il ?"},
+  {t:"Comparaison multiplicative",sch:"s-parts",n:3,ex:"Une tortue vit 3 fois plus longtemps qu'un chien qui vit 15 ans. Combien de temps vit la tortue ?"},
+  {t:"Fractions de quantités",sch:"s-part",n:3,ex:"Les deux tiers des 12 € sont dépensés. Combien d'euros sont dépensés ? (une part, puis deux parts)"},
+  {t:"Problèmes mixtes en plusieurs étapes",sch:"s-parts",n:4,ex:"4 cartons de 24 bouteilles. On en vend 37. Combien en reste-t-il ? (un schéma par étape)"}]}
+};
+function isMat(l){return MATL.includes(l)}
+function renderLevel(){
+ const L=S.level?LEVELS[S.level]:null;
+ let prog="";
+ if(L){
+  const items=isMat(S.level)?L.steps.map((id,i)=>{const M=MSIT[id];return`<li><span class="pnum">${i+1}</span><div class="ph"><span class="pic">${M.ic}</span><div><strong>${M.t}</strong><div class="pex">${M.ex}</div></div></div><button class="btn primary" data-stepi="${i}">Manipuler</button></li>`}).join("")
+   :L.steps.map((st,i)=>`<li><span class="pnum">${i+1}</span><div class="ph">${schemaSVG(st.sch,st.n)}<div><strong>${st.t}</strong><div class="pex">${esc(st.ex)} <button class="speak" data-sayex="${i}" aria-label="Écouter">🔊</button></div></div></div><button class="btn primary" data-stepi="${i}">Commencer</button></li>`).join("");
+  prog=`<section id="prog"><h1>Progression en ${S.level}</h1><p class="lead">${L.info}${isMat(S.level)?"":"<br>Démarche : comprendre, modéliser, calculer, répondre, puis vérifier."}</p><ol class="prog">${items}</ol>
+  ${isMat(S.level)?"":`<p class="tools" style="margin-top:12px"><button class="btn" data-go="cat">Choisir le type moi-même</button>${L.other?`<span class="lead" style="margin:0">À travailler aussi, hors schéma : ${L.other}.</span>`:""}</p>`}</section>`;
+ }
+ $("#main").innerHTML=`<div class="wrap"><p style="margin:4px 0 10px"><button class="btn" data-go="cat">← Retour à l'accueil</button></p>
+ <div class="lvls">${LVGROUPS.map(([g,ls])=>`<div class="lgroup"><h3>${g}</h3>${ls.map(l=>`<button class="lbtn" data-level="${l}" aria-pressed="${S.level===l}">${l}</button>`).join("")}</div>`).join("")}</div>${prog}</div>`;
+}
+function startStep(i){
+ const st=LEVELS[S.level].steps[i],k=SCH[st.sch].kind;
+ S.cat=k;S.schema=st.sch;S.zones={};S.signs={};S.qset={};S.qmode=false;S.n=st.n||DEFN[k];hist=[];S.stage="img";
+ S.step=["CP","PS","MS","GS"].includes(S.level)?1:10;S.screen="nouns";save();render();
+}
+
+/* ---------- Module maternelle : manipuler, anticiper, vérifier ---------- */
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const TH=[{e:"🧸",p:"peluches",s:"peluche"},{e:"✏️",p:"crayons",s:"crayon"},{e:"🔵",p:"billes",s:"bille"},{e:"🍎",p:"pommes",s:"pomme"},{e:"🚗",p:"petites voitures",s:"petite voiture"},{e:"🐟",p:"poissons",s:"poisson"},{e:"🥝",p:"kiwis",s:"kiwi"},{e:"⭐",p:"étoiles",s:"étoile"}];
+const nm=(T,n)=>n===1?T.s:T.p;
+const pickTh=()=>TH[rnd(0,TH.length-1)];
+const mk=(e,n,hl)=>Array.from({length:n},()=>({e,hl:!!hl}));
+const cont=(s,id)=>s.conts.find(c=>c.id===id);
+const MAXA={PS:5,MS:10,GS:12};
+const DOLLS=["🧸","🐰","🐻"];
+const REAL_BOX="Avec une vraie boîte opaque et de vrais objets : montrez, fermez, agissez devant les élèves. Ils annoncent la réponse (doigts, cartes, mots), puis on ouvre la boîte pour vérifier.";
+const MSIT={
+ ajout:{t:"On en met encore",ic:"📦",ex:"Il y a 2 peluches dans la boîte. J'en ajoute 1. Combien y en a-t-il ?",real:REAL_BOX,
+  gen(l){const T=pickTh(),a=l==="PS"?rnd(1,3):rnd(2,5),b=l==="PS"?rnd(1,Math.min(2,5-a)):rnd(1,Math.min(4,9-a));
+   return{type:"box",conts:[{id:"src",k:"sac",x:6,y:24,w:28,h:52,items:mk(T.e,b)},{id:"box",k:"box",x:52,y:12,w:40,h:76,items:mk(T.e,a)}],
+    story:[{txt:`Dans la boîte, il y a ${a} ${nm(T,a)}.`},{txt:"Je ferme la boîte.",run:async s=>{cont(s,"box").closed=true}},{txt:`J'en ajoute ${b}.`,run:async s=>{for(let i=0;i<b;i++)await fly(s,"src","box")}}],
+    q:`Combien y a-t-il de ${T.p} dans la boîte maintenant ?`,ans:a+b,check:["box"],sol:`Il y en a ${a+b}.`}}},
+ retrait:{t:"On en enlève",ic:"📤",ex:"Il y a 4 crayons dans la boîte. J'en sors 2. Combien en reste-t-il ?",real:REAL_BOX,
+  gen(l){const T=pickTh(),a=l==="PS"?rnd(3,5):l==="MS"?rnd(4,7):rnd(6,10),b=l==="PS"?rnd(1,2):l==="MS"?rnd(1,3):rnd(2,4);
+   return{type:"box",conts:[{id:"box",k:"box",x:8,y:12,w:40,h:76,items:mk(T.e,a)},{id:"out",k:"out",lab:"Sortis",x:60,y:22,w:32,h:56,items:[]}],
+    story:[{txt:`Dans la boîte, il y a ${a} ${nm(T,a)}.`},{txt:"Je ferme la boîte.",run:async s=>{cont(s,"box").closed=true}},{txt:`J'en sors ${b}.`,run:async s=>{for(let i=0;i<b;i++)await fly(s,"box","out")}}],
+    q:`Combien de ${T.p} reste-t-il dans la boîte ?`,ans:a-b,check:["box"],sol:`Il en reste ${a-b}.`}}},
+ greli:{t:"Greli-Grelo : on réunit",ic:"✋",ex:"Dans une main 2 jetons, dans l'autre 1. Je mets tout dans la boîte. Combien y en a-t-il ?",real:"Avec la comptine Greli-Grelo : cachez des jetons dans vos deux mains, ouvrez-les l'une après l'autre, puis versez tout dans une boîte fermée. Les élèves annoncent, puis on ouvre.",
+  gen(l){const T=pickTh(),a=rnd(1,3),b=rnd(1,Math.min(2,5-a));
+   return{type:"box",conts:[{id:"g",k:"main",lab:"✋",x:3,y:18,w:25,h:62,items:mk(T.e,a)},{id:"d",k:"main",lab:"🤚",x:31,y:18,w:25,h:62,items:mk(T.e,b)},{id:"box",k:"box",x:62,y:12,w:34,h:76,items:[],closed:true}],
+    story:[{txt:`Greli-grelo ! Dans cette main, il y a ${a} ${nm(T,a)}.`},{txt:`Dans l'autre main, il y en a ${b}.`},{txt:"Je mets tout dans la boîte.",run:async s=>{for(let i=0;i<a;i++)await fly(s,"g","box");for(let i=0;i<b;i++)await fly(s,"d","box")}}],
+    q:`Combien y a-t-il de ${T.p} dans la boîte ?`,ans:a+b,check:["box"],sol:`Il y en a ${a+b}.`}}},
+ reunir3:{t:"Trois parties : trouver le tout",ic:"🟥🟦🟩",ex:"3 cubes rouges, 1 bleu et 2 verts dans la boîte. Combien de cubes en tout ?",real:"Avec de vrais cubes de couleur et trois petits sacs : montrez chaque sac, versez tout dans une boîte opaque. Les élèves annoncent, puis on ouvre et on compte.",
+  gen(){const a=rnd(1,4),b=rnd(1,3),c=rnd(1,Math.min(3,10-a-b));
+   return{type:"box",conts:[{id:"s1",k:"sac",x:2,y:26,w:19,h:48,items:mk("🟥",a)},{id:"s2",k:"sac",x:23,y:26,w:19,h:48,items:mk("🟦",b)},{id:"s3",k:"sac",x:44,y:26,w:19,h:48,items:mk("🟩",c)},{id:"box",k:"box",x:67,y:12,w:30,h:76,items:[],closed:true}],
+    story:[{txt:`Dans le premier sac, il y a ${a} cube${a>1?"s":""} rouge${a>1?"s":""}.`},{txt:`Dans le deuxième sac, ${b} cube${b>1?"s":""} bleu${b>1?"s":""}.`},{txt:`Dans le troisième sac, ${c} cube${c>1?"s":""} vert${c>1?"s":""}.`},{txt:"Je verse tout dans la boîte.",run:async s=>{for(const[id,n]of[["s1",a],["s2",b],["s3",c]])for(let i=0;i<n;i++)await fly(s,id,"box")}}],
+    q:"Combien y a-t-il de cubes dans la boîte ?",ans:a+b+c,check:["box"],sol:`Il y a ${a+b+c} cubes.`}}},
+ manquant:{t:"Combien en ai-je ajouté ?",ic:"🤫",ex:"Il y a 5 billes. J'en ajoute en cachette. Maintenant il y en a 8. Combien en ai-je ajouté ?",real:"Avec une boîte opaque : montrez le contenu, fermez, ajoutez en cachette puis annoncez le nouveau total. Les élèves cherchent (doigts, surcomptage), puis on ouvre : les objets ajoutés sont mis à part pour vérifier.",
+  gen(){const T=pickTh(),a=rnd(3,6),b=rnd(1,Math.min(4,10-a));
+   return{type:"box",conts:[{id:"src",k:"sac",lab:"🤫",x:6,y:24,w:28,h:52,items:mk(T.e,b),closed:true},{id:"box",k:"box",x:52,y:14,w:40,h:74,items:mk(T.e,a)}],
+    story:[{txt:`Dans la boîte, il y a ${a} ${nm(T,a)}.`},{txt:"Je ferme la boîte.",run:async s=>{cont(s,"box").closed=true}},{txt:"J'en ajoute en cachette…",run:async s=>{for(let i=0;i<b;i++)await fly(s,"src","box",true)}},{txt:`Maintenant, il y a ${a+b} ${nm(T,a+b)} dans la boîte.`,run:async s=>{cont(s,"box").tag=a+b}}],
+    q:`Combien de ${T.p} ai-je ajoutés ?`,ans:b,check:["box"],onlyHl:true,sol:`J'en ai ajouté ${b}.`}}},
+ groupes:{t:"Groupements : combien en tout ?",ic:"📦📦",ex:"Il y a 3 boîtes. Dans chaque boîte, il y a 2 crayons. Combien de crayons en tout ?",real:"Avec de vraies boîtes (boîtes d'œufs, assiettes) : remplissez-les devant les élèves, fermez-les, faites anticiper, puis ouvrez et comptez.",
+  gen(l){const T=pickTh(),k=l==="GS"?rnd(3,4):rnd(2,3),m=rnd(2,3),w=Math.min(22,92/k-4),conts=[];
+   for(let i=0;i<k;i++)conts.push({id:"b"+i,k:"box",x:4+i*(92/k)+(92/k-w)/2,y:20,w,h:62,items:mk(T.e,m)});
+   return{type:"box",conts,story:[{txt:`Il y a ${k} boîtes. Dans chaque boîte, il y a ${m} ${nm(T,m)}.`},{txt:"Je ferme les boîtes.",run:async s=>{s.conts.forEach(c=>c.closed=true)}}],
+    q:`Combien y a-t-il de ${T.p} en tout ?`,ans:k*m,check:conts.map(c=>c.id),sol:`Il y en a ${k*m} en tout.`}}},
+ partage:{t:"Partager équitablement",ic:"🧁",ex:"6 gâteaux pour 2 poupées. Combien de gâteaux pour chaque poupée ?",real:"Avec de vraies poupées, des assiettes et des gâteaux (pâte à modeler, jetons) : l'élève distribue un par un, puis vérifie que chaque poupée en a autant.",
+  gen(l){return shareGen(rnd(2,3),rnd(2,3),0)}},
+ partageReste:{t:"Partager : et s'il en reste ?",ic:"🧁❓",ex:"7 gâteaux pour 2 poupées. Combien pour chacune ? Il en reste combien ?",real:"Avec de vraies poupées et des gâteaux : on distribue un par un ou deux par deux. Quand on ne peut plus donner la même chose à chacune, on met le reste de côté.",
+  gen(){const k=rnd(2,3);return shareGen(k,rnd(2,3),rnd(1,k-1))}},
+ piste:{t:"Avancer sur la piste",ic:"🎲",ex:"Le lapin est sur la case 3. Il avance de 4 cases. Sur quelle case arrive-t-il ?",real:"Avec une piste au sol (dalles ou cerceaux numérotés) et un gros dé : un élève joue le pion, les autres anticipent la case d'arrivée, puis il avance en comptant.",
+  gen(){const p=rnd(1,5),d=rnd(1,Math.min(4,10-p));
+   return{type:"track",N:10,pawn:p,dice:null,story:[{txt:`Le lapin est sur la case ${p}.`},{txt:`Il avance de ${d} case${d>1?"s":""}.`,run:async s=>{s.dice=d}}],
+    q:"Sur quelle case va-t-il arriver ?",ans:p+d,from:p,dir:1,d,sol:`Il arrive sur la case ${p+d}.`}}},
+ pisteDebut:{t:"D'où est parti le pion ?",ic:"🐰",ex:"Le lapin a avancé de 3 cases. Il est sur la case 7. D'où est-il parti ?",real:"Avec une piste au sol et un gros dé : l'élève sur la case d'arrivée recule en comptant pour retrouver la case de départ.",
+  gen(){const d=rnd(2,5),f=rnd(d+1,12);
+   return{type:"track",N:12,pawn:null,dice:null,story:[{txt:`Le lapin a avancé de ${d} cases.`,run:async s=>{s.dice=d}},{txt:`Maintenant, il est sur la case ${f}.`,run:async s=>{s.pawn=f}}],
+    q:"Sur quelle case était-il au départ ?",ans:f-d,from:f,dir:-1,d,sol:`Il était parti de la case ${f-d}.`}}},
+ ecart:{t:"Comparer : de plus, de moins",ic:"👦👧",ex:"Pierre a 5 billes. Julie en a 3 de plus que Pierre. Combien Julie en a-t-elle ?",real:"Avec de vraies billes et deux bandes de cases : on place les billes de Pierre, puis celles de Julie en face, une par une (terme à terme), et on ajoute celles « de plus ».",
+  gen(){const a=rnd(3,6),d=rnd(1,Math.min(4,10-a)),disc=Math.random()<.5;
+   return{type:"cmp",a,d,conts:[{id:"pie",k:"row",lab:"👦 Pierre",x:3,y:6,w:94,h:27,items:mk("🔵",a)},{id:"jul",k:"row",minus:true,lab:"👧 Julie",x:3,y:38,w:94,h:27,items:[]},{id:"res",k:"plate",lab:"",x:36,y:70,w:28,h:28,items:mk("🔵",3)}],
+    story:[{txt:`Pierre a ${a} billes.`},{txt:disc?`Il en a ${d} de moins que Julie.`:`Julie en a ${d} de plus que Pierre.`}],
+    manip:"Mets les billes de Julie : touche le bol ou la ligne de Julie pour en ajouter une. Le bouton − permet d'en enlever une.",
+    q:"Combien Julie a-t-elle de billes ?",ans:a+d,sol:`Julie a ${a+d} billes.`}}}
+};
+function shareGen(k,m,r){const n=k*m+r,w=Math.min(28,92/k-4),conts=[{id:"res",k:"plate",lab:"",x:28,y:3,w:44,h:38,items:mk("🧁",n)}];
+ for(let i=0;i<k;i++)conts.push({id:"d"+i,k:"doll",minus:true,lab:DOLLS[i],x:4+i*(92/k)+(92/k-w)/2,y:46,w,h:52,items:[]});
+ return{type:"share",k,m,r,conts,story:[{txt:`Voici ${n} gâteaux et ${k} poupées.`},{txt:"On partage : chaque poupée doit avoir autant de gâteaux."}],
+  manip:"Touche une poupée pour lui donner un gâteau. Le bouton − permet d'en reprendre un.",
+  q:"Combien de gâteaux a chaque poupée ?",ans:m,sol:`Chaque poupée a ${m} gâteaux.${r?` Il en reste ${r}.`:""}`}}
+
+const MAT={id:null,sc:null,phase:"story",i:0,ans:null,busy:false,msg:""};
+function openMat(i){MAT.id=LEVELS[S.level].steps[i];newMat(false);S.screen="mat";save();render()}
+function newMat(rr){MAT.sc=MSIT[MAT.id].gen(S.level);MAT.phase="story";MAT.i=0;MAT.ans=null;MAT.msg="";MAT.busy=false;
+ const st=MAT.sc.story[0];if(st.run)st.run(MAT.sc);if(rr!==false){renderMat()}setTimeout(()=>say(st.txt),250)}
+function dieHTML(v){return`<span class="mdie">${DIE[v].map(on=>`<i class="${on?"on":""}"></i>`).join("")}</span>`}
+function numDice(v){let h="",r=v;while(r>5){h+=dieHTML(5);r-=5}return h+(r?dieHTML(r):"")}
+function contHTML(c){
+ return`<div class="mc k-${c.k}${c.closed?" closed":""}" data-c="${c.id}" style="left:${c.x}%;top:${c.y}%;width:${c.w}%;height:${c.h}%">${c.lab?`<div class="mlab">${c.lab}</div>`:""}<div class="mitems">${c.items.map((it,j)=>`<span class="mi${it.hl?" hl":""}${it.cn?" cn":""}" data-mi="${j}">${it.e}${it.cn?`<b>${it.cn}</b>`:""}</span>`).join("")}</div>${c.closed?'<div class="lid">?</div>':""}${c.tag?`<div class="mtag">${c.tag}</div>`:""}${c.minus&&MAT.phase==="manip"&&c.items.length?`<button class="mminus" data-mminus="${c.id}" aria-label="Reprendre un objet">−</button>`:""}</div>`}
+function renderMStage(){
+ const s=MAT.sc,st=$("#mstage");if(!st)return;let h="";
+ if(s.type==="track"){
+  let cs="";for(let i=1;i<=s.N;i++)cs+=`<button class="tcase${MAT.ans===i?" sel":""}" data-mcase="${i}"><span class="tn">${i}</span>${s.pawn===i?'<span class="pawn">🐰</span>':""}${s.hopN&&s.pawn===i?`<b class="hopn">${s.hopN}</b>`:""}</button>`;
+  h=`${s.dice?`<div class="mdicebox">${dieHTML(s.dice)}</div>`:""}<div class="mtrack" style="grid-template-columns:repeat(${s.N},1fr)">${cs}</div>`;
+ }else h=s.conts.map(contHTML).join("");
+ st.innerHTML=h;fitM();
+}
+function fitM(){document.querySelectorAll("#mstage .mitems").forEach(b=>{if(b.parentNode.classList.contains("k-row"))return;const n=b.children.length;if(!n)return;const W=b.clientWidth,H=b.clientHeight;let s=Math.sqrt(W*H/n)*.7;s=Math.min(s,H*.55,W*.5,90);b.style.setProperty("--ms",Math.max(14,Math.floor(s))+"px")})}
+function sizeM(){const w=document.querySelector(".mstagewrap"),st=$("#mstage");if(!w||!st)return;
+ const W=w.clientWidth,H=Math.max(200,innerHeight-w.getBoundingClientRect().top-($("#mctl")?$("#mctl").offsetHeight:120)-70);const sw=Math.max(280,Math.min(W,H*16/9));
+ st.style.width=sw+"px";st.style.height=(sw*9/16)+"px";st.style.setProperty("--u",(sw/100)+"px");fitM()}
+async function fly(s,fid,tid,hl){
+ const F=cont(s,fid),T=cont(s,tid);if(!F||!F.items.length)return;
+ const st=$("#mstage"),fe=st.querySelector(`[data-c="${fid}"]`),src=F.closed?fe:(fe.querySelector(".mi:last-child")||fe),r1=src.getBoundingClientRect();
+ const it=F.items.pop();if(hl)it.hl=true;renderMStage();
+ const te=$("#mstage").querySelector(`[data-c="${tid}"]`),r2=te.getBoundingClientRect();
+ const g=document.createElement("div");g.className="mfly";g.textContent=it.e;
+ const x1=r1.left+r1.width/2,y1=r1.top+r1.height/2;g.style.left=x1+"px";g.style.top=y1+"px";g.style.fontSize=Math.max(26,Math.min(F.closed?60:r1.height,80))+"px";
+ document.body.appendChild(g);await sleep(30);
+ g.style.transform=`translate(-50%,-50%) translate(${r2.left+r2.width/2-x1}px,${r2.top+r2.height/2-y1}px)`;
+ await sleep(RM?60:580);g.remove();T.items.push(it);renderMStage();await sleep(RM?20:160)}
+const RM=(()=>{try{return matchMedia("(prefers-reduced-motion: reduce)").matches}catch(e){return false}})();
+function mtxtHTML(){const s=MAT.sc;const lines=s.story.slice(0,MAT.i+1).map(x=>x.txt);
+ if(MAT.phase==="manip")lines.push(s.manip);if(["q","check","done"].includes(MAT.phase))lines.push(s.q);
+ return lines.map((l,j)=>`<p${j===lines.length-1?' class="now"':""}>${esc(l)}</p>`).join("")}
+function mctlHTML(){const s=MAT.sc,P=MAT.phase;
+ if(P==="story")return`<button class="btn primary mbig" data-mact="next">▶ Suivant</button>`;
+ if(P==="manip")return`${MAT.msg?`<p class="mmsg">${esc(MAT.msg)}</p>`:""}<button class="btn primary mbig" data-mact="done">J'ai fini</button>`;
+ if(P==="q"){let h=MAT.msg?`<p class="mmsg">${esc(MAT.msg)}</p>`:"";
+  if(s.type==="track")h+=`<p class="mhint">Touche la case sur la piste.</p>`;
+  else{let c="";for(let v=1;v<=MAXA[S.level];v++)c+=`<button class="mcard${MAT.ans===v?" sel":""}" data-mans="${v}"><b>${v}</b><span class="mdd">${numDice(v)}</span></button>`;h+=`<div class="mcards">${c}</div>`}
+  if(MAT.ans!=null)h+=`<button class="btn primary mbig" data-mact="verify">🔍 On vérifie</button>`;return h}
+ if(P==="check")return`<p class="mhint">On vérifie…</p>`;
+ return`<p class="mmsg ${MAT.ok?"ok":""}">${esc(MAT.msg)}</p><button class="btn primary mbig" data-mact="new">🎲 Encore, avec d'autres nombres</button><button class="btn" data-go="level">Autres situations</button>`}
+function renderMtxt(){const t=$("#mtxt");if(t)t.innerHTML=mtxtHTML();const c=$("#mctl");if(c)c.innerHTML=mctlHTML()}
+function renderMat(){
+ const M=MSIT[MAT.id];
+ $("#main").innerHTML=`<div class="wrap mat"><div class="mbar"><button class="btn" data-go="level">← Progression ${S.level}</button><h1>${M.t}</h1><button class="btn" data-mact="new">🎲 Nouveaux nombres</button></div>
+ <div class="mtell"><div id="mtxt"></div><button class="speak" data-mact="say" aria-label="Écouter">🔊</button></div>
+ <div class="mstagewrap"><div class="mstage" id="mstage"></div></div><div class="mctl" id="mctl"></div>
+ <details class="mreal"><summary>🖐 Avec du vrai matériel (conseil pour l'enseignant)</summary><p>${M.real}</p></details></div>`;
+ renderMtxt();renderMStage();sizeM();
+}
+async function mNext(){if(MAT.busy)return;const s=MAT.sc;
+ if(MAT.i<s.story.length-1){MAT.busy=true;MAT.i++;const st=s.story[MAT.i];renderMtxt();say(st.txt);$("#mctl").innerHTML="";if(st.run){await st.run(s);renderMStage()}MAT.busy=false;renderMtxt();return}
+ MAT.phase=(s.type==="share"||s.type==="cmp")?"manip":"q";renderMtxt();sizeM();say(MAT.phase==="manip"?s.manip:s.q)}
+function mDone(){const s=MAT.sc;
+ if(s.type==="share"){const res=cont(s,"res").items.length,ls=s.conts.filter(c=>c.k==="doll").map(c=>c.items.length);
+  if(res>=s.k){MAT.msg="Il reste assez de gâteaux pour en redonner à chaque poupée : continue !";say(MAT.msg);renderMtxt();return}
+  if(ls.some(v=>v!==ls[0])){MAT.msg="Les poupées n'ont pas toutes la même chose. Regarde bien et corrige.";say(MAT.msg);renderMtxt();return}
+  MAT.msg=res?`Il en reste ${res} : on ne peut plus les partager.`:"";}
+ else MAT.msg="";
+ MAT.phase="q";renderMtxt();sizeM();say((MAT.msg?MAT.msg+" ":"")+s.q)}
+async function mVerify(){const s=MAT.sc;if(MAT.busy)return;MAT.busy=true;MAT.phase="check";MAT.msg="";renderMtxt();
+ if(s.type==="track"){let p=s.from;s.pawn=p;MAT.ans=MAT.ans;renderMStage();await sleep(400);
+  for(let k=1;k<=s.d;k++){p+=s.dir;s.pawn=p;s.hopN=k;renderMStage();say(String(k));await sleep(800)}s.hopN=0;renderMStage();}
+ else{
+  if(s.type==="cmp"){const J=cont(s,"jul");if(J.items.length!==s.ans){MAT.msg=`Julie doit avoir ${s.d} bille${s.d>1?"s":""} de plus que Pierre. Regarde !`;renderMtxt();say(MAT.msg);await sleep(1600);
+    while(J.items.length<s.ans){await fly(s,"res","jul");cont(s,"res").items.push({e:"🔵"})}while(J.items.length>s.ans)await fly(s,"jul","res")}
+   J.items.forEach((it,j)=>it.hl=j>=s.a);renderMStage()}
+  const ids=s.type==="share"?["d0"]:s.type==="cmp"?["jul"]:s.check;
+  ids.forEach(id=>{const c=cont(s,id);c.closed=false;c.tag=null});renderMStage();await sleep(600);let n=0;
+  for(const id of ids)for(const it of cont(s,id).items){if(s.onlyHl&&!it.hl)continue;n++;it.cn=n;renderMStage();say(String(n));await sleep(720)}
+ }
+ MAT.ok=MAT.ans===s.ans;MAT.msg=(MAT.ok?"Bravo ! ":`Tu avais dit ${MAT.ans}. `)+s.sol+(MAT.ok?"":" On essaie avec d'autres nombres ?");
+ MAT.phase="done";MAT.busy=false;renderMtxt();say(MAT.msg)}
+async function mTap(e){const s=MAT.sc;if(!s||MAT.busy)return;
+ const cs=e.target.closest("[data-mcase]");if(cs&&s.type==="track"&&MAT.phase==="q"){MAT.ans=+cs.dataset.mcase;renderMStage();renderMtxt();return}
+ if(MAT.phase!=="manip")return;const mm=e.target.closest("[data-mminus]");const ce=e.target.closest("#mstage [data-c]");if(!ce)return;const id=ce.dataset.c;MAT.busy=true;MAT.msg="";
+ if(mm){await fly(s,mm.dataset.mminus,"res")}
+ else if(s.type==="share"){if(id.startsWith("d"))await fly(s,"res",id)}
+ else if(s.type==="cmp"){if((id==="res"||id==="jul")&&cont(s,"jul").items.length<10){await fly(s,"res","jul");cont(s,"res").items.push({e:"🔵"});renderMStage()}}
+ MAT.busy=false;renderMtxt()}
+document.addEventListener("click",e=>{
+ const lv=e.target.closest("[data-level]");if(lv){S.level=lv.dataset.level;S.screen="level";save();render();return}
+ const si=e.target.closest("[data-stepi]");if(si){if(isMat(S.level))openMat(+si.dataset.stepi);else startStep(+si.dataset.stepi);return}
+ const sx=e.target.closest("[data-sayex]");if(sx){say(LEVELS[S.level].steps[+sx.dataset.sayex].ex);return}
+ if(S.screen!=="mat"||!MAT.sc)return;
+ const a=e.target.closest("[data-mact]");if(a){const v=a.dataset.mact;
+  if(v==="next")mNext();else if(v==="done")mDone();else if(v==="verify")mVerify();else if(v==="new"&&!MAT.busy)newMat();
+  else if(v==="say")say(MAT.sc.story.slice(0,MAT.i+1).map(x=>x.txt).join(" ")+(["q","check","done"].includes(MAT.phase)?" "+MAT.sc.q:MAT.phase==="manip"?" "+MAT.sc.manip:""));return}
+ const an=e.target.closest("[data-mans]");if(an&&MAT.phase==="q"){MAT.ans=+an.dataset.mans;renderMtxt();return}
+ mTap(e);
+});
+addEventListener("resize",()=>{if(S.screen==="mat")requestAnimationFrame(sizeM)});
+
 addEventListener("resize",()=>requestAnimationFrame(fit));
 /* ---------- Choix des objets ---------- */
 const P={open:false,mode:"add",idx:-1,cat:CATS[0],q:"",web:null,webQ:"",webMsg:"",timer:0,props:[],over:{},skip:{},best:{}};
