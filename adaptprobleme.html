@@ -174,6 +174,23 @@ a.btn{text-decoration:none;display:inline-block}
 .pic{font-size:40px;line-height:1;flex:none;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
 .pex{color:var(--muted);font-style:italic;font-size:15px;margin-top:4px}.pex .speak{font-size:15px;padding:0 6px;font-style:normal}
 .btn.back{margin:2px 0 10px;font-size:16px}.wsbar .btn.back{margin:0}
+.alayer{position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none}
+.az{cursor:default}
+.at{position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;line-height:1;transition:left var(--ad,560ms) ease-in-out,top var(--ad,560ms) ease-in-out,width var(--ad,560ms),height var(--ad,560ms),font-size var(--ad,560ms),opacity .4s,box-shadow .2s;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;border-radius:22%}
+.at img{width:100%;height:100%;object-fit:contain;pointer-events:none}
+.at .aw{width:86%;height:86%;border-radius:50%;color:#fff;font:700 .6em/1 Andika,sans-serif;display:flex;align-items:center;justify-content:center}
+.at.onarrow{background:#fff}.at.ghost{opacity:.22}.at.onarrow.ghost{opacity:.35}.at.gone{opacity:0;transform:translate(-50%,-50%) scale(.2)}
+.at.pop{animation:pop .45s ease-out}
+.at.hl{background:#FFE48A;box-shadow:0 0 0 2px #E0A800}
+.at.pair{box-shadow:0 0 0 2px #2A9D5C;background:#DDF3E6}
+.abadge{position:absolute;z-index:3;right:auto;bottom:auto;width:auto;font-size:calc(var(--u)*3.2);min-width:calc(var(--u)*5.5);height:calc(var(--u)*5.5)}
+.acap{position:absolute;left:50%;top:3%;transform:translateX(-50%);font:900 calc(var(--u)*7)/1 "Arial Black",Arial,sans-serif;opacity:0;transition:opacity .3s;pointer-events:none}
+.acap.on{opacity:1}.acap.plus{color:var(--c2)}.acap.moins{color:var(--c1)}
+.ahint{position:absolute;top:45%;left:0;right:0;text-align:center;color:var(--muted);font-size:calc(var(--u)*3)}
+#stage.aniempty{background:var(--paper);border-radius:18px;overflow:hidden}
+.amsg{font-weight:700;color:var(--c1);flex:1;min-width:240px}
+.aspeed{display:flex;align-items:center;gap:8px;margin-left:auto;font-weight:700;background:var(--ui);border:2px solid var(--line);border-radius:12px;padding:4px 12px}
+.aspeed input{width:160px}
 .prow{display:flex;flex-direction:column;align-items:flex-start;gap:4px}.pcount{font-size:13px;color:var(--muted)}
 .mat .mbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.mat .mbar h1{flex:1;margin:0;font-size:26px}
 .mtell{display:flex;gap:10px;align-items:flex-start;background:var(--ui);border-radius:12px;padding:8px 12px;margin:8px 0}
@@ -259,7 +276,7 @@ a.btn{text-decoration:none;display:inline-block}
   <header class="top">
     <div class="brand">
       <svg viewBox="0 0 104 60" aria-hidden="true"><rect x="4" y="12" width="34" height="34" rx="5" class="zs" style="stroke-width:6"/><polygon class="inkf" points="42,22 62,22 62,14 76,29 62,44 62,36 42,36"/><rect x="72" y="12" width="28" height="34" rx="5" class="zs" style="stroke-width:6;display:none"/><rect x="78" y="12" width="22" height="34" rx="5" class="zs" style="stroke-width:6"/></svg>
-      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 2.0</small>
+      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 2.3</small>
     </div>
     <nav class="steps" id="steps" aria-label="Étapes"></nav>
     <button class="btn" id="reset">Nouveau problème</button>
@@ -539,19 +556,20 @@ function toolsHTML(){
  if(S.stage==="img")h+=`<button class="btn primary" data-stage="cube">J'ai trouvé : passer aux cubes</button>`;
  else if(S.stage==="cube")h+=`<button class="btn primary" data-stage="cdu">Passer aux dizaines et unités</button>`;
  else if(S.stage==="cdu")h+=`<button class="btn primary" data-stage="num">Passer aux nombres</button>`;
+ else if(S.stage==="num")h+=`<button class="btn primary" data-stage="anim">▶ Animer la situation</button>`;
  return h;
 }
 function renderWS(anim){
- const k=SCH[S.schema];
+ const k=SCH[S.schema];ANI.tok++;
  $("#main").innerHTML=`<div class="ws wrap"><div class="wsbar">${backBtn()}<div class="wtitle">${k.title}<button class="speak" data-say="${S.schema}" aria-label="Écouter">🔊</button></div>
- <div class="seg" role="group" aria-label="Représentation">${[["img","Images"],["cube","Cubes"],["cdu","C D U"],["num","Nombres"]].map(([v,l])=>`<button data-stage="${v}" aria-pressed="${S.stage===v}">${l}</button>`).join("")}</div></div>
- <div class="stagewrap"><div class="stage${anim?" anim":""}" id="stage">${stageHTML()}</div></div>
- <div class="tools" id="tools">${toolsHTML()}</div>
- ${S.stage==="cdu"?`<div class="palette legend"><span class="lg"><span class="h mini"></span> 1 centaine = 100</span><span class="lg"><span class="t mini"></span> 1 dizaine = 10</span><span class="lg"><span class="u mini"></span> 1 unité = 1</span></div>`:S.stage==="num"?`<div class="calc"><label>Mon calcul <input id="calc" value="${esc(S.calc)}" placeholder="ex. 12 + 5 = 17" inputmode="text"></label><label>Ma réponse <input id="rep" value="${esc(S.rep)}" placeholder="Il y a…"></label></div>`
+ <div class="seg" role="group" aria-label="Représentation">${[["img","Images"],["cube","Cubes"],["cdu","C D U"],["num","Nombres"],["anim","▶ Animation"]].map(([v,l])=>`<button data-stage="${v}" aria-pressed="${S.stage===v}">${l}</button>`).join("")}</div></div>
+ <div class="stagewrap"><div class="stage${anim&&S.stage!=="anim"?" anim":""}" id="stage">${S.stage==="anim"?"":stageHTML()}</div></div>
+ <div class="tools" id="tools">${S.stage==="anim"?"":toolsHTML()}</div>
+ ${S.stage==="anim"?"":S.stage==="cdu"?`<div class="palette legend"><span class="lg"><span class="h mini"></span> 1 centaine = 100</span><span class="lg"><span class="t mini"></span> 1 dizaine = 10</span><span class="lg"><span class="u mini"></span> 1 unité = 1</span></div>`:S.stage==="num"?`<div class="calc"><label>Mon calcul <input id="calc" value="${esc(S.calc)}" placeholder="ex. 12 + 5 = 17" inputmode="text"></label><label>Ma réponse <input id="rep" value="${esc(S.rep)}" placeholder="Il y a…"></label></div>`
  :`<div class="palette" id="pal">${paletteHTML()}</div>`}</div>`;
- requestAnimationFrame(fit);
+ requestAnimationFrame(()=>{fit();if(S.stage==="anim")aniInit()});
 }
-function renderStage(newZone,k){k=k||1;const st=$("#stage");if(!st)return;st.classList.remove("anim");st.innerHTML=stageHTML();$("#tools").innerHTML=toolsHTML();
+function renderStage(newZone,k){k=k||1;const st=$("#stage");if(!st)return;if(S.stage==="anim"){aniInit();return}st.classList.remove("anim");st.innerHTML=stageHTML();$("#tools").innerHTML=toolsHTML();
  if(newZone&&S.zones[newZone]){const L=S.zones[newZone].length;st.querySelectorAll(`.zone[data-z="${newZone}"] .it`).forEach(e=>{if(+e.dataset.i>=L-k)e.classList.add("new")})}
  fit()}
 function sizeStage(){const w=document.querySelector(".stagewrap"),st=$("#stage");if(!w||!st)return;
@@ -610,7 +628,7 @@ function onUp(e){stopListen();const d=drag;drag=null;if(!d)return;if(d.ghost)d.g
 document.addEventListener("pointerdown",e=>{
  if(S.screen!=="ws")return;
  const tok=e.target.closest(".tok");if(tok){startDrag(e,{type:"pal",noun:+tok.dataset.tok});return}
- if(S.stage==="num"||S.stage==="cdu")return;
+ if(S.stage==="num"||S.stage==="cdu"||S.stage==="anim")return;
  const z=e.target.closest("#stage .zone");if(!z)return;const it=e.target.closest(".it");
  startDrag(e,it?{type:"item",zone:z.dataset.z,idx:+it.dataset.i,el:it}:{type:"tap",zone:z.dataset.z});
 });
@@ -619,7 +637,7 @@ document.addEventListener("keydown",e=>{
  if(e.key==="Enter"&&e.target.dataset&&e.target.dataset.in!==undefined){e.preventDefault();e.target.blur();return}
  if(e.key==="Escape"&&P.open){closePick();return}
  if(e.key==="Enter"&&e.target.id==="psearch"){e.preventDefault();closePick(true);return}
-if((e.key==="Enter"||e.key===" ")&&e.target.matches&&e.target.matches("#stage .zone")&&S.stage!=="num"&&S.stage!=="cdu"){e.preventDefault();tapZone(e.target.dataset.z)}});
+if((e.key==="Enter"||e.key===" ")&&e.target.matches&&e.target.matches("#stage .zone")&&S.stage!=="num"&&S.stage!=="cdu"&&S.stage!=="anim"){e.preventDefault();tapZone(e.target.dataset.z)}});
 document.addEventListener("click",e=>{
  const t=e.target.closest("button");if(!t)return;const d=t.dataset;
  if(d.go){go(d.go);return}
@@ -956,6 +974,142 @@ document.addEventListener("click",e=>{
  mTap(e);
 });
 addEventListener("resize",()=>{if(S.screen==="mat")requestAnimationFrame(sizeM)});
+
+/* ---------- Animation de la situation : écran vide, les objets apparaissent puis bougent ---------- */
+const ANI={tok:0,paused:false,state:"idle",z:{},R:{},plan:null,msg:""};
+const aSpeed=()=>S.aspeed||1;
+async function aWait(ms){const t=ANI.tok;let left=ms/aSpeed();while(left>0){if(t!==ANI.tok)throw"stop";if(!ANI.paused)left-=40;await new Promise(r=>setTimeout(r,40))}if(t!==ANI.tok)throw"stop"}
+function aSlots(z,n){
+ if(!n)return[];const ins=z.circle?.2:.06,ix=z.x+z.w*ins,iy=z.y+z.h*ins,iw=z.w*(1-2*ins),ih=z.h*(1-2*ins);
+ const tens=Math.floor(n/10),r=n%10,dice=r===0?[]:r<=5?[r]:[5,r-5];let best=null;
+ for(let rows=1;rows<=Math.max(1,Math.min(4,tens));rows++){
+  const cols=tens?Math.ceil(tens/rows):0,bw=cols?cols*1.35:0,bh=tens?rows*10.6-.6:0,dw=dice.length*3.6,dh=dice.length?3:0;
+  const tw=bw+(bw&&dw?.8:0)+dw,th=Math.max(bh,dh),c=Math.min(iw/tw,ih/th,Math.min(iw,ih)/3.2);
+  if(!best||c>best.c)best={c,cols,bw,tw,th}}
+ const {c,cols,bw,tw,th}=best,x0=ix+(iw-tw*c)/2,y0=iy+(ih-th*c)/2,out=[];
+ for(let b=0;b<tens;b++){const col=b%cols,row=Math.floor(b/cols),bx=x0+col*1.35*c+c/2,byTop=y0+row*10.6*c;for(let j=0;j<10;j++)out.push({x:bx,y:byTop+(9-j)*c+c/2,s:c*.94})}
+ let dx=x0+(bw?bw+.8:0)*c;const dy=y0+(th-3)*c/2;
+ for(const v of dice){DIE[v].forEach((on,i)=>{if(on)out.push({x:dx+(i%3)*c+c/2,y:dy+Math.floor(i/3)*c+c/2,s:c*.94})});dx+=3.6*c}
+ return out}
+function aRowSlots(z,n){const lines=Math.max(1,Math.ceil((z.max||n)/10)),c=Math.min(z.w/10.2,z.h/lines,90),out=[],nl=Math.ceil(n/10);
+ for(let i=0;i<n;i++)out.push({x:z.x+c*(i%10)+c/2,y:z.y+z.h/2+(Math.floor(i/10)-(lines-1)/2)*c,s:c*.9});return out}
+function aInner(ni){const o=S.nouns[ni];if(!o)return"●";if(!o.icon)return`<span class="aw" style="background:${col(ni)}">${esc((o.name||"?").slice(0,1).toUpperCase())}</span>`;
+ return isImg(o.icon)?`<img src="${esc(o.icon.slice(4))}" alt="" draggable="false">`:o.icon}
+function atomEl(ni,cls){const e=document.createElement("div");e.className="at"+(cls?" "+cls:"");e.innerHTML=aInner(ni);$("#alayer").appendChild(e);return e}
+function aPos(a,x,y,s,W){a.el.style.left=(x/10)+"%";a.el.style.top=(y/6.2)+"%";if(s!=null){const px=Math.max(6,s*W/1000);a.el.style.width=px+"px";a.el.style.height=px+"px";a.el.style.fontSize=(px*.86)+"px"}}
+function aSl(id,n){const z=ANI.R[id];return z.row?aRowSlots(z,n):aSlots(z,n)}
+function aMk(ni,x,y,s,cls){const st=$("#stage"),a={ni,el:atomEl(ni,cls),x,y,s};a.el.style.transition="none";aPos(a,x,y,s,st.clientWidth);void a.el.offsetWidth;a.el.style.transition="";return a}
+function aGo(a,p){a.x=p.x;a.y=p.y;if(p.s!=null)a.s=p.s;aPos(a,a.x,a.y,a.s,$("#stage").clientWidth)}
+function aBadge(){for(const id in ANI.R){const b=document.getElementById("ab-"+id);if(!b)continue;const n=(ANI.z[id]||[]).length;b.textContent=n;b.style.display=S.showNums&&n?"":"none"}}
+function aRelayout(){const W=$("#stage").clientWidth;Object.values(ANI.z).flat().forEach(a=>aPos(a,a.x,a.y,a.s,W))}
+/* 1) les objets arrivent en vrac, 2) ils se rangent en constellation, 3) petite pause */
+async function aAppear(id,n,nis,dom){const z=ANI.R[id],sl=aSl(id,n),L=(ANI.z[id]=ANI.z[id]||[]),step=Math.max(70,Math.min(260,2400/Math.max(1,n)));
+ for(let i=0;i<n;i++){const a=aMk(nis&&nis[i]!=null?nis[i]:dom,z.x+z.w*(.08+.84*Math.random()),z.y+z.h*(.08+.84*Math.random()),sl[i].s,"pop");L.push(a);aBadge();await aWait(step)}
+ await aWait(500);L.forEach((a,i)=>aGo(a,sl[i]));await aWait(900);await aWait(700)}
+/* un seul objet se déplace, les autres restent immobiles */
+async function aOne(a,fromId,toId,p,ms){if(fromId){const L=ANI.z[fromId],i=L.indexOf(a);if(i>=0)L.splice(i,1)}if(toId)(ANI.z[toId]=ANI.z[toId]||[]).push(a);aGo(a,p);aBadge();await aWait(ms||680)}
+async function aRegroup(id){const L=ANI.z[id]||[],sl=aSl(id,L.length);let moved=0;
+ for(let i=0;i<L.length;i++){const a=L[i],q=sl[i];if(Math.abs(a.x-q.x)<.5&&Math.abs(a.y-q.y)<.5&&Math.abs(a.s-q.s)<.5)continue;aGo(a,q);moved++;await aWait(680)}if(moved)await aWait(700)}
+function aCap(t,cls){const c=$("#acap");if(!c)return;c.textContent=t;c.className="acap"+(t?" on":"")+(cls?" "+cls:"")}
+function aBadges(){return Object.keys(ANI.R).map(id=>`<span class="badge abadge" id="ab-${id}" style="display:none"></span>`).join("")}
+function aPlaceBadges(){for(const id in ANI.R){const z=ANI.R[id],b=document.getElementById("ab-"+id);if(!b)continue;b.style.left=((z.row?z.x-75:z.x+z.w-45)/10)+"%";b.style.top=((z.row?z.y+z.h/2-25:z.y)/6.2)+"%"}}
+/* --- calcul des quantités inconnues --- */
+function aniPlan(){
+ const K=SCH[S.schema],kind=K.kind,c=id=>(S.zones[id]||[]).length,nis=id=>S.zones[id]||[];
+ const all=Object.values(S.zones).flat(),dom=all.length?all[0]:(S.sel||0);
+ const P={kind,dom,nis,err:""};
+ if(kind==="trans"){const N=S.n,s=[],a=[],g=[];for(let i=0;i<=N;i++)s.push(c("s"+i)||null);for(let i=0;i<N;i++){a.push(c("a"+i)||null);g.push(S.signs["a"+i]==="-"?-1:1)}
+  for(let rep=0;rep<N+2;rep++)for(let i=0;i<N;i++){
+   if(s[i]!=null&&a[i]!=null&&s[i+1]==null)s[i+1]=s[i]+g[i]*a[i];
+   else if(s[i+1]!=null&&a[i]!=null&&s[i]==null)s[i]=s[i+1]-g[i]*a[i];
+   else if(s[i]!=null&&s[i+1]!=null&&a[i]==null){a[i]=Math.abs(s[i+1]-s[i]);g[i]=s[i+1]>=s[i]?1:-1}}
+  if(s.concat(a).some(v=>v==null))P.err="Place les objets connus dans les cases (le début ou la fin, et chaque changement) pour pouvoir animer.";
+  else if(s.some(v=>v<0))P.err="Avec ces quantités, on enlèverait plus d'objets qu'il n'y en a. Vérifie les cases et les signes + / −.";
+  Object.assign(P,{N,s,a,g});P.nZ=N;}
+ else if(kind==="comp"){const N=S.n,p=[];for(let i=0;i<N;i++)p.push(c("p"+i)||null);let t=c("tout")||null;const miss=p.filter(v=>v==null).length;
+  if(t==null&&!miss){t=p.reduce((x,y)=>x+y,0);P.mode="join"}
+  else if(t!=null&&miss===1){const i=p.indexOf(null),r=t-p.reduce((x,y)=>x+(y||0),0);if(r<0)P.err="Les parties connues dépassent le tout. Vérifie les cases.";p[i]=r;P.mode="split";P.unk=i}
+  else if(t!=null&&!miss)P.mode="join";
+  else P.err="Place les objets connus : toutes les parties, ou le tout et toutes les parties sauf une.";
+  Object.assign(P,{N,p,t});P.nZ=N;}
+ else if(kind==="cmp"){let a=c("p0")||null,b=c("p1")||null,d=c("ecart")||null;const g=S.signs.ecart==="-"?-1:1;
+  if(a!=null&&b!=null){P.mode="diff";d=Math.abs(b-a)}else if(a!=null&&d!=null){b=a+g*d;P.mode="build1"}else if(b!=null&&d!=null){a=b-g*d;P.mode="build0"}
+  else P.err="Place les objets connus dans deux des trois cases pour pouvoir animer.";
+  if(!P.err&&(a<0||b<0))P.err="Avec ces quantités, la comparaison est impossible. Vérifie le signe + / −.";
+  Object.assign(P,{a,b,d});P.nZ=1;}
+ else{const t=c("centre"),p=[];for(let i=0;i<S.n;i++)p.push(c("p"+i));const known=p.filter(v=>v>0).length;
+  if(K.q==="nombre"){const m=p.find(v=>v>0);if(!t||!m)P.err="Place le tout au centre et le contenu d'une part pour pouvoir animer.";else{P.mode="groups";P.m=m;P.t=t;P.g=Math.floor(t/m);P.nZ=Math.max(2,Math.min(10,P.g));if(P.g>10)P.err="Il faudrait plus de 10 parts : trop pour l'animation."}}
+  else if(t&&!known){P.mode="share";P.t=t;P.nZ=S.n}
+  else if(!t&&known===S.n){P.mode="gather";P.p=p;P.nZ=S.n}
+  else if(!t&&p[0]>0){P.mode="same";P.p=p;P.nZ=S.n}
+  else if(t&&known===S.n){P.mode="gather";P.p=p;P.nZ=S.n;P.keep=true}
+  else P.err="Place soit le tout au centre, soit les objets d'une part (ou de toutes les parts), pour pouvoir animer."}
+ const tooMany=Object.values(S.zones).some(l=>l.length>100)||[P.t,P.a,P.b].concat(P.s||[],P.p||[]).some(v=>v>100);
+ if(!P.err&&tooMany)P.err="Plus de 100 objets dans une case : c'est trop pour l'animation.";
+ return P}
+/* --- zones invisibles où se placent les groupes d'objets --- */
+function aRects(P){const R={};
+ if(P.kind==="trans"){R.g={x:50,y:50,w:560,h:520};R.A={x:640,y:120,w:330,h:380}}
+ else if(P.kind==="comp"){const N=P.N,pw=Math.min(300,900/N-30),gap=(1000-N*pw)/(N+1);for(let i=0;i<N;i++)R["p"+i]={x:gap+i*(pw+gap),y:30,w:pw,h:250};R.t={x:260,y:330,w:480,h:270}}
+ else if(P.kind==="cmp"){const mx=Math.max(P.a,P.b);R.p0={x:90,y:90,w:640,h:190,row:1,max:mx};R.p1={x:90,y:340,w:640,h:190,row:1,max:mx};R.d={x:760,y:190,w:230,h:240}}
+ else{const L=layout(S.schema,P.nZ||S.n,true);L.Z.forEach(z=>{if(z.id==="centre"){const cx=z.x+z.w/2,cy=z.y+z.h/2,r=z.w*.95;R.c={x:cx-r,y:cy-r*.8,w:2*r,h:1.6*r}}else R[z.id]={x:z.x-20,y:z.y-20,w:z.w+40,h:z.h+40}})}
+ return R}
+function aniInit(){ANI.tok++;ANI.paused=false;ANI.z={};const P=aniPlan();ANI.plan=P;ANI.msg=P.err;ANI.state=P.err?"err":"idle";
+ const st=$("#stage");if(!st)return;ANI.R=P.err?{}:aRects(P);
+ st.innerHTML=`<div class="alayer" id="alayer"></div>${aBadges()}<div class="acap" id="acap"></div>${P.err?"":`<div class="ahint" id="ahint">Appuie sur « ▶ Lancer l'animation ».</div>`}`;
+ st.classList.add("aniempty");st.style.setProperty("--ad",Math.round(560/aSpeed())+"ms");$("#tools").innerHTML=aniToolsHTML();sizeStage();aPlaceBadges()}
+/* --- déroulé --- */
+async function aniScript(){const P=ANI.plan,Z=ANI.z,arr=id=>(Z[id]=Z[id]||[]),st=$("#stage"),W=()=>st.clientWidth;const h=$("#ahint");if(h)h.remove();
+ const pause=()=>aWait(800);
+ if(P.kind==="trans"){
+  await aAppear("g",P.s[0],P.nis("s0"),P.dom);
+  for(let i=0;i<P.N;i++){const n=P.a[i],nis=P.nis("a"+i);
+   aCap((P.g[i]>0?"+ ":"− ")+n,P.g[i]>0?"plus":"moins");await aWait(900);
+   if(P.g[i]>0){const sl=aSl("A",n);for(let k=0;k<n;k++){const a=aMk(nis[k]!=null?nis[k]:P.dom,1080,sl[k].y,sl[k].s);await aOne(a,null,"A",sl[k])}
+    await pause();Z.g=arr("g").concat(arr("A"));Z.A=[];aBadge();aCap("")}
+   else{for(let k=0;k<n;k++){const L=arr("g"),a=L[L.length-1];if(!a)break;a.el.classList.add("hl");await aWait(300);L.pop();aBadge();aGo(a,{x:-90,y:a.y});setTimeout(()=>a.el.classList.add("gone"),450/aSpeed());setTimeout(()=>a.el.remove(),1800);await aWait(680)}
+    await pause();aCap("")}
+   await aRegroup("g");await pause()}}
+ else if(P.kind==="comp"){
+  if(P.mode==="join"){for(let i=0;i<P.N;i++)await aAppear("p"+i,P.p[i],P.nis("p"+i),P.dom);await pause();
+   const T=aSl("t",P.t);let k=0;for(let i=0;i<P.N;i++){for(const a of arr("p"+i).slice())await aOne(a,"p"+i,"t",T[k++]);await aWait(300)}}
+  else{await aAppear("t",P.t,P.nis("tout"),P.dom);await pause();const order=[...Array(P.N).keys()].filter(i=>i!==P.unk).concat([P.unk]);
+   for(const i of order){const n=i===P.unk?arr("t").length:P.p[i],T=aSl("p"+i,n);for(let k=0;k<n;k++){const L=arr("t"),a=L[L.length-1];if(!a)break;await aOne(a,"t","p"+i,T[k])}await aWait(300)}}}
+ else if(P.kind==="cmp"){
+  const pair=async(a,b)=>{a.el.classList.add("pair");b.el.classList.add("pair");await aWait(320)};
+  if(P.mode==="diff"){await aAppear("p0",P.a,P.nis("p0"),P.dom);await aAppear("p1",P.b,P.nis("p1"),P.dom);await pause();
+   const m=Math.min(P.a,P.b),big=P.b>=P.a?"p1":"p0";for(let k=0;k<m;k++)await pair(arr("p0")[k],arr("p1")[k]);
+   const ex=arr(big).slice(m);ex.forEach(a=>a.el.classList.add("hl"));await pause();const D=aSl("d",ex.length);for(let k=0;k<ex.length;k++)await aOne(ex[k],big,"d",D[k])}
+  else{const ref=P.mode==="build1"?"p0":"p1",tgt=P.mode==="build1"?"p1":"p0",nr=P.mode==="build1"?P.a:P.b,nt=P.mode==="build1"?P.b:P.a,m=Math.min(nr,nt);
+   await aAppear(ref,nr,P.nis(ref),P.dom);await pause();
+   for(let k=0;k<m;k++){const a=arr(ref)[k],c=aMk(a.ni,a.x,a.y,a.s,"pair");a.el.classList.add("pair");await aOne(c,null,tgt,aSl(tgt,k+1)[k],680)}
+   await pause();
+   if(nt>nr){const nis=P.nis("ecart");aCap("+ "+(nt-nr),"plus");await aWait(700);for(let k=m;k<nt;k++){const q=aSl(tgt,k+1)[k],a=aMk(nis[k-m]!=null?nis[k-m]:P.dom,1080,q.y,q.s,"hl");await aOne(a,null,tgt,q)}}
+   else if(nr>nt){const ex=arr(ref).slice(m);aCap("− "+ex.length,"moins");ex.forEach(a=>a.el.classList.add("hl"));await pause();const D=aSl("d",ex.length);for(let k=0;k<ex.length;k++)await aOne(ex[k],ref,"d",D[k])}
+   await pause();aCap("")}}
+ else{
+  if(P.mode==="share"||P.mode==="groups"){await aAppear("c",P.t,P.nis("centre"),P.dom);await pause()}
+  if(P.mode==="share"){const m=Math.floor(P.t/S.n),T=[];for(let j=0;j<S.n;j++)T.push(aSl("p"+j,m));
+   for(let r=0;r<m;r++)for(let j=0;j<S.n;j++){const L=arr("c"),a=L[L.length-1];await aOne(a,"c","p"+j,T[j][r],680)}
+   arr("c").forEach(a=>a.el.classList.add("hl"))}
+  else if(P.mode==="groups"){for(let g=0;g<P.g;g++){const T=aSl("p"+g,P.m);for(let k=0;k<P.m;k++){const L=arr("c"),a=L[L.length-1];await aOne(a,"c","p"+g,T[k],680)}await aWait(300)}
+   arr("c").forEach(a=>a.el.classList.add("hl"))}
+  else{const nis=P.nis("p0"),cnt=[];for(let i=0;i<S.n;i++){const n=P.mode==="same"?P.p[0]:P.p[i];cnt.push(n);await aAppear("p"+i,n,P.mode==="same"?nis:P.nis("p"+i),P.dom)}await pause();
+   const T=aSl("c",cnt.reduce((x,y)=>x+y,0));let k=0;for(let i=0;i<S.n;i++){for(const a of arr("p"+i).slice())await aOne(a,"p"+i,"c",T[k++],680);await aWait(250)}}}
+ await aWait(600)}
+async function aniRun(){if(ANI.state==="err")return;if(ANI.state!=="idle")aniInit();ANI.state="run";ANI.paused=false;$("#tools").innerHTML=aniToolsHTML();const t=ANI.tok;
+ try{await aniScript();if(t===ANI.tok){ANI.state="done";$("#tools").innerHTML=aniToolsHTML()}}catch(e){if(e!=="stop")throw e}}
+function aniToolsHTML(){const sp=aSpeed();
+ let h=ANI.state==="err"?`<span class="amsg">${esc(ANI.msg)}</span>`:
+  ANI.state==="run"?`<button class="btn primary" data-ani="pause">${ANI.paused?"▶ Reprendre":"⏸ Pause"}</button><button class="btn" data-ani="restart">↺ Recommencer</button>`:
+  `<button class="btn primary" data-ani="play">${ANI.state==="done"?"↺ Rejouer l'animation":"▶ Lancer l'animation"}</button>`;
+ if(ANI.state!=="err")h+=`<button class="btn${S.showNums?" on":""}" data-ani="nums" aria-pressed="${!!S.showNums}">Voir combien</button>`;
+ return h+`<label class="aspeed">🐢 <input type="range" id="aspeed" min="0.25" max="3" step="0.25" value="${sp}" aria-label="Vitesse de l'animation"> 🐇 <b>×${sp}</b></label>`}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-ani]");if(!b)return;const v=b.dataset.ani;
+ if(v==="play")aniRun();else if(v==="pause"){ANI.paused=!ANI.paused;$("#tools").innerHTML=aniToolsHTML()}else if(v==="restart"){aniInit();aniRun()}
+ else if(v==="nums"){S.showNums=!S.showNums;save();aBadge();$("#tools").innerHTML=aniToolsHTML()}});
+document.addEventListener("input",e=>{if(e.target.id!=="aspeed")return;S.aspeed=+e.target.value;save();const st=$("#stage");if(st)st.style.setProperty("--ad",Math.round(560/aSpeed())+"ms");const l=e.target.parentNode.querySelector("b");if(l)l.textContent="×"+S.aspeed});
+addEventListener("resize",()=>{if(S.screen==="ws"&&S.stage==="anim")requestAnimationFrame(()=>{sizeStage();aRelayout()})});
 
 addEventListener("resize",()=>requestAnimationFrame(fit));
 /* ---------- Choix des objets ---------- */
