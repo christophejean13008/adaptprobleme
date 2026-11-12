@@ -174,6 +174,26 @@ a.btn{text-decoration:none;display:inline-block}
 .pic{font-size:40px;line-height:1;flex:none;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
 .pex{color:var(--muted);font-style:italic;font-size:15px;margin-top:4px}.pex .speak{font-size:15px;padding:0 6px;font-style:normal}
 .btn.back{margin:2px 0 10px;font-size:16px}.wsbar .btn.back{margin:0}
+.slayer{position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none}
+.chr{position:absolute;transform:translate(-50%,-50%);line-height:1;transition:left var(--wd,1200ms) ease-in-out,top var(--wd,1200ms) ease-in-out,opacity .4s;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
+.chr.walk{animation:sbob .3s ease-in-out infinite alternate}.chr.play{animation:swig .45s ease-in-out infinite alternate}
+@keyframes sbob{from{transform:translate(-50%,-50%)}to{transform:translate(-50%,-57%)}}
+@keyframes swig{from{transform:translate(-50%,-50%) rotate(-8deg)}to{transform:translate(-50%,-50%) rotate(8deg)}}
+.sbub{position:absolute;transform:translate(-50%,-50%);background:#fff;color:#14202B;border:3px solid #14202B;border-radius:16px;padding:.02em .45em;font:900 calc(var(--u)*4.6)/1.15 "Arial Black",Arial,sans-serif;transition:opacity .35s;white-space:nowrap}
+.sbub.ans{background:#DDF3E6;border-color:#2A9D5C;color:#1B6B3E}.sbub.neg{color:#D7263D;border-color:#D7263D}.sbub.pos{color:#2A9D5C;border-color:#2A9D5C}
+.sbag{position:absolute;transform:translate(-50%,-50%);line-height:1;transition:opacity .4s;font-size:calc(var(--u)*12);font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
+.sbag b{position:absolute;left:50%;top:62%;transform:translate(-50%,-50%);font:900 .42em/1 "Arial Black",Arial,sans-serif;color:#fff;text-shadow:0 0 5px #000}
+.sbox{position:absolute;border:3px dashed #8A949E;border-radius:12px;transition:opacity .4s}
+.scap{position:absolute;left:3%;right:3%;top:2.5%;text-align:center;font:700 calc(var(--u)*3.4)/1.25 Andika,sans-serif;color:var(--ink)}
+.smini{position:absolute;right:1.2%;bottom:1.5%;width:21%;background:rgba(255,255,255,.88);border-radius:8px;padding:.4%;pointer-events:none}
+.smini svg{width:100%;height:auto;display:block}
+.smini .inkf{fill:#C3CAD1}.smini .lns{stroke:#C3CAD1}
+.mz{fill:#fff;stroke:#C3CAD1;stroke-width:14}.mz.on{stroke:#2F6FDE;fill:#EAF1FF;stroke-width:22}
+.mt{fill:#8A949E;font-family:"Arial Black",Arial,sans-serif;font-weight:900}.mt.on{fill:#2F6FDE}.mt.inv{fill:#fff}
+#sstory{flex:1 1 420px;min-height:54px;font-size:17px;border:2px solid var(--line);border-radius:10px;padding:6px 10px;background:var(--paper);color:var(--ink);resize:vertical}
+#schr{font-size:16px;border:2px solid var(--line);border-radius:10px;padding:6px;background:var(--paper);color:var(--ink)}
+.sctl{display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap}.sctl .btn{min-width:48px;font-size:18px}.sctl .btn:disabled{opacity:.35}
+.amode{margin-left:0}
 .alayer{position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none}
 .az{cursor:default}
 .at{position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;line-height:1;transition:left var(--ad,560ms) ease-in-out,top var(--ad,560ms) ease-in-out,width var(--ad,560ms),height var(--ad,560ms),font-size var(--ad,560ms),opacity .4s,box-shadow .2s;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;border-radius:22%}
@@ -276,7 +296,7 @@ a.btn{text-decoration:none;display:inline-block}
   <header class="top">
     <div class="brand">
       <svg viewBox="0 0 104 60" aria-hidden="true"><rect x="4" y="12" width="34" height="34" rx="5" class="zs" style="stroke-width:6"/><polygon class="inkf" points="42,22 62,22 62,14 76,29 62,44 62,36 42,36"/><rect x="72" y="12" width="28" height="34" rx="5" class="zs" style="stroke-width:6;display:none"/><rect x="78" y="12" width="22" height="34" rx="5" class="zs" style="stroke-width:6"/></svg>
-      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 2.3</small>
+      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 2.4</small>
     </div>
     <nav class="steps" id="steps" aria-label="Étapes"></nav>
     <button class="btn" id="reset">Nouveau problème</button>
@@ -1054,7 +1074,7 @@ function aRects(P){const R={};
  else if(P.kind==="cmp"){const mx=Math.max(P.a,P.b);R.p0={x:90,y:90,w:640,h:190,row:1,max:mx};R.p1={x:90,y:340,w:640,h:190,row:1,max:mx};R.d={x:760,y:190,w:230,h:240}}
  else{const L=layout(S.schema,P.nZ||S.n,true);L.Z.forEach(z=>{if(z.id==="centre"){const cx=z.x+z.w/2,cy=z.y+z.h/2,r=z.w*.95;R.c={x:cx-r,y:cy-r*.8,w:2*r,h:1.6*r}}else R[z.id]={x:z.x-20,y:z.y-20,w:z.w+40,h:z.h+40}})}
  return R}
-function aniInit(){ANI.tok++;ANI.paused=false;ANI.z={};const P=aniPlan();ANI.plan=P;ANI.msg=P.err;ANI.state=P.err?"err":"idle";
+function aniInit(){if(S.amode==="story"){ANI.tok++;storyInit();return}STY.tok++;ANI.tok++;ANI.paused=false;ANI.z={};const P=aniPlan();ANI.plan=P;ANI.msg=P.err;ANI.state=P.err?"err":"idle";
  const st=$("#stage");if(!st)return;ANI.R=P.err?{}:aRects(P);
  st.innerHTML=`<div class="alayer" id="alayer"></div>${aBadges()}<div class="acap" id="acap"></div>${P.err?"":`<div class="ahint" id="ahint">Appuie sur « ▶ Lancer l'animation ».</div>`}`;
  st.classList.add("aniempty");st.style.setProperty("--ad",Math.round(560/aSpeed())+"ms");$("#tools").innerHTML=aniToolsHTML();sizeStage();aPlaceBadges()}
@@ -1100,7 +1120,7 @@ async function aniScript(){const P=ANI.plan,Z=ANI.z,arr=id=>(Z[id]=Z[id]||[]),st
 async function aniRun(){if(ANI.state==="err")return;if(ANI.state!=="idle")aniInit();ANI.state="run";ANI.paused=false;$("#tools").innerHTML=aniToolsHTML();const t=ANI.tok;
  try{await aniScript();if(t===ANI.tok){ANI.state="done";$("#tools").innerHTML=aniToolsHTML()}}catch(e){if(e!=="stop")throw e}}
 function aniToolsHTML(){const sp=aSpeed();
- let h=ANI.state==="err"?`<span class="amsg">${esc(ANI.msg)}</span>`:
+ let h=amodeHTML()+ANI.state==="err"?`<span class="amsg">${esc(ANI.msg)}</span>`:
   ANI.state==="run"?`<button class="btn primary" data-ani="pause">${ANI.paused?"▶ Reprendre":"⏸ Pause"}</button><button class="btn" data-ani="restart">↺ Recommencer</button>`:
   `<button class="btn primary" data-ani="play">${ANI.state==="done"?"↺ Rejouer l'animation":"▶ Lancer l'animation"}</button>`;
  if(ANI.state!=="err")h+=`<button class="btn${S.showNums?" on":""}" data-ani="nums" aria-pressed="${!!S.showNums}">Voir combien</button>`;
@@ -1109,7 +1129,219 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-ani]");if(
  if(v==="play")aniRun();else if(v==="pause"){ANI.paused=!ANI.paused;$("#tools").innerHTML=aniToolsHTML()}else if(v==="restart"){aniInit();aniRun()}
  else if(v==="nums"){S.showNums=!S.showNums;save();aBadge();$("#tools").innerHTML=aniToolsHTML()}});
 document.addEventListener("input",e=>{if(e.target.id!=="aspeed")return;S.aspeed=+e.target.value;save();const st=$("#stage");if(st)st.style.setProperty("--ad",Math.round(560/aSpeed())+"ms");const l=e.target.parentNode.querySelector("b");if(l)l.textContent="×"+S.aspeed});
-addEventListener("resize",()=>{if(S.screen==="ws"&&S.stage==="anim")requestAnimationFrame(()=>{sizeStage();aRelayout()})});
+addEventListener("resize",()=>{if(S.screen==="ws"&&S.stage==="anim"&&S.amode!=="story")requestAnimationFrame(()=>{sizeStage();aRelayout()})});
+/* ---------- Histoire animée : un personnage joue le problème, étape par étape ---------- */
+const STY={tok:0,k:0,steps:[],states:[],playing:0,busy:false,err:"",P:null,L:null,mini:null};
+const PERSOS=[["garçon","👦","il","le garçon"],["fille","👧","elle","la fille"],["maîtresse","👩‍🏫","elle","la maîtresse"],["maître","👨‍🏫","il","le maître"],["maman","👩","elle","maman"],["papa","👨","il","papa"],["mamie","👵","elle","mamie"],["papi","👴","il","papi"],["fermière","👩‍🌾","elle","la fermière"],["fermier","🧑‍🌾","il","le fermier"],["boulangère","👩‍🍳","elle","la boulangère"],["boulanger","🧑‍🍳","il","le boulanger"],["dame","👩","elle","la dame"],["monsieur","👨","il","le monsieur"],["enfant","🧒","il","l'enfant"]];
+const VERBES=[["perd","perdu",-1],["gagne","gagné",1],["donne","donné",-1],["reçoit","reçu",1],["mange","mangé",-1],["achète","acheté",1],["vend","vendu",-1],["trouve","trouvé",1],["casse","cassé",-1],["ajoute","ajouté",1],["enlève","enlevé",-1],["dépense","dépensé",-1],["offre","offert",-1],["prend","pris",1],["cueille","cueilli",1],["ramasse","ramassé",1],["utilise","utilisé",-1],["jette","jeté",-1]];
+const capF=s=>s?s[0].toUpperCase()+s.slice(1):s;
+function sInfo(){const t=" "+(S.story||"")+" ",lo=t.toLowerCase(),I={};
+ let best=null;for(const p of PERSOS){const i=lo.search(new RegExp("[^a-zà-ÿ]"+p[0]+"s?[^a-zà-ÿ]"));if(i>=0&&(!best||i<best.i))best={i,p}}
+ const names=[];const re=/(?:^|[^A-Za-zÀ-ÿ])([A-ZÉÈÀ][a-zéèêëàâîïôûç]+)/g;let m;const stop=["Combien","Il","Elle","Ils","Elles","Le","La","Les","Un","Une","Des","Au","Aux","Puis","Ensuite","Maintenant","Quel","Quelle","Quels","Dans","Sur","Pour","Chaque","On","Quand","Après","Avant","Mais","Et","Alors","Hier","Ce","Cette","Ces","Son","Sa","Ses","Leur","En","De","Du","Il","Mon","Ma","Mes","Tous","Toutes","Chacun","Chacune","Avec","Pendant"];
+ while((m=re.exec(t))){if(!stop.includes(m[1])&&!names.includes(m[1]))names.push(m[1])}
+ const fem=/\belle\b/.test(lo)&&!/\bil\b/.test(lo);
+ const ch=S.storyChr?PERSOS.find(p=>p[1]===S.storyChr):null;
+ const P0=ch||(best&&best.p)||(fem?PERSOS[1]:PERSOS[0]);
+ I.e=P0[1];I.pr=P0[2];I.sub=names[0]||P0[3];I.names=names;
+ let v=null;for(const x of VERBES){const i=lo.search(new RegExp("\\b(en |l'|les |la |le )?"+x[0].slice(0,-1)));if(i>=0&&(!v||i<v.i))v={i,x}}
+ I.v=v?v.x:null;I.lo=lo;return I}
+function verbOf(I,sign){if(I.v&&I.v[2]===sign)return I.v;return sign<0?["perd","perdu",-1]:["gagne","gagné",1]}
+/* lecture d'une histoire de transformation à une étape quand les cases ne sont pas remplies */
+function parseTrans(I){const nums=((S.story||"").match(/\d+/g)||[]).map(Number);if(nums.length!==2)return null;
+ const lo=I.lo,sign=I.v?I.v[2]:(/perd|donne|mange|enl|vend|casse/.test(lo)?-1:1);
+ let uz="s1";if(/combien[^?]*(au d[ée]part|au d[ée]but|avant|d'abord)/.test(lo))uz="s0";else if(/combien[^?]*(perdu|gagn|donn|re[çc]u|mang|achet|vend|trouv|cass|ajout|enlev|d[ée]pens|offert|pris|cueilli|ramass|utilis|jet)/.test(lo))uz="a0";
+ let s0,a,s1;if(uz==="s0"){[a,s1]=nums;s0=s1-sign*a}else if(uz==="a0"){[s0,s1]=nums;a=Math.abs(s1-s0)}else{[s0,a]=nums;s1=s0+sign*a}
+ if(s0<0||s1<0||a<1)return null;
+ return{kind:"trans",N:1,s:[s0,s1],a:[a],g:[a&&uz==="a0"?(s1>=s0?1:-1):sign],nis:()=>[],dom:0,uz,fromText:true}}
+/* --- construction des états successifs --- */
+function sBuild(P,uz,I){
+ const st={},states=[],steps=[];let ord=[],n=0;const W=()=>Object.assign;
+ const snap=(cap,hl,vals)=>{const o={};for(const k in st)o[k]=Object.assign({},st[k]);states.push(o);steps.push({cap,hl,vals:Object.assign({},vals),ord:ord.slice()});ord=[]};
+ const born={};const atom=(ni,x,y,s,v)=>{const id="m"+(n++);st[id]={t:"a",ni,x,y,s,v,c:""};born[id]=Object.assign({},st[id],{v:0});return id};
+ const go=(id,p)=>{Object.assign(st[id],p);ord.push(id)};
+ const nm=ni=>{const o=S.nouns[ni];return o&&o.name?o.name:"objets"};
+ const vals={};let first=true;
+ const init=()=>{const o={};for(const k in st)o[k]=Object.assign({},st[k]);states.push(o)};
+ if(P.kind==="trans"){
+  const N=P.N,dom=(P.nis("s0")[0]??P.nis("a0")[0]??P.dom),nn=nm(dom),pr=I.pr,Sub=capF(I.sub);
+  st.C={t:"c",e:I.e,x:-130,y:390,s:210,v:1,c:""};st.B={t:"b",txt:"",x:235,y:205,v:0,c:""};st.G={t:"g",x:520,y:420,s:130,v:0};
+  const pile={x:360,y:230,w:330,h:320},A={x:730,y:180,w:240,h:270};
+  init();
+  const unk0=uz==="s0";let pileIds=[];const n0=P.s[0],sl0=aSlots(pile,n0),nis0=P.nis("s0");
+  for(let i=0;i<n0;i++){const id=atom(nis0[i]??dom,unk0?520:sl0[i].x,unk0?420:sl0[i].y,sl0[i].s,0);pileIds.push(id);if(!unk0)go(id,{v:1})}
+  st.C.x=235;st.B.v=1;st.B.txt=unk0?"?":String(n0);st.B.c="";st.G.v=unk0?1:0;vals.s0=unk0?"?":n0;
+  snap(unk0?`Au début, ${I.sub} a des ${nn}… mais combien ?`:`Au début, ${I.sub} a ${n0} ${nn}.`,["s0"],vals);
+  let inBag=unk0,lostAll=[],gainAll=[];
+  for(let i=0;i<N;i++){const a=P.a[i],g=P.g[i],vb=verbOf(I,g),unkA=uz==="a"+i;st.C.c="play";
+   let gainIds=[];if(g>0){const sl=aSlots(A,a),nis=P.nis("a"+i);for(let k=0;k<a;k++){const id=atom(nis[k]??dom,1090,sl[k].y,sl[k].s,0);go(id,{v:1,x:sl[k].x,y:sl[k].y});gainIds.push(id)}gainAll.push(...gainIds)}
+   else{const take=pileIds.splice(pileIds.length-a,a).reverse();take.forEach((id,k)=>go(id,{v:1,x:1090,y:470+((k*29)%90)}));lostAll.push(...take)}
+   st.B.txt=unkA?"?":(g>0?"+":"−")+a;st.B.c=g>0?"pos":"neg";vals["a"+i]=unkA?"?":a;
+   snap(unkA?`${capF(pr)} en ${vb[0]}… combien ?`:`${capF(pr)} en ${vb[0]} ${a}.`,["a"+i],vals);
+   st.C.c="";const zid="s"+(i+1),cnt=P.s[i+1],unkS=uz===zid||(unk0&&i<N-1);
+   if(g>0)pileIds=pileIds.concat(gainIds);
+   if(!unkS||i===N-1){const sl=aSlots(pile,pileIds.length);pileIds.forEach((id,k)=>go(id,{v:1,x:sl[k].x,y:sl[k].y,s:sl[k].s}));if(inBag){st.G.v=0;inBag=false}}
+   st.B.txt=unkS?"?":String(cnt);st.B.c="";vals[zid]=unkS?"?":cnt;
+   const last=i===N-1;snap(unkS?`Combien en a-t-${pr} ${last?"maintenant":"ensuite"} ?`:`${last?"Maintenant":"Ensuite"}, ${pr} en a ${cnt}.`,[zid],vals)}
+  if(uz){const ans=uz==="s0"?P.s[0]:uz[0]==="a"?P.a[+uz.slice(1)]:P.s[+uz.slice(1)];
+   if(uz==="s0"){const sl=aSlots(pile,n0);let k=0;for(const id of Object.keys(st)){if(st[id].t!=="a")continue;if(lostAll.includes(id)||pileIds.includes(id)){if(!gainAll.includes(id)){go(id,{v:1,x:sl[k].x,y:sl[k].y,s:sl[k].s,c:lostAll.includes(id)?"ghost":""});k++}}}gainAll.forEach(id=>go(id,{c:"ghost"}))}
+   else if(uz[0]==="a"){const i=+uz.slice(1);if(P.g[i]<0){const sl=aSlots(A,P.a[i]);lostAll.forEach((id,k)=>go(id,{v:1,x:sl[k].x,y:sl[k].y,s:sl[k].s,c:"hl"}))}else gainAll.forEach(id=>go(id,{c:"hl"}))}
+   st.B.txt=uz[0]==="a"?(P.g[+uz.slice(1)]>0?"+":"−")+ans:String(ans);st.B.c="ans";vals[uz]=ans;
+   const vb=verbOf(I,P.g[0]);
+   snap(uz==="s0"?`Au départ, ${pr} avait ${ans} ${nn}.`:uz[0]==="a"?`${capF(pr)} en a ${vb[1]} ${ans}.`:`Maintenant, ${pr} a ${ans} ${nn}.`,[uz],vals)}
+ }
+ else if(P.kind==="comp"){
+  const N=P.N,pw=720/N-20,R=[...Array(N)].map((_,i)=>({x:260+i*(pw+20),y:110,w:pw,h:210})),T={x:300,y:345,w:440,h:250};
+  st.C={t:"c",e:I.e,x:-130,y:430,s:170,v:1,c:""};st.B={t:"b",txt:"",x:115,y:255,v:0,c:""};init();
+  const used=[...Array(N)].map((_,i)=>P.nis("p"+i)[0]);const tn=P.nis("tout")[0];
+  const nounP=i=>{if(used[i]!=null)return used[i];const free=S.nouns.map((_,j)=>j).filter(j=>!used.includes(j));return free.length?free[0]:(tn??P.dom)};
+  if(P.mode==="join"){const ids=[];
+   for(let i=0;i<N;i++){const sl=aSlots(R[i],P.p[i]),ni=nounP(i),nis=P.nis("p"+i);for(let k=0;k<P.p[i];k++){const id=atom(nis[k]??ni,sl[k].x,sl[k].y,sl[k].s,0);go(id,{v:1});ids.push(id)}
+    if(i===0){st.C.x=115}vals["p"+i]=P.p[i];snap(`${i?"Il y a aussi":"Il y a"} ${P.p[i]} ${nm(ni)}.`,["p"+i],vals)}
+   const sl=aSlots(T,ids.length);ids.forEach((id,k)=>go(id,{x:sl[k].x,y:sl[k].y,s:sl[k].s}));st.B.v=1;st.B.txt="?";vals.tout="?";
+   snap("On les met ensemble : combien en tout ?",["tout"],vals);
+   st.B.txt=String(P.t);st.B.c="ans";vals.tout=P.t;snap(`En tout, il y en a ${P.t}.`,["tout"],vals)}
+  else{const tl=aSlots(T,P.t),nisT=P.nis("tout"),ids=[];for(let k=0;k<P.t;k++){const id=atom(nisT[k]??tn??P.dom,tl[k].x,tl[k].y,tl[k].s,0);go(id,{v:1});ids.push(id)}
+   st.C.x=115;vals.tout=P.t;snap(`En tout, il y a ${P.t} ${nm(tn??P.dom)}.`,["tout"],vals);
+   const order=[...Array(N).keys()].filter(i=>i!==P.unk).concat([P.unk]);
+   for(const i of order){const unk=i===P.unk,cnt=P.p[i],sl=aSlots(R[i],cnt),ni=nounP(i);for(let k=0;k<cnt;k++){const id=ids.pop();go(id,{x:sl[k].x,y:sl[k].y,s:sl[k].s,ni})}
+    if(unk){st.B.v=1;st.B.txt="?";vals["p"+i]="?";snap(`Les autres sont des ${nm(ni)} : combien ?`,["p"+i],vals);st.B.txt=String(cnt);st.B.c="ans";vals["p"+i]=cnt;snap(`Il y a ${cnt} ${nm(ni)}.`,["p"+i],vals)}
+    else{vals["p"+i]=cnt;snap(`${cnt} sont des ${nm(ni)}.`,["p"+i],vals)}}}
+ }
+ else if(P.kind==="cmp"){
+  const g=S.signs.ecart==="-"?-1:1,nA=I.names[0]||"le garçon",nB=I.names[1]||"la fille",prA=I.names[0]?"il":"il",dom=P.nis("p0")[0]??P.nis("p1")[0]??P.dom,nn=nm(dom);
+  const mx=Math.max(P.a,P.b),RA={x:210,y:175,w:600,h:120,row:1,max:mx},RB={x:210,y:415,w:600,h:120,row:1,max:mx},D={x:840,y:250,w:140,h:230};
+  const slA=aRowSlots(RA,mx),slB=aRowSlots(RB,mx);
+  st.CA={t:"c",e:"👦",x:-130,y:235,s:140,v:1,c:""};st.CB={t:"c",e:"👧",x:-130,y:475,s:140,v:1,c:""};
+  st.BA={t:"b",txt:"",x:110,y:130,v:0,c:""};st.BB={t:"b",txt:"",x:110,y:370,v:0,c:""};st.BD={t:"b",txt:"?",x:910,y:215,v:0,c:""};st.GA={t:"g",x:420,y:235,s:100,v:0};st.GB={t:"g",x:420,y:475,s:100,v:0};
+  init();const A=[],B=[];
+  const row=(arr,sl,cnt,ni,hid)=>{for(let k=0;k<cnt;k++){const id=atom(ni,sl[k].x,sl[k].y,sl[k].s,0);if(!hid)go(id,{v:1});arr.push(id)}};
+  const big=P.b>=P.a,m=Math.min(P.a,P.b),d=Math.abs(P.b-P.a);
+  if(P.mode==="diff"){
+   st.CA.x=110;row(A,slA,P.a,P.nis("p0")[0]??dom);st.BA.v=1;st.BA.txt=String(P.a);vals.p0=P.a;snap(`${capF(nA)} a ${P.a} ${nn}.`,["p0"],vals);
+   st.CB.x=110;row(B,slB,P.b,P.nis("p1")[0]??dom);st.BB.v=1;st.BB.txt=String(P.b);vals.p1=P.b;snap(`${capF(nB)} a ${P.b} ${nn}.`,["p1"],vals);
+   for(let k=0;k<m;k++){go(A[k],{c:"pair"});go(B[k],{c:"pair"})}snap("On compare : on fait des paires.",["p0","p1"],vals);
+   const ex=(big?B:A).slice(m),sl=aSlots(D,ex.length);ex.forEach((id,k)=>go(id,{c:"hl",x:sl[k].x,y:sl[k].y,s:sl[k].s}));st.BD.v=1;vals.ecart="?";
+   snap(`Combien ${big?nB:nA} en a-t-${big?"elle":"il"} de plus ?`,["ecart"],vals);
+   st.BD.txt=String(d);st.BD.c="ans";vals.ecart=d;snap(`${capF(big?nB:nA)} en a ${d} de plus que ${big?nA:nB}.`,["ecart"],vals)}
+  else{const refA=P.mode==="build1",nr=refA?P.a:P.b,nt=refA?P.b:P.a,ref=refA?A:B,tgt=refA?B:A,slR=refA?slA:slB,slT=refA?slB:slA,ni=dom;
+   const rel=g>0?`${capF(nB)} en a ${P.d} de plus que ${nA}.`:`${capF(nB)} en a ${P.d} de moins que ${nA}.`;
+   if(refA){st.CA.x=110;row(A,slA,P.a,P.nis("p0")[0]??dom);st.BA.v=1;st.BA.txt=String(P.a);vals.p0=P.a;snap(`${capF(nA)} a ${P.a} ${nn}.`,["p0"],vals);
+    st.CB.x=110;st.GB.v=1;st.BB.v=1;st.BB.txt="?";vals.ecart=P.d;vals.p1="?";snap(rel,["ecart"],vals)}
+   else{st.CA.x=110;st.GA.v=1;st.BA.v=1;st.BA.txt="?";vals.p0="?";snap(`${capF(nA)} a des ${nn}… combien ?`,["p0"],vals);
+    st.CB.x=110;row(B,slB,P.b,P.nis("p1")[0]??dom);st.BB.v=1;st.BB.txt=String(P.b);vals.p1=P.b;snap(`${capF(nB)} a ${P.b} ${nn}.`,["p1"],vals);
+    vals.ecart=P.d;snap(rel,["ecart"],vals)}
+   (refA?st.GB:st.GA).v=0;
+   for(let k=0;k<Math.min(nr,nt);k++){const r=ref[k],id=atom(st[r].ni,st[r].x,st[r].y,st[r].s,0);go(id,{v:1,x:slT[k].x,y:slT[k].y,c:"pair"});st[r].c="pair";tgt.push(id)}
+   if(nt>nr){for(let k=nr;k<nt;k++){const id=atom(ni,1090,slT[k].y,slT[k].s,0);go(id,{v:1,x:slT[k].x,c:"hl"});tgt.push(id)}}
+   else ref.slice(nt).forEach(id=>go(id,{c:"hl"}));
+   snap(`On construit la collection de ${refA?nB:nA}, en face.`,[refA?"p1":"p0"],vals);
+   const bt=refA?st.BB:st.BA;bt.txt=String(nt);bt.c="ans";vals[refA?"p1":"p0"]=nt;snap(`${capF(refA?nB:nA)} a ${nt} ${nn}.`,[refA?"p1":"p0"],vals)}
+ }
+ else{
+  const dom=P.nis("centre")[0]??P.nis("p0")[0]??P.dom,nn=nm(dom),K=P.mode==="groups"?P.g:S.n,w=700/Math.max(K,1);
+  const pile={x:260,y:110,w:440,h:230},kids=[...Array(K)].map((_,j)=>({cx:60+w*(j+.5),R:{x:60+w*j+8,y:365,w:w-16,h:135}}));
+  st.C={t:"c",e:I.e,x:-130,y:250,s:170,v:1,c:""};st.B={t:"b",txt:"",x:120,y:110,v:0,c:""};
+  const KID=["🧒","👧","👦","🧒","👧","👦","🧒","👧","👦","🧒"];
+  kids.forEach((k,j)=>{if(P.mode==="groups")st["K"+j]={t:"x",x:k.R.x,y:k.R.y,w:k.R.w,h:k.R.h,v:0};else st["K"+j]={t:"c",e:KID[j],x:k.cx,y:720,s:Math.min(95,w*.55),v:1,c:""};st["KB"+j]={t:"b",txt:"?",x:k.cx+Math.min(48,w*.3),y:560,v:0,c:""}});
+  init();const ids=[];
+  if(P.mode==="share"||P.mode==="groups"){const sl=aSlots(pile,P.t),nis=P.nis("centre");for(let k=0;k<P.t;k++){const id=atom(nis[k]??dom,sl[k].x,sl[k].y,sl[k].s,0);go(id,{v:1});ids.push(id)}
+   st.C.x=120;st.B.v=1;st.B.txt=String(P.t);vals.centre=P.t;snap(`${capF(I.sub)} a ${P.t} ${nn}.`,["centre"],vals);
+   kids.forEach((k,j)=>{if(P.mode==="groups")st["K"+j].v=1;else st["K"+j].y=565});
+   const m=P.mode==="groups"?P.m:Math.floor(P.t/K),r=P.t-m*K;
+   if(P.mode==="groups"){vals.p0=m;snap(`${capF(I.pr)} fait des paquets de ${m}.`,["p0"],vals)}else{for(let j=0;j<K;j++)vals["p"+j]="?";snap(`${capF(I.pr)} partage entre ${K} enfants.`,kids.map((_,j)=>"p"+j),vals)}
+   const sls=kids.map(k=>aSlots(k.R,m));
+   if(P.mode==="groups"){for(let j=0;j<K;j++)for(let k=0;k<m;k++)go(ids.pop(),sls[j][k])}else{for(let k=0;k<m;k++)for(let j=0;j<K;j++)go(ids.pop(),sls[j][k])}
+   ids.forEach(id=>go(id,{c:"hl"}));kids.forEach((k,j)=>{st["KB"+j].v=P.mode!=="groups"?1:0});st.B.v=0;
+   snap(P.mode==="groups"?"On remplit les paquets, un par un.":"Une pour chacun, tour à tour…",kids.map((_,j)=>"p"+j),vals);
+   st.B.v=r?1:0;st.B.txt=String(r);st.B.c="neg";
+   if(P.mode==="groups"){vals.nb=P.g;snap(`On peut faire ${P.g} paquets de ${m}.${r?` Il en reste ${r}.`:""}`,kids.map((_,j)=>"p"+j),vals)}
+   else{kids.forEach((k,j)=>{st["KB"+j].txt=String(m);st["KB"+j].c="ans";vals["p"+j]=m});snap(`Chacun a ${m} ${nn}.${r?` Il en reste ${r}.`:""}`,kids.map((_,j)=>"p"+j),vals)}}
+  else{const cnt=[...Array(K)].map((_,j)=>P.mode==="same"?P.p[0]:P.p[j]);
+   kids.forEach((k,j)=>{st["K"+j].y=565;const sl=aSlots(k.R,cnt[j]),nis=P.nis(P.mode==="same"?"p0":"p"+j);for(let q=0;q<cnt[j];q++){const id=atom(nis[q]??dom,sl[q].x,sl[q].y,sl[q].s,0);go(id,{v:1});ids.push(id)}st["KB"+j].v=1;st["KB"+j].txt=String(cnt[j]);vals["p"+j]=cnt[j]});
+   snap(P.mode==="same"?`Il y a ${K} enfants. Chacun a ${cnt[0]} ${nn}.`:`Les enfants ont ${cnt.join(", ")} ${nn}.`,kids.map((_,j)=>"p"+j),vals);
+   st.C.x=120;st.B.v=1;st.B.txt="?";vals.centre="?";const t=cnt.reduce((a,b)=>a+b,0),sl=aSlots(pile,t);ids.forEach((id,k)=>go(id,sl[k]));
+   snap("Ils mettent tout ensemble : combien en tout ?",["centre"],vals);
+   st.B.txt=String(t);st.B.c="ans";vals.centre=t;snap(`Ensemble, il y en a ${t}.`,["centre"],vals)}
+ }
+ // chaque élément existe (caché) dans toutes les étapes, pour pouvoir reculer
+ for(const id in st)for(const S0 of states)if(!S0[id])S0[id]=Object.assign({},born[id]||Object.assign({},st[id],{v:0}));
+ return{states,steps}}
+/* --- affichage --- */
+function sMake(){const L=$("#slayer");L.innerHTML="";const last=STY.states[STY.states.length-1];
+ for(const id in last){const p=last[id],e=document.createElement("div");e.id="se-"+id;
+  e.className={a:"at",c:"chr",b:"sbub",g:"sbag",x:"sbox"}[p.t];if(p.t==="c")e.textContent=p.e;if(p.t==="g")e.innerHTML="👝<b>?</b>";L.appendChild(e)}}
+function sPut(id,p,inst){const e=document.getElementById("se-"+id);if(!e||!p)return;const W=$("#stage").clientWidth;
+ if(inst)e.style.transition="none";
+ e.style.left=(p.x/10)+"%";e.style.top=(p.y/6.2)+"%";
+ if(p.t==="x"){e.style.width=(p.w/10)+"%";e.style.height=(p.h/6.2)+"%"}
+ else if(p.s){const px=Math.max(6,p.s*W/1000);if(p.t==="a"){e.style.width=e.style.height=px+"px";e.style.fontSize=(px*.86)+"px"}else e.style.fontSize=px+"px"}
+ if(p.t==="a"){if(e.dataset.ni!==String(p.ni)){e.innerHTML=aInner(p.ni);e.dataset.ni=p.ni}e.className="at"+(p.c?" "+p.c:"")}
+ if(p.t==="c")e.className="chr"+(p.c?" "+p.c:"");
+ if(p.t==="b"){e.textContent=p.txt;e.className="sbub"+(p.c?" "+p.c:"")}
+ e.style.opacity=p.v?(p.c==="ghost"?"0.3":"1"):"0";
+ if(inst){void e.offsetWidth;e.style.transition=""}}
+function sApply(k){const s=STY.states[k];for(const id in s)sPut(id,s[id],true);sHud()}
+function sHud(){const k=STY.k,st=STY.steps[k-1],c=$("#scap"),n=STY.steps.length;
+ if(c)c.textContent=k?st.cap:"Appuie sur ▶ pour jouer l'histoire.";
+ const m=$("#smini");if(m)m.innerHTML=sMini(k?st.hl:[],k?st.vals:{});
+ const i=$("#sstep");if(i)i.textContent=`Étape ${k} / ${n}`;
+ document.querySelectorAll("[data-sty]").forEach(b=>{const v=b.dataset.sty;b.disabled=STY.busy&&v!=="stop"||((v==="prev"||v==="back"||v==="first")&&k===0)||((v==="next"||v==="play")&&k===n)})}
+function sMini(hl,vals){const L=STY.L;if(!L)return"";
+ let h=`<svg viewBox="0 0 1000 620" aria-hidden="true"><g class="mink">${L.svg}</g>`;
+ for(const z of L.Z){const on=hl.includes(z.id),cx=z.x+z.w/2,cy=z.y+z.h/2,v=vals[z.id];
+  if(!z.arrow)h+=z.circle?`<circle cx="${cx}" cy="${cy}" r="${z.w/2-9}" class="mz${on?" on":""}"/>`:`<rect x="${z.x+9}" y="${z.y+9}" width="${z.w-18}" height="${z.h-18}" rx="16" class="mz${on?" on":""}"/>`;
+  else if(on)h+=`<rect x="${z.x-6}" y="${z.y-6}" width="${z.w+12}" height="${z.h+12}" rx="14" class="mz on" style="fill:none"/>`;
+  if(v!=null)h+=`<text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="central" font-size="${Math.min(z.w,z.h)*.5}" class="mt${on?" on":""}${z.arrow?" inv":""}">${v}</text>`}
+ return h+"</svg>"}
+async function sWait(ms){const t=STY.tok;await new Promise(r=>setTimeout(r,ms/aSpeed()));if(t!==STY.tok)throw"stop"}
+async function sGo(to){if(to<0||to>STY.steps.length||to===STY.k)return;const dir=to>STY.k?1:-1,a=STY.states[STY.k],b=STY.states[to],step=STY.steps[dir>0?to-1:STY.k-1];
+ STY.busy=true;sHud();const st=$("#stage");st.style.setProperty("--ad",Math.round(560/aSpeed())+"ms");st.style.setProperty("--wd",Math.round(1200/aSpeed())+"ms");
+ let walk=false;
+ for(const id in b){const p=b[id],q=a[id];if(p.t==="a")continue;if(p.t==="c"&&(p.x!==q.x||p.y!==q.y)){walk=true;const e=document.getElementById("se-"+id);e.classList.add("walk");sPut(id,p);setTimeout(()=>{e.classList.remove("walk")},1200/aSpeed())}else sPut(id,p)}
+ STY.k=to;sHud();if(walk)await sWait(1250);
+ let ids=step.ord.filter((id,i,arr)=>arr.indexOf(id)===i);if(dir<0)ids=ids.reverse();
+ const others=Object.keys(b).filter(id=>b[id].t==="a"&&!ids.includes(id));others.forEach(id=>sPut(id,b[id],JSON.stringify(a[id])===JSON.stringify(b[id])));
+ for(const id of ids){const p=b[id],q=a[id];if(JSON.stringify(p)===JSON.stringify(q))continue;const moved=p.x!==q.x||p.y!==q.y;
+  if(!q.v&&p.v){sPut(id,Object.assign({},p,{x:q.x,y:q.y,s:q.s,v:1}),true);await new Promise(r=>requestAnimationFrame(r));sPut(id,p);await sWait(moved?640:200)}
+  else if(q.v&&!p.v){sPut(id,Object.assign({},p,{v:1}));await sWait(moved?640:200);sPut(id,p)}
+  else{sPut(id,p);await sWait(moved?640:150)}}
+ await sWait(250);STY.busy=false;sHud();say($("#scap").textContent)}
+async function sPlay(dir){if(STY.playing)return;STY.playing=dir;$("#tools").innerHTML=sToolsHTML();
+ try{while(STY.playing===dir){const to=STY.k+dir;if(to<0||to>STY.steps.length)break;await sGo(to);await sWait(1400)}}catch(e){if(e!=="stop")throw e}
+ STY.playing=0;STY.busy=false;if($("#tools")&&S.amode==="story")$("#tools").innerHTML=sToolsHTML();sHud()}
+function sToolsHTML(){const sp=aSpeed(),opts=[["","Personnage : auto"]].concat(PERSOS.map(p=>[p[1],p[1]+" "+p[0]]));
+ let h=amodeHTML()+`<textarea id="sstory" rows="2" placeholder="Écris l'histoire du problème. Ex. : Un garçon a des billes. Il en perd 5. Il en a maintenant 3. Combien en avait-il au départ ?">${esc(S.story||"")}</textarea>
+ <select id="schr" aria-label="Personnage">${opts.map(o=>`<option value="${o[0]}"${(S.storyChr||"")===o[0]?" selected":""}>${o[1]}</option>`).join("")}</select>`;
+ if(STY.err)return h+`<span class="amsg">${esc(STY.err)}</span>`;
+ h+=`<span class="sctl"><button class="btn" data-sty="first" title="Début" aria-label="Revenir au début">⏮</button>
+ <button class="btn" data-sty="back" title="Lire en reculant" aria-label="Lire en reculant">◀◀</button>
+ <button class="btn" data-sty="prev" title="Étape précédente" aria-label="Étape précédente">◀</button>
+ ${STY.playing?`<button class="btn primary" data-sty="stop" aria-label="Pause">⏸</button>`:""}
+ <button class="btn" data-sty="next" title="Étape suivante" aria-label="Étape suivante">▶</button>
+ <button class="btn primary" data-sty="play" title="Lire en avançant" aria-label="Lire en avançant">▶▶</button>
+ <b id="sstep"></b></span>`;
+ return h+`<label class="aspeed">🐢 <input type="range" id="aspeed" min="0.25" max="3" step="0.25" value="${sp}" aria-label="Vitesse"> 🐇 <b>×${sp}</b></label>`}
+function amodeHTML(){return`<span class="seg amode" role="group" aria-label="Type d'animation"><button data-amode="obj" aria-pressed="${S.amode!=="story"}">Objets</button><button data-amode="story" aria-pressed="${S.amode==="story"}">Histoire</button></span>`}
+function storyInit(){STY.tok++;STY.playing=0;STY.busy=false;STY.k=0;
+ const I=sInfo();let P=aniPlan();const K=SCH[S.schema];
+ STY.L=layout(S.schema,P&&!P.err?(P.nZ||S.n):S.n,true);let uz=(STY.L.Z.find(z=>z.q)||{}).id||null;
+ if(P.err&&K.kind==="trans"&&S.story){const Q=parseTrans(I);if(Q){P=Q;uz=Q.uz;STY.L=layout("t-fin",1,false)}}
+ STY.err=P.err?(P.err+(K.kind==="trans"?" Ou écris l'histoire avec ses deux nombres.":"")):"";
+ const st=$("#stage");if(!st)return;st.classList.add("aniempty");
+ st.innerHTML=`<div class="slayer" id="slayer"></div><div class="scap" id="scap"></div><div class="smini" id="smini"></div>`;
+ $("#tools").innerHTML=sToolsHTML();sizeStage();
+ if(STY.err){$("#scap").textContent="";return}
+ if(uz&&STY.L.Z.find(z=>z.id===uz)&&(S.zones[uz]||[]).length&&!P.fromText){}
+ const R=sBuild(P,uz,I);STY.states=R.states;STY.steps=R.steps;STY.P=P;sMake();sApply(0)}
+document.addEventListener("click",e=>{const am=e.target.closest("[data-amode]");if(am){S.amode=am.dataset.amode;save();ANI.tok++;STY.tok++;STY.playing=0;aniInit();return}
+ const b=e.target.closest("[data-sty]");if(!b||S.amode!=="story")return;const v=b.dataset.sty;
+ if(v==="stop"){STY.playing=0;return}if(STY.busy)return;
+ if(v==="next")sGo(STY.k+1).catch(()=>{});else if(v==="prev")sGo(STY.k-1).catch(()=>{});
+ else if(v==="first"){STY.tok++;STY.k=0;sApply(0)}else if(v==="play")sPlay(1);else if(v==="back")sPlay(-1)});
+let sTimer=0;document.addEventListener("input",e=>{if(e.target.id==="sstory"){S.story=e.target.value;save();clearTimeout(sTimer);sTimer=setTimeout(()=>{const ta=$("#sstory"),pos=ta?ta.selectionStart:0;storyInit();const t2=$("#sstory");if(t2){t2.focus();t2.setSelectionRange(pos,pos)}},900)}});
+document.addEventListener("change",e=>{if(e.target.id==="schr"){S.storyChr=e.target.value;save();storyInit()}});
+addEventListener("resize",()=>{if(S.screen==="ws"&&S.stage==="anim"&&S.amode==="story"&&STY.states.length)requestAnimationFrame(()=>{sizeStage();sApply(STY.k)})});
+
 
 addEventListener("resize",()=>requestAnimationFrame(fit));
 /* ---------- Choix des objets ---------- */
