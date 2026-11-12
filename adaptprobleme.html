@@ -174,6 +174,10 @@ a.btn{text-decoration:none;display:inline-block}
 .pic{font-size:40px;line-height:1;flex:none;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
 .pex{color:var(--muted);font-style:italic;font-size:15px;margin-top:4px}.pex .speak{font-size:15px;padding:0 6px;font-style:normal}
 .btn.back{margin:2px 0 10px;font-size:16px}.wsbar .btn.back{margin:0}
+@media (max-width:600px){.seg{flex-wrap:wrap}.seg button{padding:6px 10px}.scap{font-size:max(15px,calc(var(--u)*3.4))}}
+.sdet{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:4px 0 8px}.stype{font-size:18px}
+.sex{display:flex;flex-wrap:wrap;gap:6px;align-items:center;color:var(--muted);font-size:15px;margin-left:auto}.sex .btn{font-size:14px;padding:4px 10px}
+.sstart{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:4px 0 14px}.sstart span{color:var(--muted)}
 .slayer{position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none}
 .chr{position:absolute;transform:translate(-50%,-50%);line-height:1;transition:left var(--wd,1200ms) ease-in-out,top var(--wd,1200ms) ease-in-out,opacity .4s;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
 .chr.walk{animation:sbob .3s ease-in-out infinite alternate}.chr.play{animation:swig .45s ease-in-out infinite alternate}
@@ -296,7 +300,7 @@ a.btn{text-decoration:none;display:inline-block}
   <header class="top">
     <div class="brand">
       <svg viewBox="0 0 104 60" aria-hidden="true"><rect x="4" y="12" width="34" height="34" rx="5" class="zs" style="stroke-width:6"/><polygon class="inkf" points="42,22 62,22 62,14 76,29 62,44 62,36 42,36"/><rect x="72" y="12" width="28" height="34" rx="5" class="zs" style="stroke-width:6;display:none"/><rect x="78" y="12" width="22" height="34" rx="5" class="zs" style="stroke-width:6"/></svg>
-      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 2.4</small>
+      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 2.7</small>
     </div>
     <nav class="steps" id="steps" aria-label="Étapes"></nav>
     <button class="btn" id="reset">Nouveau problème</button>
@@ -484,7 +488,7 @@ function fichesBlob(){const bin=atob(FICHES_PDF.split(",")[1]),a=new Uint8Array(
 function renderCat(){
  $("#main").innerHTML=`<div class="wrap"><div class="teach"><div class="tprev">${["t-fin","c-tout","k-ecart","s-tout"].map(id=>schemaSVG(id)).join("")}</div>
  <div class="ttxt"><strong>Pour l'enseignant : fiches de recherche à imprimer</strong><span>${FICHES_TXT}</span></div>
- <div class="tbtn"><a class="btn primary" href="${FICHES_PDF}" download="fiches-problemes.pdf">⬇ Télécharger le PDF</a><button class="btn" data-act="printfiches">🖨 Imprimer</button></div></div><h1>De quel type est ton problème ?</h1><p class="lead">Lis le problème et cherche les mots indices. Touche 🔊 pour écouter.</p>
+ <div class="tbtn"><a class="btn primary" href="${FICHES_PDF}" download="fiches-problemes.pdf">⬇ Télécharger le PDF</a><button class="btn" data-act="printfiches">🖨 Imprimer</button></div></div><p class="sstart"><button class="btn primary mbig" data-go="story">📖 Écrire le problème et voir l'histoire</button><span>L'application reconnaît le type de problème et le joue avec un personnage.</span></p><h1>De quel type est ton problème ?</h1><p class="lead">Lis le problème et cherche les mots indices. Touche 🔊 pour écouter.</p>
  <div class="kgrid">${Object.keys(KINDS).map(k=>{const K=KINDS[k];return`<div class="card kcard${S.cat===k?" chosen":""}"><button class="pick" data-kind="${k}">${schemaSVG(KFIRST[k])}<strong class="ktitle">${K.title}</strong><span class="kdesc">${K.desc}</span></button>
  <div class="kwords"><span class="klab">Mots indices :</span>${K.keys.map(w=>`<span class="kw">${esc(w)}</span>`).join("")}</div>
  <button class="speak" data-sayk="${k}" aria-label="Écouter">🔊</button></div>`}).join("")}</div>
@@ -498,7 +502,7 @@ function renderSteps(){
 }
 function go(sc){if(sc==="ws"&&!prepNouns())return;S.screen=sc;save();render()}
 function render(){renderSteps();const m=$("#main");m.scrollTop=0;
- if(S.screen==="nouns"&&S.schema)renderNouns();else if(S.screen==="ws"&&S.schema&&validNouns())renderWS();else if(S.screen==="choose"&&S.cat)renderChoose();else if(S.screen==="level"&&S.level)renderLevel();else if(S.screen==="mat"&&MAT.sc)renderMat();else{S.screen="cat";renderSteps();renderCat()}}
+ if(S.screen==="nouns"&&S.schema)renderNouns();else if(S.screen==="ws"&&S.schema&&validNouns())renderWS();else if(S.screen==="choose"&&S.cat)renderChoose();else if(S.screen==="level"&&S.level)renderLevel();else if(S.screen==="mat"&&MAT.sc)renderMat();else if(S.screen==="story")renderStoryScreen();else{S.screen="cat";renderSteps();renderCat()}}
 
 /* ---------- Écran 1 ---------- */
 function backBtn(){const t={choose:["cat","Le type"],nouns:S.prog&&S.level&&!isMat(S.level)?["level","Progression "+S.level]:["choose","Le schéma"],ws:["nouns","Les objets"]}[S.screen];
@@ -593,6 +597,8 @@ function renderStage(newZone,k){k=k||1;const st=$("#stage");if(!st)return;if(S.s
  if(newZone&&S.zones[newZone]){const L=S.zones[newZone].length;st.querySelectorAll(`.zone[data-z="${newZone}"] .it`).forEach(e=>{if(+e.dataset.i>=L-k)e.classList.add("new")})}
  fit()}
 function sizeStage(){const w=document.querySelector(".stagewrap"),st=$("#stage");if(!w||!st)return;
+ if(typeof ResizeObserver!=="undefined"&&!w._ro){w._ro=new ResizeObserver(()=>requestAnimationFrame(()=>{if(!document.body.contains(w))return;const st2=$("#stage"),old=st2&&st2.style.width;sizeStage();if(!st2||st2.style.width===old)return;
+  if(S.stage==="anim"||S.screen==="story"){if((S.amode==="story"||S.screen==="story")&&typeof STY!=="undefined"&&STY.states.length&&!STY.busy)sApply(STY.k);else if(typeof aRelayout==="function")aRelayout()}else fit()}));w._ro.observe(w)}
  const W=w.clientWidth,H=w.clientHeight||W*.62,sw=Math.max(200,Math.min(W,H*1000/620));
  st.style.width=sw+"px";st.style.height=(sw*.62)+"px";st.style.setProperty("--u",(sw/100)+"px")}
 function fit(){sizeStage();
@@ -1120,9 +1126,9 @@ async function aniScript(){const P=ANI.plan,Z=ANI.z,arr=id=>(Z[id]=Z[id]||[]),st
 async function aniRun(){if(ANI.state==="err")return;if(ANI.state!=="idle")aniInit();ANI.state="run";ANI.paused=false;$("#tools").innerHTML=aniToolsHTML();const t=ANI.tok;
  try{await aniScript();if(t===ANI.tok){ANI.state="done";$("#tools").innerHTML=aniToolsHTML()}}catch(e){if(e!=="stop")throw e}}
 function aniToolsHTML(){const sp=aSpeed();
- let h=amodeHTML()+ANI.state==="err"?`<span class="amsg">${esc(ANI.msg)}</span>`:
+ let h=amodeHTML()+(ANI.state==="err"?`<span class="amsg">${esc(ANI.msg)}</span>`:
   ANI.state==="run"?`<button class="btn primary" data-ani="pause">${ANI.paused?"▶ Reprendre":"⏸ Pause"}</button><button class="btn" data-ani="restart">↺ Recommencer</button>`:
-  `<button class="btn primary" data-ani="play">${ANI.state==="done"?"↺ Rejouer l'animation":"▶ Lancer l'animation"}</button>`;
+  `<button class="btn primary" data-ani="play">${ANI.state==="done"?"↺ Rejouer l'animation":"▶ Lancer l'animation"}</button>`);
  if(ANI.state!=="err")h+=`<button class="btn${S.showNums?" on":""}" data-ani="nums" aria-pressed="${!!S.showNums}">Voir combien</button>`;
  return h+`<label class="aspeed">🐢 <input type="range" id="aspeed" min="0.25" max="3" step="0.25" value="${sp}" aria-label="Vitesse de l'animation"> 🐇 <b>×${sp}</b></label>`}
 document.addEventListener("click",e=>{const b=e.target.closest("[data-ani]");if(!b)return;const v=b.dataset.ani;
@@ -1153,6 +1159,44 @@ function parseTrans(I){const nums=((S.story||"").match(/\d+/g)||[]).map(Number);
  let s0,a,s1;if(uz==="s0"){[a,s1]=nums;s0=s1-sign*a}else if(uz==="a0"){[s0,s1]=nums;a=Math.abs(s1-s0)}else{[s0,a]=nums;s1=s0+sign*a}
  if(s0<0||s1<0||a<1)return null;
  return{kind:"trans",N:1,s:[s0,s1],a:[a],g:[a&&uz==="a0"?(s1>=s0?1:-1):sign],nis:()=>[],dom:0,uz,fromText:true}}
+/* lecture d'une histoire à une, deux ou trois transformations (verbes dans l'ordre, chaque nombre avec son verbe) */
+const TVB=[["perd","perdent","perdu",-1,"perd(?:s|ent|u|us|ue|ues)?"],["gagne","gagnent","gagné",1,"gagn(?:e|es|ent|é|és|ée|ées)"],["donne","donnent","donné",-1,"donn(?:e|es|ent|é|és|ée|ées)"],
+ ["reçoit","reçoivent","reçu",1,"re[çc](?:oit|ois|oivent|u|us|ue|ues)"],["mange","mangent","mangé",-1,"mang(?:e|es|ent|é|és|ée|ées)"],["achète","achètent","acheté",1,"ach[èe]t(?:e|es|ent|é|és|ée|ées)"],
+ ["vend","vendent","vendu",-1,"vend(?:s|ent|u|us|ue|ues)?"],["trouve","trouvent","trouvé",1,"trouv(?:e|es|ent|é|és|ée|ées)"],["casse","cassent","cassé",-1,"cass(?:e|es|ent|é|és|ée|ées)"],
+ ["ajoute","ajoutent","ajouté",1,"ajout(?:e|es|ent|é|és|ée|ées)"],["enlève","enlèvent","enlevé",-1,"enl[èe]v(?:e|es|ent|é|és|ée|ées)"],["dépense","dépensent","dépensé",-1,"d[ée]pens(?:e|es|ent|é|és|ée|ées)"],
+ ["offre","offrent","offert",-1,"offr(?:e|es|ent)|offert(?:e|s|es)?"],["prête","prêtent","prêté",-1,"pr[êe]t(?:e|es|ent|é|és|ée|ées)"],["prend","prennent","pris",1,"prends?|prennent"],
+ ["cueille","cueillent","cueilli",1,"cueill(?:e|es|ent|i|is|ie|ies)"],["ramasse","ramassent","ramassé",1,"ramass(?:e|es|ent|é|és|ée|ées)"],["utilise","utilisent","utilisé",-1,"utilis(?:e|es|ent|é|és|ée|ées)"],
+ ["jette","jettent","jeté",-1,"jett?(?:e|es|ent|é|és|ée|ées)"],["récupère","récupèrent","récupéré",1,"r[ée]cup[èée]r(?:e|es|ent|é|és|ée|ées)"],["pond","pondent","pondu",1,"pond(?:s|ent|u|us)?"],
+ ["monte","montent","monté",1,"mont(?:e|ent|é|és|ée|ées)"],["descend","descendent","descendu",-1,"descend(?:s|ent|u|us|ue|ues)?"],["entre","entrent","entré",1,"entr(?:ent|é|és|ée|ées)"],
+ ["sort","sortent","sorti",-1,"sort(?:s|ent|i|is|ie|ies)?"],["arrive","arrivent","arrivé",1,"arriv(?:e|ent|é|és|ée|ées)"],["part","partent","parti",-1,"part(?:ent|i|is)"],
+ ["naît","naissent","né",1,"na(?:issent|ît|it|quit|quirent)"],["s'envole","s'envolent","envolé",-1,"envol(?:e|ent|é|és|ée|ées)"],["se pose","se posent","posé",1,"posent"],
+ ["quitte","quittent","quitté",-1,"quitt(?:e|ent|é|és|ée|ées)"],["rejoint","rejoignent","rejoint",1,"rejoi(?:nt|gnent)"]];
+const TVBR=TVB.map(v=>new RegExp("(^|[^a-zà-ÿ])("+v[4]+")(?![a-zà-ÿ])"));
+const PLACES=[["bus|car|autobus","🚌"],["train|tgv|ter|métro|tram","🚆"],["avion","✈️"],["bateau","⛴️"],["cinéma|salle|théâtre","🎬"],["classe|école|cantine|cour","🏫"],["magasin|boutique|librairie|boulangerie","🏪"],["parking|garage","🅿️"],["ville|village","🏙️"],["arbre|branche","🌳"],["ferme|poulailler|pré|champ","🏡"],["bibliothèque","📚"],["piscine","🏊"],["aquarium|bassin|mare","🐟"]];
+function tvFind(c){let b=null;TVBR.forEach((r,k)=>{const x=r.exec(c);if(x&&(!b||x.index<b.i))b={v:TVB[k],i:x.index+x[1].length}});return b}
+function parseTransX(I){const lo=" "+(S.story||"").toLowerCase().replace(/[’]/g,"'")+" ";
+ let qi=lo.search(/combien|quel(?:le)?s?\s/);if(qi<0)qi=lo.length;
+ const body=lo.slice(0,qi),q=lo.slice(qi),cl=[],sep=/[.;!?,:]|\s(?:puis|ensuite|et|mais|alors|enfin|apr[èe]s)\s/g;let m,last=0;
+ while((m=sep.exec(body))){cl.push(body.slice(last,m.index));last=m.index+m[0].length}cl.push(body.slice(last));
+ const ev=[],st={};let k=0;
+ for(const c of cl){const ns=[],rn=/(\d+)(?!\d)(?!\s*(?:e|er|re|ème|eme)(?![a-zà-ÿ]))/g;let x;while((x=rn.exec(c)))ns.push({n:+x[1],i:x.index});
+  if(ns.length>1)return null;const v=tvFind(c);
+  if(v){const pron=/(^|[^a-zà-ÿ])(il|elle|on|ils|elles|je|tu|nous|vous)(?![a-zà-ÿ])/.test(c.slice(0,v.i));ev.push({vb:v.v,n:ns.length?ns[0].n:null,coll:!!(ns.length&&ns[0].i<v.i&&!pron)});k++}
+  else if(ns.length){if(st[k]!=null)return null;st[k]=ns[0].n}}
+ if(!Object.keys(st).length&&ev.length>1&&ev[0].n!=null&&ev[0].vb[3]>0){st[0]=ev[0].n;ev.shift()}
+ const N=ev.length;if(N<1||N>3||!ev.some(e=>e.n!=null))return null;
+ if(Object.keys(st).some(i=>+i>N))return null;
+ const s=[...Array(N+1)].map((_,i)=>st[i]??null),a=ev.map(e=>e.n),g=ev.map(e=>e.vb[3]);
+ for(let r=0;r<N+2;r++)for(let i=0;i<N;i++){
+  if(s[i]!=null&&a[i]!=null&&s[i+1]==null)s[i+1]=s[i]+g[i]*a[i];
+  else if(s[i+1]!=null&&a[i]!=null&&s[i]==null)s[i]=s[i+1]-g[i]*a[i];
+  else if(s[i]!=null&&s[i+1]!=null&&a[i]==null)a[i]=g[i]*(s[i+1]-s[i])}
+ if(s.concat(a).some(v=>v==null||v<0)||a.some(v=>v<1))return null;
+ let uz=null;if(st[0]==null)uz="s0";else{const j=ev.findIndex(e=>e.n==null);uz=j>=0?"a"+j:st[N]==null?"s"+N:null}
+ if(!uz)return null;
+ const known={};for(let i=0;i<=N;i++)if(st[i]!=null)known["s"+i]=1;ev.forEach((e,i)=>{if(e.n!=null)known["a"+i]=1});
+ let place=null;if(ev.some(e=>e.coll)){for(const p of PLACES)if(new RegExp("(^|[^a-zà-ÿ])("+p[0]+")s?(?![a-zà-ÿ])").test(lo)){place=p[1];break}if(!place)place="🏠"}
+ return{kind:"trans",N,s,a,g,vb:ev.map(e=>e.vb),coll:ev.map(e=>e.coll),known,place,nis:()=>[],dom:0,uz,fromText:true}}
 /* --- construction des états successifs --- */
 function sBuild(P,uz,I){
  const st={},states=[],steps=[];let ord=[],n=0;const W=()=>Object.assign;
@@ -1163,31 +1207,36 @@ function sBuild(P,uz,I){
  const vals={};let first=true;
  const init=()=>{const o={};for(const k in st)o[k]=Object.assign({},st[k]);states.push(o)};
  if(P.kind==="trans"){
-  const N=P.N,dom=(P.nis("s0")[0]??P.nis("a0")[0]??P.dom),nn=nm(dom),pr=I.pr,Sub=capF(I.sub);
-  st.C={t:"c",e:I.e,x:-130,y:390,s:210,v:1,c:""};st.B={t:"b",txt:"",x:235,y:205,v:0,c:""};st.G={t:"g",x:520,y:420,s:130,v:0};
+  const N=P.N,dom=(P.nis("s0")[0]??P.nis("a0")[0]??P.dom),nn=nm(dom),pr=I.pr,Sub=capF(I.sub),CO=!!(P.coll&&P.coll.some(Boolean));
+  const VB=i=>{const v=P.vb&&P.vb[i];if(v)return{pr:v[0],pl:v[1],pp:v[2]};const o=verbOf(I,P.g[i]);return{pr:o[0],pl:o[0]+"nt",pp:o[1]}};
+  const isC=i=>!!(P.coll&&P.coll[i]);
+  st.C={t:"c",e:(CO&&P.place&&!S.storyChr)?P.place:I.e,x:-130,y:390,s:210,v:1,c:""};st.B={t:"b",txt:"",x:235,y:205,v:0,c:""};st.G={t:"g",x:520,y:420,s:130,v:0};
   const pile={x:360,y:230,w:330,h:320},A={x:730,y:180,w:240,h:270};
   init();
-  const unk0=uz==="s0";let pileIds=[];const n0=P.s[0],sl0=aSlots(pile,n0),nis0=P.nis("s0");
+  const unk0=uz==="s0",unkAi=uz&&uz[0]==="a"?+uz.slice(1):-1;let pileIds=[];const n0=P.s[0],sl0=aSlots(pile,n0),nis0=P.nis("s0");
   for(let i=0;i<n0;i++){const id=atom(nis0[i]??dom,unk0?520:sl0[i].x,unk0?420:sl0[i].y,sl0[i].s,0);pileIds.push(id);if(!unk0)go(id,{v:1})}
   st.C.x=235;st.B.v=1;st.B.txt=unk0?"?":String(n0);st.B.c="";st.G.v=unk0?1:0;vals.s0=unk0?"?":n0;
-  snap(unk0?`Au début, ${I.sub} a des ${nn}… mais combien ?`:`Au début, ${I.sub} a ${n0} ${nn}.`,["s0"],vals);
-  let inBag=unk0,lostAll=[],gainAll=[];
-  for(let i=0;i<N;i++){const a=P.a[i],g=P.g[i],vb=verbOf(I,g),unkA=uz==="a"+i;st.C.c="play";
-   let gainIds=[];if(g>0){const sl=aSlots(A,a),nis=P.nis("a"+i);for(let k=0;k<a;k++){const id=atom(nis[k]??dom,1090,sl[k].y,sl[k].s,0);go(id,{v:1,x:sl[k].x,y:sl[k].y});gainIds.push(id)}gainAll.push(...gainIds)}
-   else{const take=pileIds.splice(pileIds.length-a,a).reverse();take.forEach((id,k)=>go(id,{v:1,x:1090,y:470+((k*29)%90)}));lostAll.push(...take)}
+  snap(CO?(unk0?`Au début, il y a des ${nn}… mais combien ?`:`Au début, il y a ${n0} ${nn}.`):(unk0?`Au début, ${I.sub} a des ${nn}… mais combien ?`:`Au début, ${I.sub} a ${n0} ${nn}.`),["s0"],vals);
+  let inBag=unk0;const lostBy=[],gainBy=[],lostAll=[],gainAll=[];
+  for(let i=0;i<N;i++){const a=P.a[i],g=P.g[i],vb=VB(i),unkA=uz==="a"+i;st.C.c="play";
+   let gainIds=[],lostIds=[];if(g>0){const sl=aSlots(A,a),nis=P.nis("a"+i);for(let k=0;k<a;k++){const id=atom(nis[k]??dom,1090,sl[k].y,sl[k].s,0);go(id,{v:1,x:sl[k].x,y:sl[k].y});gainIds.push(id)}gainAll.push(...gainIds)}
+   else{lostIds=pileIds.splice(pileIds.length-a,a).reverse();lostIds.forEach((id,k)=>go(id,{v:1,x:1090,y:470+((k*29)%90)}));lostAll.push(...lostIds)}
+   gainBy.push(gainIds);lostBy.push(lostIds);
    st.B.txt=unkA?"?":(g>0?"+":"−")+a;st.B.c=g>0?"pos":"neg";vals["a"+i]=unkA?"?":a;
-   snap(unkA?`${capF(pr)} en ${vb[0]}… combien ?`:`${capF(pr)} en ${vb[0]} ${a}.`,["a"+i],vals);
-   st.C.c="";const zid="s"+(i+1),cnt=P.s[i+1],unkS=uz===zid||(unk0&&i<N-1);
+   snap(isC(i)?(unkA?`Des ${nn} ${vb.pl}… combien ?`:`${a} ${a>1?vb.pl:vb.pr}.`):(unkA?`${capF(pr)} en ${vb.pr}… combien ?`:`${capF(pr)} en ${vb.pr} ${a}.`),["a"+i],vals);
+   st.C.c="";const zid="s"+(i+1),cnt=P.s[i+1],last=i===N-1,unkS=uz===zid||(unk0&&!last)||(unkAi>=0&&unkAi<=i&&!last);
    if(g>0)pileIds=pileIds.concat(gainIds);
-   if(!unkS||i===N-1){const sl=aSlots(pile,pileIds.length);pileIds.forEach((id,k)=>go(id,{v:1,x:sl[k].x,y:sl[k].y,s:sl[k].s}));if(inBag){st.G.v=0;inBag=false}}
-   st.B.txt=unkS?"?":String(cnt);st.B.c="";vals[zid]=unkS?"?":cnt;
-   const last=i===N-1;snap(unkS?`Combien en a-t-${pr} ${last?"maintenant":"ensuite"} ?`:`${last?"Maintenant":"Ensuite"}, ${pr} en a ${cnt}.`,[zid],vals)}
-  if(uz){const ans=uz==="s0"?P.s[0]:uz[0]==="a"?P.a[+uz.slice(1)]:P.s[+uz.slice(1)];
+   if(!unkS||last){const sl=aSlots(pile,pileIds.length);pileIds.forEach((id,k)=>go(id,{v:1,x:sl[k].x,y:sl[k].y,s:sl[k].s}));if(inBag){st.G.v=0;inBag=false}}
+   vals[zid]=unkS?"?":cnt;
+   if(unkS&&!last&&uz!==zid)continue;
+   st.B.txt=unkS?"?":String(cnt);st.B.c="";
+   snap(CO?(unkS?`Combien y en a-t-il ${last?"maintenant":"ensuite"} ?`:`${last?"Maintenant":"Ensuite"}, il y en a ${cnt}.`):(unkS?`Combien en a-t-${pr} ${last?"maintenant":"ensuite"} ?`:`${last?"Maintenant":"Ensuite"}, ${pr} en a ${cnt}.`),[zid],vals)}
+  if(uz){const ans=uz==="s0"?P.s[0]:uz[0]==="a"?P.a[unkAi]:P.s[+uz.slice(1)];
    if(uz==="s0"){const sl=aSlots(pile,n0);let k=0;for(const id of Object.keys(st)){if(st[id].t!=="a")continue;if(lostAll.includes(id)||pileIds.includes(id)){if(!gainAll.includes(id)){go(id,{v:1,x:sl[k].x,y:sl[k].y,s:sl[k].s,c:lostAll.includes(id)?"ghost":""});k++}}}gainAll.forEach(id=>go(id,{c:"ghost"}))}
-   else if(uz[0]==="a"){const i=+uz.slice(1);if(P.g[i]<0){const sl=aSlots(A,P.a[i]);lostAll.forEach((id,k)=>go(id,{v:1,x:sl[k].x,y:sl[k].y,s:sl[k].s,c:"hl"}))}else gainAll.forEach(id=>go(id,{c:"hl"}))}
-   st.B.txt=uz[0]==="a"?(P.g[+uz.slice(1)]>0?"+":"−")+ans:String(ans);st.B.c="ans";vals[uz]=ans;
-   const vb=verbOf(I,P.g[0]);
-   snap(uz==="s0"?`Au départ, ${pr} avait ${ans} ${nn}.`:uz[0]==="a"?`${capF(pr)} en a ${vb[1]} ${ans}.`:`Maintenant, ${pr} a ${ans} ${nn}.`,[uz],vals)}
+   else if(uz[0]==="a"){if(P.g[unkAi]<0){const sl=aSlots(A,P.a[unkAi]);lostBy[unkAi].forEach((id,k)=>go(id,{v:1,x:sl[k].x,y:sl[k].y,s:sl[k].s,c:"hl"}))}else gainBy[unkAi].forEach(id=>go(id,{c:"hl"}))}
+   st.B.txt=uz[0]==="a"?(P.g[unkAi]>0?"+":"−")+ans:String(ans);st.B.c="ans";vals[uz]=ans;
+   const vb=VB(unkAi>=0?unkAi:0);
+   snap(uz==="s0"?(CO?`Au départ, il y avait ${ans} ${nn}.`:`Au départ, ${pr} avait ${ans} ${nn}.`):uz[0]==="a"?(isC(unkAi)?`${ans} ${nn} ${ans>1?vb.pl:vb.pr}.`:`${capF(pr)} en a ${vb.pp} ${ans}.`):(CO?`Maintenant, il y a ${ans} ${nn}.`:`Maintenant, ${pr} a ${ans} ${nn}.`),[uz],vals)}
  }
  else if(P.kind==="comp"){
   const N=P.N,pw=720/N-20,R=[...Array(N)].map((_,i)=>({x:260+i*(pw+20),y:110,w:pw,h:210})),T={x:300,y:345,w:440,h:250};
@@ -1204,11 +1253,11 @@ function sBuild(P,uz,I){
    st.C.x=115;vals.tout=P.t;snap(`En tout, il y a ${P.t} ${nm(tn??P.dom)}.`,["tout"],vals);
    const order=[...Array(N).keys()].filter(i=>i!==P.unk).concat([P.unk]);
    for(const i of order){const unk=i===P.unk,cnt=P.p[i],sl=aSlots(R[i],cnt),ni=nounP(i);for(let k=0;k<cnt;k++){const id=ids.pop();go(id,{x:sl[k].x,y:sl[k].y,s:sl[k].s,ni})}
-    if(unk){st.B.v=1;st.B.txt="?";vals["p"+i]="?";snap(`Les autres sont des ${nm(ni)} : combien ?`,["p"+i],vals);st.B.txt=String(cnt);st.B.c="ans";vals["p"+i]=cnt;snap(`Il y a ${cnt} ${nm(ni)}.`,["p"+i],vals)}
-    else{vals["p"+i]=cnt;snap(`${cnt} sont des ${nm(ni)}.`,["p"+i],vals)}}}
+    if(unk){const same=nm(ni)===nm(tn??P.dom);st.B.v=1;st.B.txt="?";vals["p"+i]="?";snap(same?"Et de l'autre côté : combien ?":`Les autres sont des ${nm(ni)} : combien ?`,["p"+i],vals);st.B.txt=String(cnt);st.B.c="ans";vals["p"+i]=cnt;snap(same?`De l'autre côté, il y en a ${cnt}.`:`Il y a ${cnt} ${nm(ni)}.`,["p"+i],vals)}
+    else{vals["p"+i]=cnt;snap(nm(ni)===nm(tn??P.dom)?`Il y en a ${cnt} d'un côté.`:`${cnt} sont des ${nm(ni)}.`,["p"+i],vals)}}}
  }
  else if(P.kind==="cmp"){
-  const g=S.signs.ecart==="-"?-1:1,nA=I.names[0]||"le garçon",nB=I.names[1]||"la fille",prA=I.names[0]?"il":"il",dom=P.nis("p0")[0]??P.nis("p1")[0]??P.dom,nn=nm(dom);
+  const g=P.cg??(S.signs.ecart==="-"?-1:1),nA=I.names[0]||"le garçon",nB=I.names[1]||"la fille",prA=I.names[0]?"il":"il",dom=P.nis("p0")[0]??P.nis("p1")[0]??P.dom,nn=nm(dom);
   const mx=Math.max(P.a,P.b),RA={x:210,y:175,w:600,h:120,row:1,max:mx},RB={x:210,y:415,w:600,h:120,row:1,max:mx},D={x:840,y:250,w:140,h:230};
   const slA=aRowSlots(RA,mx),slB=aRowSlots(RB,mx);
   st.CA={t:"c",e:"👦",x:-130,y:235,s:140,v:1,c:""};st.CB={t:"c",e:"👧",x:-130,y:475,s:140,v:1,c:""};
@@ -1237,8 +1286,41 @@ function sBuild(P,uz,I){
    snap(`On construit la collection de ${refA?nB:nA}, en face.`,[refA?"p1":"p0"],vals);
    const bt=refA?st.BB:st.BA;bt.txt=String(nt);bt.c="ans";vals[refA?"p1":"p0"]=nt;snap(`${capF(refA?nB:nA)} a ${nt} ${nn}.`,[refA?"p1":"p0"],vals)}
  }
+ else if(P.mult){
+  const dom=P.dom,nn=nm(dom),txt=S.story||"",nm2=I.names.map(n=>({n,i:txt.indexOf(n)}));
+  const kp=P.mult==="howmany"?P.big:P.ki;let KN=null;for(const x of nm2)if(x.i>=0&&x.i<kp)KN=x.n;if(!KN&&nm2.length)KN=nm2[0].n;
+  let UN=(nm2.find(x=>x.n!==KN)||{}).n||null;
+  if(P.mult==="howmany"){let w=null;for(const x of nm2)if(x.i>=0&&x.i<P.small)w=x.n;if(w&&w!==KN)UN=w}
+  const gE=n=>!n?"🧒":/(a|e|ie|é|ine|elle)$/i.test(n)?"👧":"👦",KA=KN||"le premier",UA=UN||"le second";
+  const K=P.mult==="howmany"?P.g:P.K,bw=(575-(K-1)*10)/K,boxes=[...Array(K)].map((_,j)=>({x:225+j*(bw+10),y:335,w:bw,h:210}));
+  const HM=P.mult==="howmany",RK={x:225,y:95,w:HM?330:420,h:200},RU={x:700,y:95,w:280,h:200};
+  st.CK={t:"c",e:gE(KN),x:-130,y:225,s:140,v:1,c:""};st.CU={t:"c",e:gE(UN),x:HM?1130:-130,y:HM?225:470,s:140,v:1,c:""};
+  st.BK={t:"b",txt:"",x:110,y:110,v:0,c:""};st.BU={t:"b",txt:"",x:HM?620:110,y:HM?110:355,v:0,c:""};
+  boxes.forEach((b,j)=>{st["X"+j]=Object.assign({t:"x",v:0},b);st["XB"+j]={t:"b",txt:"",x:b.x+b.w/2,y:580,v:0,c:""}});
+  init();const pk=[],lay=(R,n,arr)=>{const sl=aSlots(R,n);for(let q=0;q<n;q++){const id=atom(dom,sl[q].x,sl[q].y,sl[q].s,0);go(id,{v:1});arr.push(id)}};
+  const allP=boxes.map((_,j)=>"p"+j);
+  if(P.mult==="times"){const a=P.a;lay(RK,a,pk);
+   st.CK.x=110;st.BK.v=1;st.BK.txt=String(a);vals.p0=a;snap(`${capF(KA)} a ${a} ${nn}.`,["p0"],vals);
+   st.CU.x=110;st.BU.v=1;st.BU.txt="?";boxes.forEach((_,j)=>st["X"+j].v=1);vals.centre="?";snap(`${capF(UA)} en a ${K} fois plus : ${K} fois autant que ${KA}.`,["centre"],vals);
+   for(let j=0;j<K;j++){const sl=aSlots(boxes[j],a);for(let q=0;q<a;q++){const r=st[pk[q]],id=atom(dom,r.x,r.y,r.s,0);go(id,{v:1,x:sl[q].x,y:sl[q].y,s:sl[q].s,f:1})}
+    st["XB"+j].v=1;st["XB"+j].txt=String(a);vals["p"+j]=a;snap(`${j+1} fois ${a}.`,["p"+j],vals)}
+   st.BU.txt=String(P.b);st.BU.c="ans";vals.centre=P.b;snap(`${capF(UA)} a ${K} fois ${a}, c'est ${P.b} ${nn}.`,["centre"],vals)}
+  else if(P.mult==="less"){const t=P.t,m=P.a;lay(RK,t,pk);
+   st.CK.x=110;st.BK.v=1;st.BK.txt=String(t);vals.centre=t;snap(`${capF(KA)} a ${t} ${nn}.`,["centre"],vals);
+   st.CU.x=110;st.BU.v=1;st.BU.txt="?";boxes.forEach((_,j)=>{st["X"+j].v=1;vals["p"+j]="?"});snap(`${capF(UA)} en a ${K} fois moins : on partage les ${nn} de ${KA} en ${K} parts égales.`,allP,vals);
+   const sls=boxes.map(b=>aSlots(b,m)),ids=pk.slice().reverse(),inBox=boxes.map(()=>[]);let c=0;
+   for(let q=0;q<m;q++)for(let j=0;j<K;j++){const id=ids[c++];go(id,Object.assign({},sls[j][q],{f:1}));inBox[j].push(id)}
+   boxes.forEach((_,j)=>{st["XB"+j].v=1;st["XB"+j].txt=String(m);vals["p"+j]=m});st.BK.v=0;snap(`Chaque part a ${m} ${nn}.`,allP,vals);
+   inBox[0].forEach(id=>go(id,{c:"hl"}));st.BU.txt=String(m);st.BU.c="ans";snap(`${capF(UA)} a autant qu'une part : ${m} ${nn}.`,["p0"],vals)}
+  else{const t=P.t,m=P.m,g=P.g,uk=[];lay(RK,t,pk);
+   st.CK.x=110;st.BK.v=1;st.BK.txt=String(t);vals.centre=t;snap(`${capF(KA)} a ${t} ${nn}.`,["centre"],vals);
+   lay(RU,m,uk);st.CU.x=620;st.BU.v=1;st.BU.txt=String(m);vals.p0=m;snap(`${capF(UA)} a ${m} ${nn}.`,["p0"],vals);
+   const ids=pk.slice().reverse();let c=0;for(let j=0;j<g;j++){st["X"+j].v=1;const sl=aSlots(boxes[j],m);for(let q=0;q<m;q++)go(ids[c++],Object.assign({},sl[q],{f:1}));st["XB"+j].v=1;st["XB"+j].txt=String(j+1);vals["p"+j]=m}
+   st.BK.v=0;snap(`Combien de fois ${m} dans ${t} ? On fait des paquets de ${m}.`,allP,vals);
+   st.BK.v=1;st.BK.txt=g+" fois";st.BK.c="ans";snap(`${capF(KA)} en a ${g} fois plus que ${UA}.`,allP,vals)}
+ }
  else{
-  const dom=P.nis("centre")[0]??P.nis("p0")[0]??P.dom,nn=nm(dom),K=P.mode==="groups"?P.g:S.n,w=700/Math.max(K,1);
+  const dom=P.nis("centre")[0]??P.nis("p0")[0]??P.dom,nn=nm(dom),K=P.mode==="groups"?P.g:(P.K||S.n),w=700/Math.max(K,1);
   const pile={x:260,y:110,w:440,h:230},kids=[...Array(K)].map((_,j)=>({cx:60+w*(j+.5),R:{x:60+w*j+8,y:365,w:w-16,h:135}}));
   st.C={t:"c",e:I.e,x:-130,y:250,s:170,v:1,c:""};st.B={t:"b",txt:"",x:120,y:110,v:0,c:""};
   const KID=["🧒","👧","👦","🧒","👧","👦","🧒","👧","👦","🧒"];
@@ -1302,15 +1384,15 @@ async function sGo(to){if(to<0||to>STY.steps.length||to===STY.k)return;const dir
  let ids=step.ord.filter((id,i,arr)=>arr.indexOf(id)===i);if(dir<0)ids=ids.reverse();
  const others=Object.keys(b).filter(id=>b[id].t==="a"&&!ids.includes(id));others.forEach(id=>sPut(id,b[id],JSON.stringify(a[id])===JSON.stringify(b[id])));
  for(const id of ids){const p=b[id],q=a[id];if(JSON.stringify(p)===JSON.stringify(q))continue;const moved=p.x!==q.x||p.y!==q.y;
-  if(!q.v&&p.v){sPut(id,Object.assign({},p,{x:q.x,y:q.y,s:q.s,v:1}),true);await new Promise(r=>requestAnimationFrame(r));sPut(id,p);await sWait(moved?640:200)}
+  if(!q.v&&p.v){sPut(id,Object.assign({},p,{x:q.x,y:q.y,s:q.s,v:1}),true);await new Promise(r=>requestAnimationFrame(r));sPut(id,p);await sWait(moved?(p.f?240:640):200)}
   else if(q.v&&!p.v){sPut(id,Object.assign({},p,{v:1}));await sWait(moved?640:200);sPut(id,p)}
-  else{sPut(id,p);await sWait(moved?640:150)}}
+  else{sPut(id,p);await sWait(moved?(p.f?240:640):150)}}
  await sWait(250);STY.busy=false;sHud();say($("#scap").textContent)}
 async function sPlay(dir){if(STY.playing)return;STY.playing=dir;$("#tools").innerHTML=sToolsHTML();
  try{while(STY.playing===dir){const to=STY.k+dir;if(to<0||to>STY.steps.length)break;await sGo(to);await sWait(1400)}}catch(e){if(e!=="stop")throw e}
- STY.playing=0;STY.busy=false;if($("#tools")&&S.amode==="story")$("#tools").innerHTML=sToolsHTML();sHud()}
+ STY.playing=0;STY.busy=false;if($("#tools")&&(S.amode==="story"||S.screen==="story"))$("#tools").innerHTML=sToolsHTML();sHud()}
 function sToolsHTML(){const sp=aSpeed(),opts=[["","Personnage : auto"]].concat(PERSOS.map(p=>[p[1],p[1]+" "+p[0]]));
- let h=amodeHTML()+`<textarea id="sstory" rows="2" placeholder="Écris l'histoire du problème. Ex. : Un garçon a des billes. Il en perd 5. Il en a maintenant 3. Combien en avait-il au départ ?">${esc(S.story||"")}</textarea>
+ let h=(S.screen==="ws"?amodeHTML():"")+`<textarea id="sstory" rows="2" placeholder="Écris l'histoire du problème. Ex. : Un garçon a des billes. Il en perd 5. Il en a maintenant 3. Combien en avait-il au départ ?">${esc(S.story||"")}</textarea>
  <select id="schr" aria-label="Personnage">${opts.map(o=>`<option value="${o[0]}"${(S.storyChr||"")===o[0]?" selected":""}>${o[1]}</option>`).join("")}</select>`;
  if(STY.err)return h+`<span class="amsg">${esc(STY.err)}</span>`;
  h+=`<span class="sctl"><button class="btn" data-sty="first" title="Début" aria-label="Revenir au début">⏮</button>
@@ -1322,10 +1404,20 @@ function sToolsHTML(){const sp=aSpeed(),opts=[["","Personnage : auto"]].concat(P
  <b id="sstep"></b></span>`;
  return h+`<label class="aspeed">🐢 <input type="range" id="aspeed" min="0.25" max="3" step="0.25" value="${sp}" aria-label="Vitesse"> 🐇 <b>×${sp}</b></label>`}
 function amodeHTML(){return`<span class="seg amode" role="group" aria-label="Type d'animation"><button data-amode="obj" aria-pressed="${S.amode!=="story"}">Objets</button><button data-amode="story" aria-pressed="${S.amode==="story"}">Histoire</button></span>`}
-function storyInit(){STY.tok++;STY.playing=0;STY.busy=false;STY.k=0;
+function storyInitText(){const R=S.story?parseStory():null;STY.R=R;if(R&&R.nouns.length)S.nouns=R.nouns;
+ const I=sInfo();
+ const big=R&&[R.P.t,R.P.a,R.P.b,R.P.m].concat(R.P.s||[],R.P.p||[]).some(v=>typeof v==="number"&&v>100);
+ STY.err=!S.story?"Écris un problème, ou choisis un exemple.":!R?"Je n'ai pas reconnu ce problème. Mots utiles : perd, gagne, monte, descend… puis… (transformation, en une ou deux étapes) ; en tout, dont (composition) ; de plus que, de moins que, 3 fois plus, 3 fois moins (comparaison) ; partage entre, paquets de (partage).":big?"Ces nombres sont trop grands pour l'animation (plus de 100 objets). Tu peux quand même construire le schéma.":"";
+ const d=$("#sdet");if(d)d.innerHTML=(R?`<span class="stype">Type reconnu : <b>${esc(R.label)}</b></span><button class="btn primary" data-sbuild>Construire le schéma avec ces nombres</button>`:"")+`<span class="sex">Exemples : ${SEX.map((x,i)=>`<button class="btn" data-sex="${i}">${x[0]}</button>`).join("")}</span>`;
+ const st=$("#stage");if(!st)return;st.classList.add("aniempty");
+ st.innerHTML=`<div class="slayer" id="slayer"></div><div class="scap" id="scap"></div><div class="smini" id="smini"></div>${STY.err?`<div class="ahint">${esc(STY.err)}</div>`:""}`;
+ $("#tools").innerHTML=sToolsHTML();sizeStage();
+ if(STY.err){STY.states=[];STY.steps=[];return}
+ STY.L=layout(R.schema,R.n,false);const B=sBuild(R.P,R.uz,I);STY.states=B.states;STY.steps=B.steps;STY.P=R.P;sMake();sApply(0)}
+function storyInit(){STY.tok++;STY.playing=0;STY.busy=false;STY.k=0;if(S.screen==="story")return storyInitText();
  const I=sInfo();let P=aniPlan();const K=SCH[S.schema];
  STY.L=layout(S.schema,P&&!P.err?(P.nZ||S.n):S.n,true);let uz=(STY.L.Z.find(z=>z.q)||{}).id||null;
- if(P.err&&K.kind==="trans"&&S.story){const Q=parseTrans(I);if(Q){P=Q;uz=Q.uz;STY.L=layout("t-fin",1,false)}}
+ if(P.err&&K.kind==="trans"&&S.story){const Q=parseTransX(I)||parseTrans(I);if(Q){P=Q;uz=Q.uz;STY.L=layout("t-fin",Q.N,false)}}
  STY.err=P.err?(P.err+(K.kind==="trans"?" Ou écris l'histoire avec ses deux nombres.":"")):"";
  const st=$("#stage");if(!st)return;st.classList.add("aniempty");
  st.innerHTML=`<div class="slayer" id="slayer"></div><div class="scap" id="scap"></div><div class="smini" id="smini"></div>`;
@@ -1334,13 +1426,84 @@ function storyInit(){STY.tok++;STY.playing=0;STY.busy=false;STY.k=0;
  if(uz&&STY.L.Z.find(z=>z.id===uz)&&(S.zones[uz]||[]).length&&!P.fromText){}
  const R=sBuild(P,uz,I);STY.states=R.states;STY.steps=R.steps;STY.P=P;sMake();sApply(0)}
 document.addEventListener("click",e=>{const am=e.target.closest("[data-amode]");if(am){S.amode=am.dataset.amode;save();ANI.tok++;STY.tok++;STY.playing=0;aniInit();return}
- const b=e.target.closest("[data-sty]");if(!b||S.amode!=="story")return;const v=b.dataset.sty;
+ const b=e.target.closest("[data-sty]");if(!b||(S.amode!=="story"&&S.screen!=="story"))return;const v=b.dataset.sty;
  if(v==="stop"){STY.playing=0;return}if(STY.busy)return;
  if(v==="next")sGo(STY.k+1).catch(()=>{});else if(v==="prev")sGo(STY.k-1).catch(()=>{});
  else if(v==="first"){STY.tok++;STY.k=0;sApply(0)}else if(v==="play")sPlay(1);else if(v==="back")sPlay(-1)});
 let sTimer=0;document.addEventListener("input",e=>{if(e.target.id==="sstory"){S.story=e.target.value;save();clearTimeout(sTimer);sTimer=setTimeout(()=>{const ta=$("#sstory"),pos=ta?ta.selectionStart:0;storyInit();const t2=$("#sstory");if(t2){t2.focus();t2.setSelectionRange(pos,pos)}},900)}});
 document.addEventListener("change",e=>{if(e.target.id==="schr"){S.storyChr=e.target.value;save();storyInit()}});
-addEventListener("resize",()=>{if(S.screen==="ws"&&S.stage==="anim"&&S.amode==="story"&&STY.states.length)requestAnimationFrame(()=>{sizeStage();sApply(STY.k)})});
+addEventListener("resize",()=>{if(((S.screen==="ws"&&S.stage==="anim"&&S.amode==="story")||S.screen==="story")&&STY.states.length)requestAnimationFrame(()=>{sizeStage();sApply(STY.k)})});
+/* ---------- Écrire le problème d'abord : reconnaissance du type et des nombres ---------- */
+const SNSTOP=["et","de","plus","moins","fois","en","sont","ont","a","au","aux","par","pour","chacun","chacune","entre","que","qui","dans","sur","le","la","les","du","des","un","une","il","elle","on","ans"];
+function sNums(t){const out=[],re=/(\d+)(?:\s+(?:de\s+|d['’])?([a-zà-ÿœ]+)(?:\s+(rouges?|bleus?|bleues?|verts?|vertes?|jaunes?|noirs?|noires?|blancs?|blanches?))?)?/gi;let m;
+ while((m=re.exec(t))){let w=(m[2]||"").toLowerCase();if(SNSTOP.includes(w)||tvFind(" "+w+" "))w="";else if(w&&m[3])w+=" "+m[3].toLowerCase();out.push({n:+m[1],w,i:m.index})}return out}
+const SEX=[["Transformation","Un garçon a des billes. Il en perd 5. Il en a maintenant 3. Combien en avait-il au départ ?"],
+ ["Composition","Dans la classe, il y a 12 filles et 11 garçons. Combien d'élèves en tout ?"],
+ ["Comparaison","Tom a 6 images. Léa en a 3 de plus que lui. Combien Léa a-t-elle d'images ?"],
+ ["Partage","La maîtresse partage 13 billes entre 3 enfants. Combien chacun en reçoit-il ?"],
+ ["2 transformations","Léo a 12 billes. Il en gagne 4, puis il en perd 6. Combien en a-t-il maintenant ?"],
+ ["Le bus","Dans le bus, il y a 15 personnes. 6 descendent, puis 4 montent. Combien de personnes y a-t-il dans le bus ?"],
+ ["Fois plus","Tom a 6 images. Léa en a 3 fois plus. Combien Léa a-t-elle d'images ?"]];
+function sNoun(w){if(!w)return null;const e=bestMatch(w,true);return{name:w,icon:e?e.icon:(suggest(w)[0]||null),auto:false}}
+function parseStory(){const txt=S.story||"",lo=txt.toLowerCase(),nums=sNums(txt);if(!nums.length)return null;
+ const q=(lo.match(/combien[^?.!]*[?.!]?/)||[""])[0];
+ const mk=(words)=>{const list=[];const idx=w=>{if(!w)w=list.length?list[0].name:"objets";let i=list.findIndex(o=>o.name===w);if(i<0){list.push(sNoun(w)||{name:w,icon:null});i=list.length-1}return i};return{list,idx}};
+ const N=mk(),first=nums.find(x=>x.w),main=first?first.w:((lo.match(/des\s+([a-zà-ÿœ]+)/)||[])[1]||"objets");
+ const fill=(o,z)=>{o.nisMap=z;o.nis=id=>Array(400).fill(z[id]??0);o.dom=z._dom??0;return o};
+ // Partage
+ const ent=lo.match(/(partag|distribu|r[ée]parti)[^.?!]*entre\s+(\d+)/);
+ if(ent){const K=+ent[2],t=nums.find(x=>x.n!==K||x.i<lo.indexOf("entre"));if(!t||K<2||K>10)return null;const i=N.idx(t.w||main);
+  return{schema:"s-part",n:K,uz:"p0",nouns:N.list,P:fill({kind:"star",mode:"share",t:t.n,K,nZ:K},{_dom:i,centre:i}),label:"Partage : je cherche ce qu'il y a dans une part"}}
+ const pq=lo.match(/(paquets?|bo[iî]tes?|sachets?|groupes?|[ée]quipes?|rang[ée]es?|sacs?|lots?|tas)\s+de\s+(\d+)/);
+ if(pq&&/combien\s+(de\s+)?(paquets|bo[iî]tes|sachets|groupes|[ée]quipes|rang[ée]es|sacs|lots|tas)/.test(lo)){const m=+pq[2],t=nums.find(x=>x.n!==m)||nums[0];if(!t||m<1)return null;const g=Math.floor(t.n/m);if(g<1||g>10)return null;const i=N.idx(t.w||main);
+  return{schema:"s-nombre",n:Math.max(2,Math.min(10,g)),uz:null,nouns:N.list,P:fill({kind:"star",mode:"groups",t:t.n,m,g,nZ:Math.max(2,Math.min(10,g))},{_dom:i,centre:i,p0:i}),label:"Partage : je cherche le nombre de parts"}}
+ // Comparaison multiplicative : « 3 fois plus (que) », « 3 fois moins », « le double », « combien de fois plus »
+ const KW={deux:2,trois:3,quatre:4,cinq:5,six:6,sept:7,huit:8,neuf:9,dix:10};
+ const fm=lo.match(/(\d+|deux|trois|quatre|cinq|six|sept|huit|neuf|dix)\s+fois\s+(plus|moins)/);let k=0,fi=-1,fs=0;
+ if(fm){k=KW[fm[1]]||+fm[1];fi=fm.index;fs=fm[2]==="plus"?1:-1}
+ else{const dm=lo.match(/(^|[^a-zà-ÿ])(double|triple|quadruple|moiti[ée])(?![a-zà-ÿ])/);if(dm&&!/combien\s+de\s+fois/.test(lo)){k={double:2,triple:3,quadruple:4}[dm[2]]||2;fs=/moiti/.test(dm[2])?-1:1;fi=dm.index}}
+ if(/combien\s+de\s+fois/.test(lo)&&nums.length===2){const bg=nums[0].n>=nums[1].n?nums[0]:nums[1],sm=bg===nums[0]?nums[1]:nums[0];if(!sm.n||bg.n%sm.n)return null;const g=bg.n/sm.n;if(g<2||g>10)return null;const i=N.idx(bg.w||sm.w||main);
+  return{schema:"s-nombre",n:g,uz:null,nouns:N.list,P:fill({kind:"star",mode:"groups",mult:"howmany",t:bg.n,m:sm.n,g,nZ:g,big:bg.i,small:sm.i},{_dom:i,centre:i,p0:i}),label:"Comparaison multiplicative : je cherche combien de fois plus"}}
+ if(k){const oth=nums.filter(x=>!(fm&&x.i===fi));if(oth.length!==1||k<2||k>10)return null;const o=oth[0],i=N.idx(o.w||main);
+  const cest=/c'est|c’est/.test(lo.slice(Math.max(0,fi-12),fi)),times=(fs>0)!==cest;
+  if(times)return{schema:"s-parts",n:k,uz:"centre",nouns:N.list,P:fill({kind:"star",mode:"same",mult:"times",p:Array(k).fill(o.n),a:o.n,b:o.n*k,K:k,nZ:k,ki:o.i},{_dom:i,p0:i,centre:i}),label:`Comparaison multiplicative : ${k} fois plus, je cherche la plus grande quantité`};
+  if(o.n%k)return null;return{schema:"s-part",n:k,uz:"p0",nouns:N.list,P:fill({kind:"star",mode:"share",mult:"less",t:o.n,K:k,a:o.n/k,nZ:k,ki:o.i},{_dom:i,centre:i}),label:`Comparaison multiplicative : ${k} fois moins, je cherche la plus petite quantité`}}
+ // Comparaison
+ const rel=lo.match(/(\d+)\s+(?:[a-zà-ÿ]+\s+)?de\s+(plus|moins)\s+que/);
+ if(rel&&nums.length===2){const d=+rel[1],sg=rel[2]==="plus"?1:-1,base=nums.find(x=>x.n!==d||x.i!==rel.index)||nums[0];const i=N.idx(base.w||main);
+  const b=base.n+sg*d;if(b<0)return null;return{schema:"k-comp",n:1,uz:"p1",cg:sg,nouns:N.list,P:fill({kind:"cmp",mode:"build1",a:base.n,b,d,nZ:1,cg:sg},{_dom:i,p0:i,p1:i,ecart:i}),label:"Comparaison : je cherche la quantité comparée"}}
+ if(/combien[^?]*de\s+(plus|moins)/.test(lo)&&nums.length===2){const i=N.idx(nums[0].w||main);
+  return{schema:"k-ecart",n:1,uz:"ecart",nouns:N.list,P:fill({kind:"cmp",mode:"diff",a:nums[0].n,b:nums[1].n,d:Math.abs(nums[1].n-nums[0].n),nZ:1},{_dom:i,p0:i,p1:i,ecart:i}),label:"Comparaison : je cherche la différence"}}
+ // Transformation
+ const I=sInfo();if(!/(^|[^a-zà-ÿ])(dont|parmi)(?![a-zà-ÿ])|(^|\s)sur \d+/.test(lo)){const Q=parseTransX(I)||(I.v&&nums.length===2?parseTrans(I):null);if(Q){const i=N.idx(main);Object.assign(Q,{nis:()=>Array(400).fill(i),dom:i});
+  const sg={};Q.g.forEach((g,j)=>sg["a"+j]=g<0?"-":"+");const ch=Q.uz[0]==="a";
+  return{schema:Q.uz==="s0"?"t-debut":ch?"t-change":"t-fin",n:Q.N,uz:Q.uz,nouns:N.list,P:Q,signs:sg,
+   label:"Transformation"+(Q.N>1?` en ${Q.N} étapes`:"")+" : "+(Q.uz==="s0"?"je cherche le début":ch?"je cherche ce qui a changé":"je cherche la fin")}}}
+ // Composition
+ if(/en tout|au total|ensemble|dont|parmi|les autres|le reste|reste-t-il|(^|\s)sur \d+/.test(lo)&&nums.length>=2&&nums.length<=5){
+  if(/combien[^?]*(en tout|au total|ensemble)/.test(lo)||!/dont|parmi|les autres|le reste|(^|\s)sur \d+/.test(lo)){const z={};const p=nums.map((x,k)=>{z["p"+k]=N.idx(x.w||main);return x.n});z._dom=z.p0;
+   const tw=(q.match(/combien\s+(?:de\s+|d['’])([a-zà-ÿœ]+)/)||[])[1];z.tout=tw?N.idx(tw):z.p0;
+   return{schema:"c-tout",n:p.length,uz:"tout",nouns:N.list,P:fill({kind:"comp",mode:"join",N:p.length,p,t:p.reduce((a,b)=>a+b,0),nZ:p.length},z),label:"Composition : je cherche le tout"}}
+  const t=nums.reduce((a,b)=>b.n>a.n?b:a),part=nums.filter(x=>x!==t);if(part.length!==1)return null;const r=t.n-part[0].n;if(r<0)return null;
+  const z={tout:N.idx(t.w||main),p0:N.idx(part[0].w||main)};const uw=(q.match(/combien\s+(?:de\s+|d['’])([a-zà-ÿœ]+)/)||[])[1];z.p1=N.idx(uw||null);z._dom=z.tout;
+  return{schema:"c-partie",n:2,uz:"p1",nouns:N.list,P:fill({kind:"comp",mode:"split",N:2,p:[part[0].n,r],t:t.n,unk:1,nZ:2},z),label:"Composition : je cherche une partie"}}
+ return null}
+function renderStoryScreen(){
+ $("#main").innerHTML=`<div class="ws wrap"><div class="wsbar"><button class="btn back" data-go="cat">← Retour</button><div class="wtitle">Écris le problème, regarde l'histoire</div></div>
+ <div class="sdet" id="sdet"></div><div class="stagewrap"><div class="stage" id="stage"></div></div><div class="tools" id="tools"></div></div>`;
+ requestAnimationFrame(()=>storyInit())}
+function sBuildSchema(){const R=STY.R;if(!R)return;const P=R.P,Z={};const put=(id,n)=>{if(n>0)Z[id]=Array(n).fill(P.nisMap?(P.nisMap[id]??P.dom):P.dom)};
+ if(P.kind==="trans"){const kn=P.known;for(let i=0;i<=P.N;i++){const id="s"+i;if(id!==R.uz&&(kn?kn[id]:true))put(id,P.s[i])}for(let i=0;i<P.N;i++){const id="a"+i;if(id!==R.uz&&(kn?kn[id]:true))put(id,P.a[i])}}
+ else if(P.kind==="comp"){if(P.mode==="join")P.p.forEach((v,i)=>put("p"+i,v));else{put("tout",P.t);put("p0",P.p[0])}}
+ else if(P.kind==="cmp"){if(P.mode==="diff"){put("p0",P.a);put("p1",P.b)}else{put("p0",P.a);put("ecart",P.d)}}
+ else if(P.mult==="times")put("p0",P.a);
+ else{put("centre",P.t);if(P.mode==="groups")put("p0",P.m)}
+ S.nouns=R.nouns.length?R.nouns:[{name:"objets",icon:"⚪",auto:false}];S.schema=R.schema;S.cat=SCH[R.schema].kind;S.n=R.n;S.zones=Z;
+ S.signs=R.signs||(R.cg?{ecart:R.cg<0?"-":"+"}:{});S.qset={};
+ if(P.kind==="trans"){for(let i=0;i<=P.N;i++)S.qset["s"+i]=R.uz==="s"+i;for(let i=0;i<P.N;i++)S.qset["a"+i]=R.uz==="a"+i}S.qmode=false;S.stage="img";S.prog=false;hist=[];S.screen="ws";save();render()}
+document.addEventListener("click",e=>{const x=e.target.closest("[data-sex]");if(x){S.story=SEX[+x.dataset.sex][1];save();storyInit();return}
+ if(e.target.closest("[data-sbuild]"))sBuildSchema()});
+
 
 
 addEventListener("resize",()=>requestAnimationFrame(fit));
