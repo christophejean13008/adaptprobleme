@@ -300,7 +300,7 @@ a.btn{text-decoration:none;display:inline-block}
   <header class="top">
     <div class="brand">
       <svg viewBox="0 0 104 60" aria-hidden="true"><rect x="4" y="12" width="34" height="34" rx="5" class="zs" style="stroke-width:6"/><polygon class="inkf" points="42,22 62,22 62,14 76,29 62,44 62,36 42,36"/><rect x="72" y="12" width="28" height="34" rx="5" class="zs" style="stroke-width:6;display:none"/><rect x="78" y="12" width="22" height="34" rx="5" class="zs" style="stroke-width:6"/></svg>
-      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 2.7</small>
+      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 2.9</small>
     </div>
     <nav class="steps" id="steps" aria-label="Étapes"></nav>
     <button class="btn" id="reset">Nouveau problème</button>
@@ -1087,7 +1087,17 @@ function aniInit(){if(S.amode==="story"){ANI.tok++;storyInit();return}STY.tok++;
 /* --- déroulé --- */
 async function aniScript(){const P=ANI.plan,Z=ANI.z,arr=id=>(Z[id]=Z[id]||[]),st=$("#stage"),W=()=>st.clientWidth;const h=$("#ahint");if(h)h.remove();
  const pause=()=>aWait(800);
- if(P.kind==="trans"){
+ const lz=P.kind==="trans"?layout(S.schema,S.n,true).Z.find(z=>z.id==="s0"):null;
+ if(P.kind==="trans"&&lz&&lz.q&&!(S.zones.s0||[]).length){/* on cherche le début : on part de la fin et on remonte */
+  const N=P.N;await aAppear("g",P.s[N],P.nis("s"+N),P.dom);await pause();
+  for(let i=N-1;i>=0;i--){const n=P.a[i],nis=P.nis("a"+i);
+   aCap((P.g[i]<0?"+ ":"− ")+n,P.g[i]<0?"plus":"moins");await aWait(900);
+   if(P.g[i]<0){const sl=aSl("A",n);for(let k=0;k<n;k++){const a=aMk(nis[k]!=null?nis[k]:P.dom,1080,sl[k].y,sl[k].s);await aOne(a,null,"A",sl[k])}
+    await pause();Z.g=arr("g").concat(arr("A"));Z.A=[];aBadge();aCap("")}
+   else{for(let k=0;k<n;k++){const L=arr("g"),a=L[L.length-1];if(!a)break;a.el.classList.add("hl");await aWait(300);L.pop();aBadge();aGo(a,{x:1090,y:a.y});setTimeout(()=>a.el.classList.add("gone"),450/aSpeed());setTimeout(()=>a.el.remove(),1800);await aWait(680)}
+    await pause();aCap("")}
+   await aRegroup("g");await pause()}}
+ else if(P.kind==="trans"){
   await aAppear("g",P.s[0],P.nis("s0"),P.dom);
   for(let i=0;i<P.N;i++){const n=P.a[i],nis=P.nis("a"+i);
    aCap((P.g[i]>0?"+ ":"− ")+n,P.g[i]>0?"plus":"moins");await aWait(900);
@@ -1213,6 +1223,26 @@ function sBuild(P,uz,I){
   st.C={t:"c",e:(CO&&P.place&&!S.storyChr)?P.place:I.e,x:-130,y:390,s:210,v:1,c:""};st.B={t:"b",txt:"",x:235,y:205,v:0,c:""};st.G={t:"g",x:520,y:420,s:130,v:0};
   const pile={x:360,y:230,w:330,h:320},A={x:730,y:180,w:240,h:270};
   init();
+  if(uz==="s0"){/* on cherche le début : on part de la fin et on remonte l'histoire */
+   const nN=P.s[N],slN=aSlots(pile,nN),nisN=P.nis("s"+N);let pileIds=[];
+   for(let k=0;k<nN;k++){const id=atom(nisN[k]??dom,slN[k].x,slN[k].y,slN[k].s,0);go(id,{v:1});pileIds.push(id)}
+   st.C.x=235;st.B.v=1;st.B.txt=String(nN);vals["s"+N]=nN;
+   snap(CO?`À la fin, il y a ${nN} ${nn}.`:`À la fin, ${I.sub} a ${nN} ${nn}.`,["s"+N],vals);
+   st.B.txt="?";vals.s0="?";snap(CO?"Combien y en avait-il au début ? On remonte l'histoire !":`Combien en avait-${pr} au début ? On remonte l'histoire !`,["s0"],vals);
+   for(let i=N-1;i>=0;i--){const a=P.a[i],g=P.g[i],vb=VB(i);st.C.c="play";
+    if(g<0){const sl=aSlots(A,a),nis=P.nis("a"+i),back=[];for(let k=0;k<a;k++){const id=atom(nis[k]??dom,1090,sl[k].y,sl[k].s,0);go(id,{v:1,x:sl[k].x,y:sl[k].y,c:"hl"});back.push(id)}
+     st.B.txt="+"+a;st.B.c="pos";vals["a"+i]=a;
+     snap(isC(i)?`${a} ${a>1?"sont "+vb.pp+"s":"est "+vb.pp} : on les remet.`:`${capF(pr)} en avait ${vb.pp} ${a} : on les remet.`,["a"+i],vals);
+     back.forEach(id=>st[id].c="");pileIds=pileIds.concat(back)}
+    else{const sl=aSlots(A,a),out=pileIds.splice(pileIds.length-a,a);out.forEach((id,k)=>go(id,{x:sl[k].x,y:sl[k].y,s:sl[k].s,c:"hl"}));
+     st.B.txt="−"+a;st.B.c="neg";vals["a"+i]=a;
+     snap(isC(i)?`${a} ${a>1?"sont "+vb.pp+"s":"est "+vb.pp} : on les enlève.`:`${capF(pr)} en avait ${vb.pp} ${a} : on les enlève.`,["a"+i],vals);
+     out.forEach(id=>{st[id].v=0;st[id].x=1090;ord.push(id)})}
+    st.C.c="";const sl=aSlots(pile,pileIds.length);pileIds.forEach((id,k)=>go(id,{v:1,x:sl[k].x,y:sl[k].y,s:sl[k].s}));
+    const cnt=P.s[i];vals["s"+i]=cnt;st.B.txt=String(cnt);
+    if(i>0){st.B.c="";snap(CO?`Avant, il y en avait ${cnt}.`:`Avant, ${pr} en avait ${cnt}.`,["s"+i],vals)}
+    else{st.B.c="ans";snap(CO?`Au départ, il y avait ${cnt} ${nn}.`:`Au départ, ${pr} avait ${cnt} ${nn}.`,["s0"],vals)}}
+  }else{
   const unk0=uz==="s0",unkAi=uz&&uz[0]==="a"?+uz.slice(1):-1;let pileIds=[];const n0=P.s[0],sl0=aSlots(pile,n0),nis0=P.nis("s0");
   for(let i=0;i<n0;i++){const id=atom(nis0[i]??dom,unk0?520:sl0[i].x,unk0?420:sl0[i].y,sl0[i].s,0);pileIds.push(id);if(!unk0)go(id,{v:1})}
   st.C.x=235;st.B.v=1;st.B.txt=unk0?"?":String(n0);st.B.c="";st.G.v=unk0?1:0;vals.s0=unk0?"?":n0;
@@ -1237,7 +1267,7 @@ function sBuild(P,uz,I){
    st.B.txt=uz[0]==="a"?(P.g[unkAi]>0?"+":"−")+ans:String(ans);st.B.c="ans";vals[uz]=ans;
    const vb=VB(unkAi>=0?unkAi:0);
    snap(uz==="s0"?(CO?`Au départ, il y avait ${ans} ${nn}.`:`Au départ, ${pr} avait ${ans} ${nn}.`):uz[0]==="a"?(isC(unkAi)?`${ans} ${nn} ${ans>1?vb.pl:vb.pr}.`:`${capF(pr)} en a ${vb.pp} ${ans}.`):(CO?`Maintenant, il y a ${ans} ${nn}.`:`Maintenant, ${pr} a ${ans} ${nn}.`),[uz],vals)}
- }
+ }}
  else if(P.kind==="comp"){
   const N=P.N,pw=720/N-20,R=[...Array(N)].map((_,i)=>({x:260+i*(pw+20),y:110,w:pw,h:210})),T={x:300,y:345,w:440,h:250};
   st.C={t:"c",e:I.e,x:-130,y:430,s:170,v:1,c:""};st.B={t:"b",txt:"",x:115,y:255,v:0,c:""};init();
@@ -1394,7 +1424,7 @@ async function sPlay(dir){if(STY.playing)return;STY.playing=dir;$("#tools").inne
 function sToolsHTML(){const sp=aSpeed(),opts=[["","Personnage : auto"]].concat(PERSOS.map(p=>[p[1],p[1]+" "+p[0]]));
  let h=(S.screen==="ws"?amodeHTML():"")+`<textarea id="sstory" rows="2" placeholder="Écris l'histoire du problème. Ex. : Un garçon a des billes. Il en perd 5. Il en a maintenant 3. Combien en avait-il au départ ?">${esc(S.story||"")}</textarea>
  <select id="schr" aria-label="Personnage">${opts.map(o=>`<option value="${o[0]}"${(S.storyChr||"")===o[0]?" selected":""}>${o[1]}</option>`).join("")}</select>`;
- if(STY.err)return h+`<span class="amsg">${esc(STY.err)}</span>`;
+ if(STY.err)return S.screen==="story"?h:h+`<span class="amsg">${esc(STY.err)}</span>`;
  h+=`<span class="sctl"><button class="btn" data-sty="first" title="Début" aria-label="Revenir au début">⏮</button>
  <button class="btn" data-sty="back" title="Lire en reculant" aria-label="Lire en reculant">◀◀</button>
  <button class="btn" data-sty="prev" title="Étape précédente" aria-label="Étape précédente">◀</button>
@@ -1407,7 +1437,8 @@ function amodeHTML(){return`<span class="seg amode" role="group" aria-label="Typ
 function storyInitText(){const R=S.story?parseStory():null;STY.R=R;if(R&&R.nouns.length)S.nouns=R.nouns;
  const I=sInfo();
  const big=R&&[R.P.t,R.P.a,R.P.b,R.P.m].concat(R.P.s||[],R.P.p||[]).some(v=>typeof v==="number"&&v>100);
- STY.err=!S.story?"Écris un problème, ou choisis un exemple.":!R?"Je n'ai pas reconnu ce problème. Mots utiles : perd, gagne, monte, descend… puis… (transformation, en une ou deux étapes) ; en tout, dont (composition) ; de plus que, de moins que, 3 fois plus, 3 fois moins (comparaison) ; partage entre, paquets de (partage).":big?"Ces nombres sont trop grands pour l'animation (plus de 100 objets). Tu peux quand même construire le schéma.":"";
+ const nn=S.story?sNums(S.story).length:0;
+ STY.err=!S.story?"Écris un problème, ou choisis un exemple.":!R&&nn<2?(nn?`Il manque un nombre : je n'ai trouvé que ${sNums(S.story)[0].n}. Écris tous les nombres que l'on connaît (ex. : « il lui reste 5 billes »).`:"Il manque les nombres : écris les nombres que l'on connaît."):!R?"Je n'ai pas reconnu ce problème. Mots utiles : perd, gagne, monte, descend… puis… (transformation, en une ou deux étapes) ; en tout, dont (composition) ; de plus que, de moins que, 3 fois plus, 3 fois moins (comparaison) ; partage entre, paquets de (partage).":big?"Ces nombres sont trop grands pour l'animation (plus de 100 objets). Tu peux quand même construire le schéma.":"";
  const d=$("#sdet");if(d)d.innerHTML=(R?`<span class="stype">Type reconnu : <b>${esc(R.label)}</b></span><button class="btn primary" data-sbuild>Construire le schéma avec ces nombres</button>`:"")+`<span class="sex">Exemples : ${SEX.map((x,i)=>`<button class="btn" data-sex="${i}">${x[0]}</button>`).join("")}</span>`;
  const st=$("#stage");if(!st)return;st.classList.add("aniempty");
  st.innerHTML=`<div class="slayer" id="slayer"></div><div class="scap" id="scap"></div><div class="smini" id="smini"></div>${STY.err?`<div class="ahint">${esc(STY.err)}</div>`:""}`;
