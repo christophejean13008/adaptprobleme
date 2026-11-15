@@ -212,6 +212,7 @@ a.btn{text-decoration:none;display:inline-block}
 .acap.on{opacity:1}.acap.plus{color:var(--c2)}.acap.moins{color:var(--c1)}
 .ahint{position:absolute;top:45%;left:0;right:0;text-align:center;color:var(--muted);font-size:calc(var(--u)*3)}
 #stage.aniempty{background:var(--paper);border-radius:18px;overflow:hidden}
+.sinv{flex:1 1 100%;font-size:18px;font-weight:700;background:#FFF8E1;border:2px dashed #E0A800;border-radius:10px;padding:8px 12px;color:#14202B}
 .amsg{font-weight:700;color:var(--c1);flex:1;min-width:240px}
 .aspeed{display:flex;align-items:center;gap:8px;margin-left:auto;font-weight:700;background:var(--ui);border:2px solid var(--line);border-radius:12px;padding:4px 12px}
 .aspeed input{width:160px}
@@ -300,7 +301,7 @@ a.btn{text-decoration:none;display:inline-block}
   <header class="top">
     <div class="brand">
       <svg viewBox="0 0 104 60" aria-hidden="true"><rect x="4" y="12" width="34" height="34" rx="5" class="zs" style="stroke-width:6"/><polygon class="inkf" points="42,22 62,22 62,14 76,29 62,44 62,36 42,36"/><rect x="72" y="12" width="28" height="34" rx="5" class="zs" style="stroke-width:6;display:none"/><rect x="78" y="12" width="22" height="34" rx="5" class="zs" style="stroke-width:6"/></svg>
-      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 2.9</small>
+      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 2.0</small>
     </div>
     <nav class="steps" id="steps" aria-label="Étapes"></nav>
     <button class="btn" id="reset">Nouveau problème</button>
@@ -1207,10 +1208,23 @@ function parseTransX(I){const lo=" "+(S.story||"").toLowerCase().replace(/[’]/
  const known={};for(let i=0;i<=N;i++)if(st[i]!=null)known["s"+i]=1;ev.forEach((e,i)=>{if(e.n!=null)known["a"+i]=1});
  let place=null;if(ev.some(e=>e.coll)){for(const p of PLACES)if(new RegExp("(^|[^a-zà-ÿ])("+p[0]+")s?(?![a-zà-ÿ])").test(lo)){place=p[1];break}if(!place)place="🏠"}
  return{kind:"trans",N,s,a,g,vb:ev.map(e=>e.vb),coll:ev.map(e=>e.coll),known,place,nis:()=>[],dom:0,uz,fromText:true}}
+/* --- accord singulier / pluriel des noms dans les phrases de l'histoire --- */
+const INV=["bus","souris","noix","croix","voix","prix","nez","pois","fois","ananas","radis","tapis","bras","corps","os","gaz","riz","colis","puits","repas","mois","jus","avis","choix","poids","cas","dos","héros","maïs","pas","autobus","cactus","virus","tennis","gens"];
+const STOPW=["de","d'","du","des","à","au","en","la","le"];
+function plW(w){if(/[sxz]$/.test(w))return w;if(/(au|eau|eu)$/.test(w)&&!/^(bleu|pneu|émeu)$/.test(w))return w+"x";if(/al$/.test(w)&&!/^(bal|carnaval|festival|chacal|régal|récital)$/.test(w))return w.slice(0,-2)+"aux";if(/^(bijou|caillou|chou|genou|hibou|joujou|pou)$/.test(w))return w+"x";return w+"s"}
+function sgW(w){if(INV.includes(w))return w;if(/(eau|eu|ou)x$/.test(w))return w.slice(0,-1);if(/aux$/.test(w))return w.slice(0,-3)+"al";if(/s$/.test(w))return w.slice(0,-1);return w}
+function nForms(name){const ws=String(name).trim().split(/\s+/);let stop=false;const sg=[],pl=[];
+ for(const w of ws){const lw=w.toLowerCase();if(stop||STOPW.includes(lw)||/^d'/.test(lw)){stop=stop||STOPW.includes(lw)||/^d'/.test(lw);sg.push(w);pl.push(w);continue}sg.push(sgW(w));pl.push(plW(sgW(w)))}
+ return{sg:sg.join(" "),pl:pl.join(" ")}}
+function fixAgr(t){const names=(S.nouns||[]).map(o=>o&&o.name).filter(Boolean).concat(["objets"]);
+ for(const n of names){const f=nForms(n),alt=[f.pl,f.sg].filter((x,i,a)=>x&&a.indexOf(x)===i).map(x=>x.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")).join("|");if(!alt)continue;
+  t=t.replace(new RegExp("(\\d+)(\\s+)("+alt+")(?![a-zà-ÿœ])","gi"),(m,d,sp)=>d+sp+(+d<2?f.sg:f.pl));
+  t=t.replace(new RegExp("(^|[^a-zà-ÿ])(des|les|ses|mes|tes|nos|vos|leurs|aux|plusieurs)(\\s+)("+alt+")(?![a-zà-ÿœ])","gi"),(m,a,b,sp)=>a+b+sp+f.pl)}
+ return t}
 /* --- construction des états successifs --- */
 function sBuild(P,uz,I){
  const st={},states=[],steps=[];let ord=[],n=0;const W=()=>Object.assign;
- const snap=(cap,hl,vals)=>{const o={};for(const k in st)o[k]=Object.assign({},st[k]);states.push(o);steps.push({cap,hl,vals:Object.assign({},vals),ord:ord.slice()});ord=[]};
+ const snap=(cap,hl,vals)=>{const o={};for(const k in st)o[k]=Object.assign({},st[k]);states.push(o);steps.push({cap:fixAgr(cap),hl,vals:Object.assign({},vals),ord:ord.slice()});ord=[]};
  const born={};const atom=(ni,x,y,s,v)=>{const id="m"+(n++);st[id]={t:"a",ni,x,y,s,v,c:""};born[id]=Object.assign({},st[id],{v:0});return id};
  const go=(id,p)=>{Object.assign(st[id],p);ord.push(id)};
  const nm=ni=>{const o=S.nouns[ni];return o&&o.name?o.name:"objets"};
@@ -1232,11 +1246,11 @@ function sBuild(P,uz,I){
    for(let i=N-1;i>=0;i--){const a=P.a[i],g=P.g[i],vb=VB(i);st.C.c="play";
     if(g<0){const sl=aSlots(A,a),nis=P.nis("a"+i),back=[];for(let k=0;k<a;k++){const id=atom(nis[k]??dom,1090,sl[k].y,sl[k].s,0);go(id,{v:1,x:sl[k].x,y:sl[k].y,c:"hl"});back.push(id)}
      st.B.txt="+"+a;st.B.c="pos";vals["a"+i]=a;
-     snap(isC(i)?`${a} ${a>1?"sont "+vb.pp+"s":"est "+vb.pp} : on les remet.`:`${capF(pr)} en avait ${vb.pp} ${a} : on les remet.`,["a"+i],vals);
+     snap(isC(i)?`${a} ${a>1?vb.pl:vb.pr} : on en remet ${a}.`:`${capF(pr)} en avait ${vb.pp} ${a} : on en remet ${a}.`,["a"+i],vals);
      back.forEach(id=>st[id].c="");pileIds=pileIds.concat(back)}
     else{const sl=aSlots(A,a),out=pileIds.splice(pileIds.length-a,a);out.forEach((id,k)=>go(id,{x:sl[k].x,y:sl[k].y,s:sl[k].s,c:"hl"}));
      st.B.txt="−"+a;st.B.c="neg";vals["a"+i]=a;
-     snap(isC(i)?`${a} ${a>1?"sont "+vb.pp+"s":"est "+vb.pp} : on les enlève.`:`${capF(pr)} en avait ${vb.pp} ${a} : on les enlève.`,["a"+i],vals);
+     snap(isC(i)?`${a} ${a>1?vb.pl:vb.pr} : on en enlève ${a}.`:`${capF(pr)} en avait ${vb.pp} ${a} : on en enlève ${a}.`,["a"+i],vals);
      out.forEach(id=>{st[id].v=0;st[id].x=1090;ord.push(id)})}
     st.C.c="";const sl=aSlots(pile,pileIds.length);pileIds.forEach((id,k)=>go(id,{v:1,x:sl[k].x,y:sl[k].y,s:sl[k].s}));
     const cnt=P.s[i];vals["s"+i]=cnt;st.B.txt=String(cnt);
@@ -1393,8 +1407,8 @@ function sPut(id,p,inst){const e=document.getElementById("se-"+id);if(!e||!p)ret
  e.style.opacity=p.v?(p.c==="ghost"?"0.3":"1"):"0";
  if(inst){void e.offsetWidth;e.style.transition=""}}
 function sApply(k){const s=STY.states[k];for(const id in s)sPut(id,s[id],true);sHud()}
-function sHud(){const k=STY.k,st=STY.steps[k-1],c=$("#scap"),n=STY.steps.length;
- if(c)c.textContent=k?st.cap:"Appuie sur ▶ pour jouer l'histoire.";
+function sHud(){const k=STY.k,st=STY.steps[k-1],c=$("#scap"),n=STY.steps.length,hid=STY.inv&&!STY.inv.shown;
+ if(c)c.textContent=hid?(k?(k===n?"Quel était l'énoncé de ce problème ?":"Que se passe-t-il ?"):"Regarde bien l'histoire : ensemble, vous inventerez l'énoncé."):k?st.cap:"Appuie sur ▶ pour jouer l'histoire.";
  const m=$("#smini");if(m)m.innerHTML=sMini(k?st.hl:[],k?st.vals:{});
  const i=$("#sstep");if(i)i.textContent=`Étape ${k} / ${n}`;
  document.querySelectorAll("[data-sty]").forEach(b=>{const v=b.dataset.sty;b.disabled=STY.busy&&v!=="stop"||((v==="prev"||v==="back"||v==="first")&&k===0)||((v==="next"||v==="play")&&k===n)})}
@@ -1417,13 +1431,17 @@ async function sGo(to){if(to<0||to>STY.steps.length||to===STY.k)return;const dir
   if(!q.v&&p.v){sPut(id,Object.assign({},p,{x:q.x,y:q.y,s:q.s,v:1}),true);await new Promise(r=>requestAnimationFrame(r));sPut(id,p);await sWait(moved?(p.f?240:640):200)}
   else if(q.v&&!p.v){sPut(id,Object.assign({},p,{v:1}));await sWait(moved?640:200);sPut(id,p)}
   else{sPut(id,p);await sWait(moved?(p.f?240:640):150)}}
- await sWait(250);STY.busy=false;sHud();say($("#scap").textContent)}
+ await sWait(250);STY.busy=false;sHud();if(!(STY.inv&&!STY.inv.shown))say($("#scap").textContent)}
 async function sPlay(dir){if(STY.playing)return;STY.playing=dir;$("#tools").innerHTML=sToolsHTML();
  try{while(STY.playing===dir){const to=STY.k+dir;if(to<0||to>STY.steps.length)break;await sGo(to);await sWait(1400)}}catch(e){if(e!=="stop")throw e}
  STY.playing=0;STY.busy=false;if($("#tools")&&(S.amode==="story"||S.screen==="story"))$("#tools").innerHTML=sToolsHTML();sHud()}
 function sToolsHTML(){const sp=aSpeed(),opts=[["","Personnage : auto"]].concat(PERSOS.map(p=>[p[1],p[1]+" "+p[0]]));
- let h=(S.screen==="ws"?amodeHTML():"")+`<textarea id="sstory" rows="2" placeholder="Écris l'histoire du problème. Ex. : Un garçon a des billes. Il en perd 5. Il en a maintenant 3. Combien en avait-il au départ ?">${esc(S.story||"")}</textarea>
+ let h=(S.screen==="ws"?amodeHTML():"");
+ if(STY.inv){h+=`<button class="btn" data-inv="new" title="Même type de problème, autres nombres">🎲 Autres nombres</button><button class="btn" data-inv="show" aria-pressed="${!!STY.inv.shown}">${STY.inv.shown?"🙈 Cacher l'énoncé":"👀 Montrer l'énoncé"}</button><button class="btn" data-inv="end">✖ Revenir à mon problème</button>`+(STY.inv.shown?`<div class="sinv">${esc(STY.inv.txt)}</div>`:"")}
+ else h+=`<button class="btn" data-inv="go" title="Rejouer l'histoire avec d'autres nombres : les élèves inventent l'énoncé">🎭 Histoire à inventer</button>`;
+ if(!STY.inv)h+=`<textarea id="sstory" rows="2" placeholder="Écris l'histoire du problème. Ex. : Un garçon a des billes. Il en perd 5. Il en a maintenant 3. Combien en avait-il au départ ?">${esc(S.story||"")}</textarea>
  <select id="schr" aria-label="Personnage">${opts.map(o=>`<option value="${o[0]}"${(S.storyChr||"")===o[0]?" selected":""}>${o[1]}</option>`).join("")}</select>`;
+ if(STY.inv&&STY.inv.err)return h+`<span class="amsg">${esc(STY.inv.err)}</span>`;
  if(STY.err)return S.screen==="story"?h:h+`<span class="amsg">${esc(STY.err)}</span>`;
  h+=`<span class="sctl"><button class="btn" data-sty="first" title="Début" aria-label="Revenir au début">⏮</button>
  <button class="btn" data-sty="back" title="Lire en reculant" aria-label="Lire en reculant">◀◀</button>
@@ -1434,18 +1452,20 @@ function sToolsHTML(){const sp=aSpeed(),opts=[["","Personnage : auto"]].concat(P
  <b id="sstep"></b></span>`;
  return h+`<label class="aspeed">🐢 <input type="range" id="aspeed" min="0.25" max="3" step="0.25" value="${sp}" aria-label="Vitesse"> 🐇 <b>×${sp}</b></label>`}
 function amodeHTML(){return`<span class="seg amode" role="group" aria-label="Type d'animation"><button data-amode="obj" aria-pressed="${S.amode!=="story"}">Objets</button><button data-amode="story" aria-pressed="${S.amode==="story"}">Histoire</button></span>`}
-function storyInitText(){const R=S.story?parseStory():null;STY.R=R;if(R&&R.nouns.length)S.nouns=R.nouns;
+function storyInitText(){const real=S.story;if(STY.inv&&STY.inv.txt)S.story=STY.inv.txt;try{storyInitText0()}finally{S.story=real}}
+function storyInitText0(){const R=S.story?parseStory():null;STY.R=R;if(R&&R.nouns.length)S.nouns=R.nouns;
  const I=sInfo();
  const big=R&&[R.P.t,R.P.a,R.P.b,R.P.m].concat(R.P.s||[],R.P.p||[]).some(v=>typeof v==="number"&&v>100);
  const nn=S.story?sNums(S.story).length:0;
  STY.err=!S.story?"Écris un problème, ou choisis un exemple.":!R&&nn<2?(nn?`Il manque un nombre : je n'ai trouvé que ${sNums(S.story)[0].n}. Écris tous les nombres que l'on connaît (ex. : « il lui reste 5 billes »).`:"Il manque les nombres : écris les nombres que l'on connaît."):!R?"Je n'ai pas reconnu ce problème. Mots utiles : perd, gagne, monte, descend… puis… (transformation, en une ou deux étapes) ; en tout, dont (composition) ; de plus que, de moins que, 3 fois plus, 3 fois moins (comparaison) ; partage entre, paquets de (partage).":big?"Ces nombres sont trop grands pour l'animation (plus de 100 objets). Tu peux quand même construire le schéma.":"";
- const d=$("#sdet");if(d)d.innerHTML=(R?`<span class="stype">Type reconnu : <b>${esc(R.label)}</b></span><button class="btn primary" data-sbuild>Construire le schéma avec ces nombres</button>`:"")+`<span class="sex">Exemples : ${SEX.map((x,i)=>`<button class="btn" data-sex="${i}">${x[0]}</button>`).join("")}</span>`;
+ const d=$("#sdet");if(d)d.innerHTML=(R&&!STY.inv?`<span class="stype">Type reconnu : <b>${esc(R.label)}</b></span><button class="btn primary" data-sbuild>Construire le schéma avec ces nombres</button>`:"")+`<span class="sex">Exemples : ${SEX.map((x,i)=>`<button class="btn" data-sex="${i}">${x[0]}</button>`).join("")}</span>`;
  const st=$("#stage");if(!st)return;st.classList.add("aniempty");
  st.innerHTML=`<div class="slayer" id="slayer"></div><div class="scap" id="scap"></div><div class="smini" id="smini"></div>${STY.err?`<div class="ahint">${esc(STY.err)}</div>`:""}`;
  $("#tools").innerHTML=sToolsHTML();sizeStage();
  if(STY.err){STY.states=[];STY.steps=[];return}
  STY.L=layout(R.schema,R.n,false);const B=sBuild(R.P,R.uz,I);STY.states=B.states;STY.steps=B.steps;STY.P=R.P;sMake();sApply(0)}
-function storyInit(){STY.tok++;STY.playing=0;STY.busy=false;STY.k=0;if(S.screen==="story")return storyInitText();
+function storyInit(){STY.tok++;STY.playing=0;STY.busy=false;STY.k=0;if(S.screen==="story"||(STY.inv&&STY.inv.txt))return storyInitText();
+ if(STY.inv){const st=$("#stage");if(st){st.classList.add("aniempty");st.innerHTML=`<div class="slayer" id="slayer"></div><div class="scap" id="scap"></div><div class="smini" id="smini"></div>`}STY.states=[];STY.steps=[];$("#tools").innerHTML=sToolsHTML();sizeStage();return}
  const I=sInfo();let P=aniPlan();const K=SCH[S.schema];
  STY.L=layout(S.schema,P&&!P.err?(P.nZ||S.n):S.n,true);let uz=(STY.L.Z.find(z=>z.q)||{}).id||null;
  if(P.err&&K.kind==="trans"&&S.story){const Q=parseTransX(I)||parseTrans(I);if(Q){P=Q;uz=Q.uz;STY.L=layout("t-fin",Q.N,false)}}
@@ -1464,9 +1484,25 @@ document.addEventListener("click",e=>{const am=e.target.closest("[data-amode]");
 let sTimer=0;document.addEventListener("input",e=>{if(e.target.id==="sstory"){S.story=e.target.value;save();clearTimeout(sTimer);sTimer=setTimeout(()=>{const ta=$("#sstory"),pos=ta?ta.selectionStart:0;storyInit();const t2=$("#sstory");if(t2){t2.focus();t2.setSelectionRange(pos,pos)}},900)}});
 document.addEventListener("change",e=>{if(e.target.id==="schr"){S.storyChr=e.target.value;save();storyInit()}});
 addEventListener("resize",()=>{if(((S.screen==="ws"&&S.stage==="anim"&&S.amode==="story")||S.screen==="story")&&STY.states.length)requestAnimationFrame(()=>{sizeStage();sApply(STY.k)})});
+/* ---------- Histoire à inventer : même type de problème, autres nombres proches ---------- */
+function sSig(R){const P=R.P;return JSON.stringify([R.schema,R.uz,P.kind,P.mode||"",P.mult||"",P.N||0,P.kind==="trans"?P.g:0,P.kind==="comp"?P.N:0,P.mode==="share"?P.t%P.K===0:0,P.mode==="groups"?P.t%P.m===0:0])}
+function sInvent(){const base=S.story||"";let R0=null;if(base){R0=parseStory()}
+ if(!R0)return{err:S.screen==="ws"?"Pour inventer une histoire, écris d'abord l'énoncé du problème (dans l'écran « Écrire le problème et voir l'histoire »).":"Écris d'abord un problème que l'appli reconnaît."};
+ const sig=sSig(R0),old=STY.inv&&STY.inv.txt,ri=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+ for(let t=0;t<400;t++){const txt=base.replace(/\d+(?!\d)(?!\s*(?:e|er|re|ème|eme)(?![a-zà-ÿ]))/gi,m=>{const n=+m,d=Math.max(1,Math.round(n*.35));let v=n+ri(-d,d);if(v<1)v=n+ri(1,d);return String(v)});
+  if(txt===base||txt===old)continue;S.story=txt;let R=null;try{R=parseStory()}catch(e){}S.story=base;
+  if(!R||sSig(R)!==sig)continue;const P=R.P,vals=[P.t,P.a,P.b,P.m].concat(P.s||[],P.p||[]).filter(v=>typeof v==="number");
+  if(vals.some(v=>v>100||v<0))continue;if(P.kind==="trans"&&P.a.some(v=>v<1))continue;return{txt,shown:false}}
+ return{err:"Je n'ai pas trouvé d'autres nombres qui marchent pour ce problème."}}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-inv]");if(!b)return;const v=b.dataset.inv;
+ if(v==="go"||v==="new"){const r=sInvent();if(r.err&&v==="new"){STY.inv.err=r.err}else STY.inv=r;storyInit();if(STY.inv&&!STY.inv.err&&STY.states.length)setTimeout(()=>{if(STY.inv&&!STY.busy&&!STY.playing)sPlay(1)},400)}
+ else if(v==="show"){STY.inv.shown=!STY.inv.shown;$("#tools").innerHTML=sToolsHTML();sHud()}
+ else if(v==="end"){STY.inv=null;storyInit()}});
+document.addEventListener("click",e=>{const x=e.target.closest("[data-sex]");if(x&&STY.inv){STY.inv=null}},true);
+document.addEventListener("click",e=>{if(e.target.closest("[data-amode],[data-sbuild],[data-go]"))STY.inv=null},true);
 /* ---------- Écrire le problème d'abord : reconnaissance du type et des nombres ---------- */
 const SNSTOP=["et","de","plus","moins","fois","en","sont","ont","a","au","aux","par","pour","chacun","chacune","entre","que","qui","dans","sur","le","la","les","du","des","un","une","il","elle","on","ans"];
-function sNums(t){const out=[],re=/(\d+)(?:\s+(?:de\s+|d['’])?([a-zà-ÿœ]+)(?:\s+(rouges?|bleus?|bleues?|verts?|vertes?|jaunes?|noirs?|noires?|blancs?|blanches?))?)?/gi;let m;
+function sNums(t){const out=[],re=/(\d+)(?:\s+(?:de\s+|d['’])?([a-zà-ÿœ]+)(?:\s+(rouges?|bleues?|bleus?|vertes?|verts?|jaunes?|noires?|noirs?|blanches?|blancs?|roses?|oranges?|violettes?|violets?|grises?|gris)(?![a-zà-ÿ]))?)?/gi;let m;
  while((m=re.exec(t))){let w=(m[2]||"").toLowerCase();if(SNSTOP.includes(w)||tvFind(" "+w+" "))w="";else if(w&&m[3])w+=" "+m[3].toLowerCase();out.push({n:+m[1],w,i:m.index})}return out}
 const SEX=[["Transformation","Un garçon a des billes. Il en perd 5. Il en a maintenant 3. Combien en avait-il au départ ?"],
  ["Composition","Dans la classe, il y a 12 filles et 11 garçons. Combien d'élèves en tout ?"],
