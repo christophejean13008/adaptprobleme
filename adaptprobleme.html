@@ -213,6 +213,9 @@ a.btn{text-decoration:none;display:inline-block}
 .ahint{position:absolute;top:45%;left:0;right:0;text-align:center;color:var(--muted);font-size:calc(var(--u)*3)}
 #stage.aniempty{background:var(--paper);border-radius:18px;overflow:hidden}
 .sinv{flex:1 1 100%;font-size:18px;font-weight:700;background:#FFF8E1;border:2px dashed #E0A800;border-radius:10px;padding:8px 12px;color:#14202B}
+.at.snum{background:#fff;border:3px solid #1565C0;border-radius:14px;padding:.12em .35em;gap:.25em;white-space:nowrap;font-family:"Arial Black",Arial,sans-serif;color:#14202B;box-shadow:0 3px 0 rgba(0,0,0,.15)}
+.at.snum b{font-weight:900}.at.snum i{font-style:normal;font-size:.75em;display:inline-flex;width:1.1em;height:1.1em;align-items:center;justify-content:center}.at.snum i img{width:100%;height:100%;object-fit:contain}
+.at.snum.hl{border-color:#E0A800;background:#FFF3C4}
 .amsg{font-weight:700;color:var(--c1);flex:1;min-width:240px}
 .aspeed{display:flex;align-items:center;gap:8px;margin-left:auto;font-weight:700;background:var(--ui);border:2px solid var(--line);border-radius:12px;padding:4px 12px}
 .aspeed input{width:160px}
@@ -301,7 +304,7 @@ a.btn{text-decoration:none;display:inline-block}
   <header class="top">
     <div class="brand">
       <svg viewBox="0 0 104 60" aria-hidden="true"><rect x="4" y="12" width="34" height="34" rx="5" class="zs" style="stroke-width:6"/><polygon class="inkf" points="42,22 62,22 62,14 76,29 62,44 62,36 42,36"/><rect x="72" y="12" width="28" height="34" rx="5" class="zs" style="stroke-width:6;display:none"/><rect x="78" y="12" width="22" height="34" rx="5" class="zs" style="stroke-width:6"/></svg>
-      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 2.0</small>
+      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 2.1</small>
     </div>
     <nav class="steps" id="steps" aria-label="Étapes"></nav>
     <button class="btn" id="reset">Nouveau problème</button>
@@ -1006,8 +1009,10 @@ addEventListener("resize",()=>{if(S.screen==="mat")requestAnimationFrame(sizeM)}
 const ANI={tok:0,paused:false,state:"idle",z:{},R:{},plan:null,msg:""};
 const aSpeed=()=>S.aspeed||1;
 async function aWait(ms){const t=ANI.tok;let left=ms/aSpeed();while(left>0){if(t!==ANI.tok)throw"stop";if(!ANI.paused)left-=40;await new Promise(r=>setTimeout(r,40))}if(t!==ANI.tok)throw"stop"}
+let SBIG=false;
+const sBigSl=(z,n)=>{const s=Math.max(30,Math.min(85,z.w*.3,z.h*.5));return Array(n).fill(0).map(()=>({x:z.x+z.w/2,y:z.y+z.h/2,s}))};
 function aSlots(z,n){
- if(!n)return[];const ins=z.circle?.2:.06,ix=z.x+z.w*ins,iy=z.y+z.h*ins,iw=z.w*(1-2*ins),ih=z.h*(1-2*ins);
+ if(!n)return[];if(SBIG)return sBigSl(z,n);const ins=z.circle?.2:.06,ix=z.x+z.w*ins,iy=z.y+z.h*ins,iw=z.w*(1-2*ins),ih=z.h*(1-2*ins);
  const tens=Math.floor(n/10),r=n%10,dice=r===0?[]:r<=5?[r]:[5,r-5];let best=null;
  for(let rows=1;rows<=Math.max(1,Math.min(4,tens));rows++){
   const cols=tens?Math.ceil(tens/rows):0,bw=cols?cols*1.35:0,bh=tens?rows*10.6-.6:0,dw=dice.length*3.6,dh=dice.length?3:0;
@@ -1018,7 +1023,7 @@ function aSlots(z,n){
  let dx=x0+(bw?bw+.8:0)*c;const dy=y0+(th-3)*c/2;
  for(const v of dice){DIE[v].forEach((on,i)=>{if(on)out.push({x:dx+(i%3)*c+c/2,y:dy+Math.floor(i/3)*c+c/2,s:c*.94})});dx+=3.6*c}
  return out}
-function aRowSlots(z,n){const lines=Math.max(1,Math.ceil((z.max||n)/10)),c=Math.min(z.w/10.2,z.h/lines,90),out=[],nl=Math.ceil(n/10);
+function aRowSlots(z,n){if(SBIG)return sBigSl(z,n);const lines=Math.max(1,Math.ceil((z.max||n)/10)),c=Math.min(z.w/10.2,z.h/lines,90),out=[],nl=Math.ceil(n/10);
  for(let i=0;i<n;i++)out.push({x:z.x+c*(i%10)+c/2,y:z.y+z.h/2+(Math.floor(i/10)-(lines-1)/2)*c,s:c*.9});return out}
 function aInner(ni){const o=S.nouns[ni];if(!o)return"●";if(!o.icon)return`<span class="aw" style="background:${col(ni)}">${esc((o.name||"?").slice(0,1).toUpperCase())}</span>`;
  return isImg(o.icon)?`<img src="${esc(o.icon.slice(4))}" alt="" draggable="false">`:o.icon}
@@ -1072,7 +1077,8 @@ function aniPlan(){
   else if(t&&known===S.n){P.mode="gather";P.p=p;P.nZ=S.n;P.keep=true}
   else P.err="Place soit le tout au centre, soit les objets d'une part (ou de toutes les parts), pour pouvoir animer."}
  const tooMany=Object.values(S.zones).some(l=>l.length>100)||[P.t,P.a,P.b].concat(P.s||[],P.p||[]).some(v=>v>100);
- if(!P.err&&tooMany)P.err="Plus de 100 objets dans une case : c'est trop pour l'animation.";
+ if(!P.err&&tooMany)P.big=true;
+ if(!P.err&&[P.t,P.a,P.b].concat(P.s||[],P.p||[]).some(v=>v>20000))P.err="Plus de 20 000 : c'est trop pour l'animation.";
  return P}
 /* --- zones invisibles où se placent les groupes d'objets --- */
 function aRects(P){const R={};
@@ -1081,7 +1087,8 @@ function aRects(P){const R={};
  else if(P.kind==="cmp"){const mx=Math.max(P.a,P.b);R.p0={x:90,y:90,w:640,h:190,row:1,max:mx};R.p1={x:90,y:340,w:640,h:190,row:1,max:mx};R.d={x:760,y:190,w:230,h:240}}
  else{const L=layout(S.schema,P.nZ||S.n,true);L.Z.forEach(z=>{if(z.id==="centre"){const cx=z.x+z.w/2,cy=z.y+z.h/2,r=z.w*.95;R.c={x:cx-r,y:cy-r*.8,w:2*r,h:1.6*r}}else R[z.id]={x:z.x-20,y:z.y-20,w:z.w+40,h:z.h+40}})}
  return R}
-function aniInit(){if(S.amode==="story"){ANI.tok++;storyInit();return}STY.tok++;ANI.tok++;ANI.paused=false;ANI.z={};const P=aniPlan();ANI.plan=P;ANI.msg=P.err;ANI.state=P.err?"err":"idle";
+function aniInit(){if(S.amode==="story"){ANI.tok++;storyInit();return}STY.tok++;ANI.tok++;ANI.paused=false;ANI.z={};const P=aniPlan();
+ if(P.big&&!P.err){S.amode="story";ANI.tok++;storyInit();return}ANI.plan=P;ANI.msg=P.err;ANI.state=P.err?"err":"idle";
  const st=$("#stage");if(!st)return;ANI.R=P.err?{}:aRects(P);
  st.innerHTML=`<div class="alayer" id="alayer"></div>${aBadges()}<div class="acap" id="acap"></div>${P.err?"":`<div class="ahint" id="ahint">Appuie sur « ▶ Lancer l'animation ».</div>`}`;
  st.classList.add("aniempty");st.style.setProperty("--ad",Math.round(560/aSpeed())+"ms");$("#tools").innerHTML=aniToolsHTML();sizeStage();aPlaceBadges()}
@@ -1264,7 +1271,7 @@ function sBuild(P,uz,I){
   let inBag=unk0;const lostBy=[],gainBy=[],lostAll=[],gainAll=[];
   for(let i=0;i<N;i++){const a=P.a[i],g=P.g[i],vb=VB(i),unkA=uz==="a"+i;st.C.c="play";
    let gainIds=[],lostIds=[];if(g>0){const sl=aSlots(A,a),nis=P.nis("a"+i);for(let k=0;k<a;k++){const id=atom(nis[k]??dom,1090,sl[k].y,sl[k].s,0);go(id,{v:1,x:sl[k].x,y:sl[k].y});gainIds.push(id)}gainAll.push(...gainIds)}
-   else{lostIds=pileIds.splice(pileIds.length-a,a).reverse();lostIds.forEach((id,k)=>go(id,{v:1,x:1090,y:470+((k*29)%90)}));lostAll.push(...lostIds)}
+   else{lostIds=pileIds.splice(pileIds.length-a,a).reverse();lostIds.forEach((id,k)=>go(id,{v:1,x:1090,y:SBIG?470:470+((k*29)%90)}));lostAll.push(...lostIds)}
    gainBy.push(gainIds);lostBy.push(lostIds);
    st.B.txt=unkA?"?":(g>0?"+":"−")+a;st.B.c=g>0?"pos":"neg";vals["a"+i]=unkA?"?":a;
    snap(isC(i)?(unkA?`Des ${nn} ${vb.pl}… combien ?`:`${a} ${a>1?vb.pl:vb.pr}.`):(unkA?`${capF(pr)} en ${vb.pr}… combien ?`:`${capF(pr)} en ${vb.pr} ${a}.`),["a"+i],vals);
@@ -1304,7 +1311,7 @@ function sBuild(P,uz,I){
   const g=P.cg??(S.signs.ecart==="-"?-1:1),nA=I.names[0]||"le garçon",nB=I.names[1]||"la fille",prA=I.names[0]?"il":"il",dom=P.nis("p0")[0]??P.nis("p1")[0]??P.dom,nn=nm(dom);
   const mx=Math.max(P.a,P.b),RA={x:210,y:175,w:600,h:120,row:1,max:mx},RB={x:210,y:415,w:600,h:120,row:1,max:mx},D={x:840,y:250,w:140,h:230};
   const slA=aRowSlots(RA,mx),slB=aRowSlots(RB,mx);
-  st.CA={t:"c",e:"👦",x:-130,y:235,s:140,v:1,c:""};st.CB={t:"c",e:"👧",x:-130,y:475,s:140,v:1,c:""};
+  st.CA={t:"c",e:I.names[0]?(sPron(nA)==="elle"?"👧":"👦"):"👦",x:-130,y:235,s:140,v:1,c:""};st.CB={t:"c",e:I.names[1]?(sPron(nB)==="elle"?"👧":"👦"):"👧",x:-130,y:475,s:140,v:1,c:""};
   st.BA={t:"b",txt:"",x:110,y:130,v:0,c:""};st.BB={t:"b",txt:"",x:110,y:370,v:0,c:""};st.BD={t:"b",txt:"?",x:910,y:215,v:0,c:""};st.GA={t:"g",x:420,y:235,s:100,v:0};st.GB={t:"g",x:420,y:475,s:100,v:0};
   init();const A=[],B=[];
   const row=(arr,sl,cnt,ni,hid)=>{for(let k=0;k<cnt;k++){const id=atom(ni,sl[k].x,sl[k].y,sl[k].s,0);if(!hid)go(id,{v:1});arr.push(id)}};
@@ -1314,7 +1321,7 @@ function sBuild(P,uz,I){
    st.CB.x=110;row(B,slB,P.b,P.nis("p1")[0]??dom);st.BB.v=1;st.BB.txt=String(P.b);vals.p1=P.b;snap(`${capF(nB)} a ${P.b} ${nn}.`,["p1"],vals);
    for(let k=0;k<m;k++){go(A[k],{c:"pair"});go(B[k],{c:"pair"})}snap("On compare : on fait des paires.",["p0","p1"],vals);
    const ex=(big?B:A).slice(m),sl=aSlots(D,ex.length);ex.forEach((id,k)=>go(id,{c:"hl",x:sl[k].x,y:sl[k].y,s:sl[k].s}));st.BD.v=1;vals.ecart="?";
-   snap(`Combien ${big?nB:nA} en a-t-${big?"elle":"il"} de plus ?`,["ecart"],vals);
+   snap(`Combien ${big?nB:nA} en a-t-${sPron(big?nB:nA)} de plus ?`,["ecart"],vals);
    st.BD.txt=String(d);st.BD.c="ans";vals.ecart=d;snap(`${capF(big?nB:nA)} en a ${d} de plus que ${big?nA:nB}.`,["ecart"],vals)}
   else{const refA=P.mode==="build1",nr=refA?P.a:P.b,nt=refA?P.b:P.a,ref=refA?A:B,tgt=refA?B:A,slR=refA?slA:slB,slT=refA?slB:slA,ni=dom;
    const rel=g>0?`${capF(nB)} en a ${P.d} de plus que ${nA}.`:`${capF(nB)} en a ${P.d} de moins que ${nA}.`;
@@ -1392,6 +1399,27 @@ function sBuild(P,uz,I){
  // chaque élément existe (caché) dans toutes les étapes, pour pouvoir reculer
  for(const id in st)for(const S0 of states)if(!S0[id])S0[id]=Object.assign({},born[id]||Object.assign({},st[id],{v:0}));
  return{states,steps}}
+/* --- grandes quantités (plus de 100) : chaque collection devient une étiquette avec le nombre écrit en chiffres --- */
+function sPron(n){n=String(n||"").trim();return /^la\s/i.test(n)?"elle":/^le\s/i.test(n)?"il":/(a|e|ie|é|ine|elle)$/i.test(n)?"elle":"il"}
+function sBigOf(P){const v=[P.t,P.a,P.b,P.m].concat(P.s||[],P.p||[]).filter(x=>typeof x==="number");return{big:v.some(x=>x>100),huge:v.some(x=>x>20000)}}
+function sTokens(B){const SS=B.states,key=p=>Math.round(p.x)+","+Math.round(p.y),maps=[],toks=[];
+ SS.forEach(s=>{const g={},m={};for(const id in s){const p=s[id];if(p.t!=="a"||!p.v)continue;const k=key(p);const o=g[k]=g[k]||{n:0,ng:0,x:p.x,y:p.y,s:p.s,ni:p.ni,hl:false,pair:false};o.n++;if(p.c==="ghost")o.ng++;if(p.c==="hl")o.hl=true;m[id]=k}
+  const o={};for(const id in s)if(s[id].t!=="a")o[id]=s[id];
+  for(const k in g){const q=g[k],all=q.ng===q.n;o["T"+k]={t:"a",tok:1,ni:q.ni,txt:String(all?q.n:q.n-q.ng),x:q.x,y:q.y,s:q.s,v:1,c:all?"ghost":q.hl?"hl":""}}
+  toks.push(o);maps.push(m)});
+ const ids=new Set();toks.forEach(o=>{for(const id in o)if(o[id].tok)ids.add(id)});
+ const atomsOf=(j,tid)=>Object.keys(maps[j]).filter(a=>"T"+maps[j][a]===tid);
+ const where=(j,atoms)=>{const c={};for(const a of atoms){const p=SS[j][a];if(!p)continue;const k=key(p);c[k]=(c[k]||0)+1}let b=null;for(const k in c)if(!b||c[k]>c[b])b=k;return b};
+ for(const tid of ids){let last=null;toks.forEach(o=>{if(o[tid])last=o[tid]});
+  toks.forEach((o,j)=>{if(o[tid])return;let k=null;
+   if(j+1<toks.length&&toks[j+1][tid])k=where(j,atomsOf(j+1,tid));
+   else if(j>0&&toks[j-1][tid])k=where(j,atomsOf(j-1,tid));
+   const ref=toks[j+1]&&toks[j+1][tid]||toks[j-1]&&toks[j-1][tid]||last,xy=k?k.split(",").map(Number):[ref.x,ref.y];
+   o[tid]=Object.assign({},ref,{x:xy[0],y:xy[1],v:0})})}
+ const steps=B.steps.map((st,i)=>{const out=[];for(const a of st.ord){const k=maps[i+1][a]??maps[i][a];if(k!=null&&!out.includes("T"+k))out.push("T"+k)}
+  for(const tid of ids){const p=toks[i+1][tid],q=toks[i][tid];if((p.v!==q.v||p.x!==q.x||p.y!==q.y)&&!out.includes(tid))out.push(tid)}return Object.assign({},st,{ord:out})});
+ return{states:toks,steps}}
+function sBuildX(P,uz,I){if(!sBigOf(P).big)return sBuild(P,uz,I);SBIG=true;try{return sTokens(sBuild(P,uz,I))}finally{SBIG=false}}
 /* --- affichage --- */
 function sMake(){const L=$("#slayer");L.innerHTML="";const last=STY.states[STY.states.length-1];
  for(const id in last){const p=last[id],e=document.createElement("div");e.id="se-"+id;
@@ -1400,8 +1428,9 @@ function sPut(id,p,inst){const e=document.getElementById("se-"+id);if(!e||!p)ret
  if(inst)e.style.transition="none";
  e.style.left=(p.x/10)+"%";e.style.top=(p.y/6.2)+"%";
  if(p.t==="x"){e.style.width=(p.w/10)+"%";e.style.height=(p.h/6.2)+"%"}
- else if(p.s){const px=Math.max(6,p.s*W/1000);if(p.t==="a"){e.style.width=e.style.height=px+"px";e.style.fontSize=(px*.86)+"px"}else e.style.fontSize=px+"px"}
- if(p.t==="a"){if(e.dataset.ni!==String(p.ni)){e.innerHTML=aInner(p.ni);e.dataset.ni=p.ni}e.className="at"+(p.c?" "+p.c:"")}
+ else if(p.s){const px=Math.max(6,p.s*W/1000);if(p.t==="a"&&p.tok){e.style.width=e.style.height="auto";e.style.fontSize=(px*.62)+"px"}else if(p.t==="a"){e.style.width=e.style.height=px+"px";e.style.fontSize=(px*.86)+"px"}else e.style.fontSize=px+"px"}
+ if(p.t==="a"&&p.tok){const h=`<b>${p.txt}</b><i>${aInner(p.ni)}</i>`;if(e.dataset.h!==h){e.innerHTML=h;e.dataset.h=h}e.className="at snum"+(p.c?" "+p.c:"")}
+ else if(p.t==="a"){if(e.dataset.ni!==String(p.ni)){e.innerHTML=aInner(p.ni);e.dataset.ni=p.ni}e.className="at"+(p.c?" "+p.c:"")}
  if(p.t==="c")e.className="chr"+(p.c?" "+p.c:"");
  if(p.t==="b"){e.textContent=p.txt;e.className="sbub"+(p.c?" "+p.c:"")}
  e.style.opacity=p.v?(p.c==="ghost"?"0.3":"1"):"0";
@@ -1455,15 +1484,15 @@ function amodeHTML(){return`<span class="seg amode" role="group" aria-label="Typ
 function storyInitText(){const real=S.story;if(STY.inv&&STY.inv.txt)S.story=STY.inv.txt;try{storyInitText0()}finally{S.story=real}}
 function storyInitText0(){const R=S.story?parseStory():null;STY.R=R;if(R&&R.nouns.length)S.nouns=R.nouns;
  const I=sInfo();
- const big=R&&[R.P.t,R.P.a,R.P.b,R.P.m].concat(R.P.s||[],R.P.p||[]).some(v=>typeof v==="number"&&v>100);
+ const big=R&&sBigOf(R.P).huge;
  const nn=S.story?sNums(S.story).length:0;
- STY.err=!S.story?"Écris un problème, ou choisis un exemple.":!R&&nn<2?(nn?`Il manque un nombre : je n'ai trouvé que ${sNums(S.story)[0].n}. Écris tous les nombres que l'on connaît (ex. : « il lui reste 5 billes »).`:"Il manque les nombres : écris les nombres que l'on connaît."):!R?"Je n'ai pas reconnu ce problème. Mots utiles : perd, gagne, monte, descend… puis… (transformation, en une ou deux étapes) ; en tout, dont (composition) ; de plus que, de moins que, 3 fois plus, 3 fois moins (comparaison) ; partage entre, paquets de (partage).":big?"Ces nombres sont trop grands pour l'animation (plus de 100 objets). Tu peux quand même construire le schéma.":"";
+ STY.err=!S.story?"Écris un problème, ou choisis un exemple.":!R&&nn<2?(nn?`Il manque un nombre : je n'ai trouvé que ${sNums(S.story)[0].n}. Écris tous les nombres que l'on connaît (ex. : « il lui reste 5 billes »).`:"Il manque les nombres : écris les nombres que l'on connaît."):!R?"Je n'ai pas reconnu ce problème. Mots utiles : perd, gagne, monte, descend… puis… (transformation, en une ou deux étapes) ; en tout, dont (composition) ; de plus que, de moins que, 3 fois plus, 3 fois moins (comparaison) ; partage entre, paquets de (partage).":big?"Ces nombres sont trop grands pour l'animation (plus de 20 000). Tu peux quand même construire le schéma.":"";
  const d=$("#sdet");if(d)d.innerHTML=(R&&!STY.inv?`<span class="stype">Type reconnu : <b>${esc(R.label)}</b></span><button class="btn primary" data-sbuild>Construire le schéma avec ces nombres</button>`:"")+`<span class="sex">Exemples : ${SEX.map((x,i)=>`<button class="btn" data-sex="${i}">${x[0]}</button>`).join("")}</span>`;
  const st=$("#stage");if(!st)return;st.classList.add("aniempty");
  st.innerHTML=`<div class="slayer" id="slayer"></div><div class="scap" id="scap"></div><div class="smini" id="smini"></div>${STY.err?`<div class="ahint">${esc(STY.err)}</div>`:""}`;
  $("#tools").innerHTML=sToolsHTML();sizeStage();
  if(STY.err){STY.states=[];STY.steps=[];return}
- STY.L=layout(R.schema,R.n,false);const B=sBuild(R.P,R.uz,I);STY.states=B.states;STY.steps=B.steps;STY.P=R.P;sMake();sApply(0)}
+ STY.L=layout(R.schema,R.n,false);const B=sBuildX(R.P,R.uz,I);STY.states=B.states;STY.steps=B.steps;STY.P=R.P;sMake();sApply(0)}
 function storyInit(){STY.tok++;STY.playing=0;STY.busy=false;STY.k=0;if(S.screen==="story"||(STY.inv&&STY.inv.txt))return storyInitText();
  if(STY.inv){const st=$("#stage");if(st){st.classList.add("aniempty");st.innerHTML=`<div class="slayer" id="slayer"></div><div class="scap" id="scap"></div><div class="smini" id="smini"></div>`}STY.states=[];STY.steps=[];$("#tools").innerHTML=sToolsHTML();sizeStage();return}
  const I=sInfo();let P=aniPlan();const K=SCH[S.schema];
@@ -1475,7 +1504,7 @@ function storyInit(){STY.tok++;STY.playing=0;STY.busy=false;STY.k=0;if(S.screen=
  $("#tools").innerHTML=sToolsHTML();sizeStage();
  if(STY.err){$("#scap").textContent="";return}
  if(uz&&STY.L.Z.find(z=>z.id===uz)&&(S.zones[uz]||[]).length&&!P.fromText){}
- const R=sBuild(P,uz,I);STY.states=R.states;STY.steps=R.steps;STY.P=P;sMake();sApply(0)}
+ const R=sBuildX(P,uz,I);STY.states=R.states;STY.steps=R.steps;STY.P=P;sMake();sApply(0)}
 document.addEventListener("click",e=>{const am=e.target.closest("[data-amode]");if(am){S.amode=am.dataset.amode;save();ANI.tok++;STY.tok++;STY.playing=0;aniInit();return}
  const b=e.target.closest("[data-sty]");if(!b||(S.amode!=="story"&&S.screen!=="story"))return;const v=b.dataset.sty;
  if(v==="stop"){STY.playing=0;return}if(STY.busy)return;
