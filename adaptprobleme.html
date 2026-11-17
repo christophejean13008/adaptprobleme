@@ -194,6 +194,14 @@ a.btn{text-decoration:none;display:inline-block}
 .smini .inkf{fill:#C3CAD1}.smini .lns{stroke:#C3CAD1}
 .mz{fill:#fff;stroke:#C3CAD1;stroke-width:14}.mz.on{stroke:#2F6FDE;fill:#EAF1FF;stroke-width:22}
 .mt{fill:#8A949E;font-family:"Arial Black",Arial,sans-serif;font-weight:900}.mt.on{fill:#2F6FDE}.mt.inv{fill:#fff}
+#popask{position:fixed;z-index:2100;background:#fff;color:#14202B;border:3px solid #1565C0;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.3);padding:10px 12px;max-width:min(92vw,360px)}
+#popask::before{content:"";position:absolute;top:-11px;left:calc(var(--ax,50%) - 10px);border:10px solid transparent;border-top:0;border-bottom:11px solid #1565C0}
+#popask p{margin:0 0 8px;font-weight:700;font-size:17px}#popask div{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+#sedtop{position:fixed;left:0;right:0;top:0;z-index:2000;background:var(--paper,#fff);box-shadow:0 6px 24px rgba(0,0,0,.35);padding:10px 14px 12px;display:flex;flex-direction:column;gap:8px;border-bottom:4px solid #1565C0}
+#sedtop .sedh{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-weight:800;font-size:18px}
+#sedtop .sedh span{flex:1 1 auto}
+#sedit{width:100%;min-height:0;font-size:24px;line-height:1.35;border:3px solid #1565C0;border-radius:12px;padding:8px 12px;background:#fff;color:#14202B;resize:none}
+#sedback{position:fixed;inset:0;top:0;left:0;right:0;bottom:0;z-index:1999;background:rgba(20,32,43,.35)}
 #sstory{flex:1 1 420px;min-height:54px;font-size:17px;border:2px solid var(--line);border-radius:10px;padding:6px 10px;background:var(--paper);color:var(--ink);resize:vertical}
 #schr{font-size:16px;border:2px solid var(--line);border-radius:10px;padding:6px;background:var(--paper);color:var(--ink)}
 .sctl{display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap}.sctl .btn{min-width:48px;font-size:18px}.sctl .btn:disabled{opacity:.35}
@@ -304,7 +312,7 @@ a.btn{text-decoration:none;display:inline-block}
   <header class="top">
     <div class="brand">
       <svg viewBox="0 0 104 60" aria-hidden="true"><rect x="4" y="12" width="34" height="34" rx="5" class="zs" style="stroke-width:6"/><polygon class="inkf" points="42,22 62,22 62,14 76,29 62,44 62,36 42,36"/><rect x="72" y="12" width="28" height="34" rx="5" class="zs" style="stroke-width:6;display:none"/><rect x="78" y="12" width="22" height="34" rx="5" class="zs" style="stroke-width:6"/></svg>
-      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 2.1</small>
+      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 2.3</small>
     </div>
     <nav class="steps" id="steps" aria-label="Étapes"></nav>
     <button class="btn" id="reset">Nouveau problème</button>
@@ -691,7 +699,7 @@ document.addEventListener("click",e=>{
  if(d.more!==undefined){const i=+d.more;const prev=openMore;openMore=openMore===i?-1:i;if(prev>=0&&prev!==i&&$("#ch"+prev))renderChips(prev);renderChips(i);return}
  if(d.del!==undefined){removeNoun(+d.del);save();renderNouns();return}
  if(t.id==="addn"){if(S.nouns.length>=MAXN)return;S.nouns.push({name:"",icon:null,auto:true});save();renderNouns();const ins=document.querySelectorAll("[data-in]");ins[ins.length-1].focus();return}
- if(t.id==="reset"){if(confirm("Effacer ce problème et en commencer un nouveau ?")){const lv=S.level;S=fresh();S.level=lv;hist=[];save();render()}return}
+ if(t.id==="reset"){popAsk(t,"Effacer ce problème et en commencer un nouveau ?","Oui, nouveau problème",()=>{const lv=S.level;S=fresh();S.level=lv;hist=[];save();render()});return}
  if(d.stage){if(S.stage!==d.stage){S.stage=d.stage;save();renderWS(d.stage!=="num")}return}
  if(d.sign){push();S.signs[d.sign]=S.signs[d.sign]==="-"?"+":"-";save();renderStage();return}
  if(d.act){const a=d.act;
@@ -1510,6 +1518,28 @@ document.addEventListener("click",e=>{const am=e.target.closest("[data-amode]");
  if(v==="stop"){STY.playing=0;return}if(STY.busy)return;
  if(v==="next")sGo(STY.k+1).catch(()=>{});else if(v==="prev")sGo(STY.k-1).catch(()=>{});
  else if(v==="first"){STY.tok++;STY.k=0;sApply(0)}else if(v==="play")sPlay(1);else if(v==="back")sPlay(-1)});
+/* --- Sur l'ENI, le clavier cache le bas de l'écran : on écrit l'énoncé dans un bandeau en haut --- */
+function sEdOpen(){if($("#sedtop"))return;const bk=document.createElement("div");bk.id="sedback";const d=document.createElement("div");d.id="sedtop";
+ d.innerHTML=`<div class="sedh"><span>✏️ Écris l'énoncé du problème</span><button class="btn" data-sed="clear">Effacer</button><button class="btn primary" data-sed="ok">✓ Voir l'histoire</button></div><textarea id="sedit" rows="4" placeholder="Ex. : Un garçon a des billes. Il en perd 5. Il en a maintenant 3. Combien en avait-il au départ ?"></textarea>`;
+ document.body.appendChild(bk);document.body.appendChild(d);const t=$("#sedit");t.value=S.story||"";
+ setTimeout(()=>{t.focus();const n=t.value.length;try{t.setSelectionRange(n,n)}catch(e){}},30)}
+function sEdClose(){const t=$("#sedit");if(t){S.story=t.value;save()}["#sedtop","#sedback"].forEach(q=>{const e=$(q);if(e)e.remove()});clearTimeout(sTimer);STY.inv=null;storyInit()}
+document.addEventListener("focusin",e=>{if(e.target.id==="sstory"){e.target.blur();sEdOpen()}});
+document.addEventListener("click",e=>{const b=e.target.closest("[data-sed]");if(b){if(b.dataset.sed==="clear"){const t=$("#sedit");t.value="";S.story="";save();t.focus()}else sEdClose();return}
+ if(e.target.id==="sedback")sEdClose()});
+document.addEventListener("input",e=>{if(e.target.id==="sedit"){S.story=e.target.value;save()}});
+document.addEventListener("keydown",e=>{if(e.target.id==="sedit"&&e.key==="Enter"&&!e.shiftKey){e.preventDefault();sEdClose()}});
+/* --- petite question qui s'ouvre juste sous le bouton touché (au lieu d'une boîte au centre de l'écran) --- */
+function popAsk(btn,msg,yes,fn){popClose();const r=btn.getBoundingClientRect(),d=document.createElement("div");d.id="popask";d.setAttribute("role","dialog");
+ d.innerHTML=`<p>${esc(msg)}</p><div><button class="btn" data-pop="no">Annuler</button><button class="btn primary" data-pop="yes">${esc(yes)}</button></div>`;
+ document.body.appendChild(d);const w=d.offsetWidth,vw=document.documentElement.clientWidth;
+ let x=r.left+r.width/2-w/2;x=Math.max(8,Math.min(vw-w-8,x));d.style.left=x+"px";d.style.top=(r.bottom+8)+"px";
+ d.style.setProperty("--ax",(r.left+r.width/2-x)+"px");d._fn=fn;setTimeout(()=>{const y=d.querySelector('[data-pop="yes"]');if(y)y.focus()},20)}
+function popClose(){const d=$("#popask");if(d)d.remove()}
+document.addEventListener("click",e=>{const d=$("#popask");if(!d)return;const b=e.target.closest("[data-pop]");
+ if(b){const fn=d._fn;popClose();if(b.dataset.pop==="yes"&&fn)fn();e.stopPropagation();return}
+ if(!e.target.closest("#popask")&&e.target.id!=="reset")popClose()},true);
+document.addEventListener("keydown",e=>{if(e.key==="Escape")popClose()});
 let sTimer=0;document.addEventListener("input",e=>{if(e.target.id==="sstory"){S.story=e.target.value;save();clearTimeout(sTimer);sTimer=setTimeout(()=>{const ta=$("#sstory"),pos=ta?ta.selectionStart:0;storyInit();const t2=$("#sstory");if(t2){t2.focus();t2.setSelectionRange(pos,pos)}},900)}});
 document.addEventListener("change",e=>{if(e.target.id==="schr"){S.storyChr=e.target.value;save();storyInit()}});
 addEventListener("resize",()=>{if(((S.screen==="ws"&&S.stage==="anim"&&S.amode==="story")||S.screen==="story")&&STY.states.length)requestAnimationFrame(()=>{sizeStage();sApply(STY.k)})});
