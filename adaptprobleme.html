@@ -222,8 +222,8 @@ a.btn{text-decoration:none;display:inline-block}
 .vstage{position:relative;overflow:hidden;border-radius:16px;background:#fff;box-shadow:0 10px 40px rgba(0,0,0,.5)}
 .ve.vmint{filter:hue-rotate(150deg) saturate(1.2)}.ve.vmint.vok{filter:hue-rotate(150deg) drop-shadow(0 0 .12em #2E9E44)}
 .ve svg.vkit{width:1em;height:1em;display:block}
-.ve img{height:1em;width:auto;display:block;filter:drop-shadow(0 .03em .03em rgba(0,0,0,.35))}
-.vimg{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover}
+.ve img.big{height:1.5em}.ve img{height:1em;width:auto;display:block;filter:drop-shadow(0 .03em .03em rgba(0,0,0,.35))}
+.vimg{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;object-position:50% 72%}
 .vbgw,.vlayer{position:absolute;left:0;top:0;width:100%;height:100%}.vbg{width:100%;height:100%;display:block}
 .vcap{min-height:2.6em;font-size:clamp(20px,3.2vw,40px);font-weight:800;text-align:center;padding:8px 16px;line-height:1.25}
 .vctl{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;padding:0 10px 12px}.vctl .btn{font-size:20px;padding:10px 18px}
@@ -357,7 +357,7 @@ a.btn{text-decoration:none;display:inline-block}
   <header class="top">
     <div class="brand">
       <svg viewBox="0 0 104 60" aria-hidden="true"><rect x="4" y="12" width="34" height="34" rx="5" class="zs" style="stroke-width:6"/><polygon class="inkf" points="42,22 62,22 62,14 76,29 62,44 62,36 42,36"/><rect x="72" y="12" width="28" height="34" rx="5" class="zs" style="stroke-width:6;display:none"/><rect x="78" y="12" width="22" height="34" rx="5" class="zs" style="stroke-width:6"/></svg>
-      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 2.15</small>
+      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 2.16</small>
     </div>
     <nav class="steps" id="steps" aria-label="Étapes"></nav>
     <button class="btn" id="reset">Nouveau problème</button>
@@ -766,7 +766,7 @@ function vApply(id){const p=VZ.st[id],e=document.getElementById("ve-"+id);if(!p|
  e.style.transitionDuration=VZ.inst?"0s":((p.d==null?900:p.d)/1000)+"s";e.className="ve"+(p.c?" "+p.c:"")+(p.mint&&VZ.skin!=="ico"&&!e.querySelector("img")?" vmint":"")}
 function vPut(id,p){let e=document.getElementById("ve-"+id);const L=vLay();if(!L)return;
  if(!e){e=document.createElement("div");e.id="ve-"+id;e.className="ve";L.appendChild(e);const q=Object.assign({},VZ.st[id]||{},p,{d:0});VZ.st[id]=q;vApply(id);void e.offsetWidth}
- VZ.st[id]=Object.assign({},VZ.st[id]||{},p);if(p.h!=null&&e.dataset.h!==p.h){const q=VZ.st[id]||p,sp=VZ.skin==="des"?vSpr(id,p.h,q):null,ki=VZ.skin==="ico"?vKit(id,p.h,q):null;e.innerHTML=ki!=null?ki:sp===""?"":sp?`<img src="images/obj/${sp}.png" alt="">`:p.h;e.dataset.h=p.h}vApply(id)}
+ VZ.st[id]=Object.assign({},VZ.st[id]||{},p);if(p.h!=null&&e.dataset.h!==p.h){const q=VZ.st[id]||p,sp=VZ.skin==="des"?vSpr(id,p.h,q):null,ki=VZ.skin==="ico"?vKit(id,p.h,q):null;e.innerHTML=ki!=null?ki:sp===""?"":sp?`<img src="images/obj/${sp}.png" alt=""${VBIG.includes(sp)?' class="big"':""}>`:p.h;e.dataset.h=p.h}vApply(id)}
 /* personnages et objets en 3D (images PNG détourées dans images/obj/) : remplacent les émojis du dessin animé quand elles existent */
 const VSPN={girl:"chaperon",bas:"panier",wolf:"loup",gm:"meregrand",table:"table",ch:"coffre",bn:"princesse",pf:"prof",hare:"lievre",tor:"tortue",bus:"bus"};
 const VSPE={"🍪":"galette","🪙":"piece","⏱️":"chrono","🧍":"passager","🧍‍♀️":"passagere","🐼":"panda","🐯":"tigre"};
@@ -775,6 +775,7 @@ const KITI={"galette":["-8 -8 16 16","M 1.04,7.93 L 2.07,7.72 L 3.06,7.39 L 4,6.
 const VKN={ch:"coffre",hare:"lievre",tor:"tortue",bus:"bus"},VKE={"🍪":"galette","🪙":"piece","🐼":"panda","🐯":"tigre","🧍":"passager","🧍‍♀️":"passager","🍬":"bonbon"};
 function vKit(id,h,q){if(/^ph\d+$/.test(id))return"";let n=VKN[id]||(/^p\d+$/.test(id)?"pirate":VKE[h]);let k=n&&KITI[n];if(k&&n==="bonbon"&&q&&q.mint)k=[k[0],k[1],"#2E9E6B",k[3]];if(!k)return null;
  return`<svg class="vkit" viewBox="${k[0]}">${k[3]?`<circle r="7.6" fill="${k[3]}"/>`:""}<path d="${k[1]}" fill="${k[2]}" fill-rule="evenodd"/></svg>`}
+const VBIG=["coffre","chaperon","loup","meregrand","princesse","prof","pirate","passager","passagere","lievre","tortue","panda","tigre"];
 const VSP=new Set();
 function vSpr(id,h,q){let n=VSPN[id];if(h==="🍬")n=q&&q.mint?"bonbon_menthe":"bonbon_fraise";if(!n&&/^p\d+$/.test(id))n="pirate";if(/^ph\d+$/.test(id))return VSP.has("pirate")?"":null;if(!n)n=VSPE[h];return n&&VSP.has(n)?n:null}
 function vSprProbe(){Object.values(VSPN).concat(Object.values(VSPE),["pirate","bonbon_fraise","bonbon_menthe"]).forEach(n=>{const im=new Image();im.onload=()=>VSP.add(n);im.src="images/obj/"+n+".png"})}
@@ -916,7 +917,7 @@ function vOpen(skin){const B=bS();VZ.skin=skin;VZ.story=B.st;const sto=BSTO[B.st
  let o=$("#vwrap");if(!o){o=document.createElement("div");o.id="vwrap";document.body.appendChild(o)}
  o.innerHTML=`<div class="vtop"><b>${sto.e} ${esc(sto.t)}</b><span class="seg"><button data-vskin="des" aria-pressed="${skin==="des"}">🎨 Dessin animé</button><button data-vskin="ico" aria-pressed="${skin==="ico"}">🔷 Icônes</button>${VVID[vRK()]?`<button data-vskin="vid" aria-pressed="${skin==="vid"}">🎬 Vidéo${VVID[vRK()].length>1?" ("+VVID[vRK()].length+" clips)":""}</button>`:""}</span>${B.st==="tr"&&skin!=="ico"?`<span class="seg"><button data-vtrg="0" aria-pressed="${!VZ.trg}">🍪 Elle perd des galettes</button><button data-vtrg="1" aria-pressed="${VZ.trg}">🐺 Le loup en donne</button></span>`:""}
   <span class="vnums" id="vnums"></span><button class="btn" data-vact="fs" title="Plein écran">⛶</button><button class="btn" data-vact="close">✖ Fermer</button></div>
-  <div class="vstagewrap"><div class="vstage" id="vstage">${skin==="vid"?`<video id="vvideo" playsinline muted style="width:100%;height:100%;background:#000;object-fit:contain"></video>`:`<div class="vbgw">${vDecor(B.st,skin)}${skin==="des"?`<img class="vimg" alt="" src="images/barofile-${B.st}.png" data-alt="jpg,jpeg,webp" onerror="const l=this.dataset.alt.split(',');if(l[0]){this.dataset.alt=l.slice(1).join(',');this.src='images/barofile-${B.st}.'+l[0]}else this.remove()">`:""}</div><div id="vlayer" class="vlayer"></div>`}</div></div>
+  <div class="vstagewrap"><div class="vstage" id="vstage">${skin==="vid"?`<video id="vvideo" playsinline muted style="width:100%;height:100%;background:#000;object-fit:contain"></video>`:`<div class="vbgw">${vDecor(B.st,skin)}${skin==="des"?`<img class="vimg" alt="" src="images/barofile-${B.st}.jpg" data-alt="png,jpeg,webp" onerror="const l=this.dataset.alt.split(',');if(l[0]){this.dataset.alt=l.slice(1).join(',');this.src='images/barofile-${B.st}.'+l[0]}else this.remove()">`:""}</div><div id="vlayer" class="vlayer"></div>`}</div></div>
   <div class="vcap" id="vcap"></div>
   <div class="vctl"><button class="btn" data-vact="first">⏮</button><button class="btn" data-vact="prev">◀</button><button class="btn primary" data-vact="play" id="vplay">▶ Lecture</button><button class="btn" data-vact="next">▶▶</button>${skin==="ico"?`<button class="btn" data-vact="dice">🎲 Autres nombres</button>${sto.u.length>1?`<button class="btn" data-vact="q">❓ Déplacer le ?</button>`:""}`:""}</div>`;
  vNums();vSize();if(skin!=="vid"){vBuild();vGo(0,true)}else{$("#vcap").textContent="Appuie sur ▶ pour regarder la vidéo.";VV.i=0;VV.tok++}}
