@@ -357,7 +357,7 @@ a.btn{text-decoration:none;display:inline-block}
   <header class="top">
     <div class="brand">
       <svg viewBox="0 0 104 60" aria-hidden="true"><rect x="4" y="12" width="34" height="34" rx="5" class="zs" style="stroke-width:6"/><polygon class="inkf" points="42,22 62,22 62,14 76,29 62,44 62,36 42,36"/><rect x="72" y="12" width="28" height="34" rx="5" class="zs" style="stroke-width:6;display:none"/><rect x="78" y="12" width="22" height="34" rx="5" class="zs" style="stroke-width:6"/></svg>
-      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 2.14</small>
+      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 2.15</small>
     </div>
     <nav class="steps" id="steps" aria-label="Étapes"></nav>
     <button class="btn" id="reset">Nouveau problème</button>
@@ -916,7 +916,7 @@ function vOpen(skin){const B=bS();VZ.skin=skin;VZ.story=B.st;const sto=BSTO[B.st
  let o=$("#vwrap");if(!o){o=document.createElement("div");o.id="vwrap";document.body.appendChild(o)}
  o.innerHTML=`<div class="vtop"><b>${sto.e} ${esc(sto.t)}</b><span class="seg"><button data-vskin="des" aria-pressed="${skin==="des"}">🎨 Dessin animé</button><button data-vskin="ico" aria-pressed="${skin==="ico"}">🔷 Icônes</button>${VVID[vRK()]?`<button data-vskin="vid" aria-pressed="${skin==="vid"}">🎬 Vidéo${VVID[vRK()].length>1?" ("+VVID[vRK()].length+" clips)":""}</button>`:""}</span>${B.st==="tr"&&skin!=="ico"?`<span class="seg"><button data-vtrg="0" aria-pressed="${!VZ.trg}">🍪 Elle perd des galettes</button><button data-vtrg="1" aria-pressed="${VZ.trg}">🐺 Le loup en donne</button></span>`:""}
   <span class="vnums" id="vnums"></span><button class="btn" data-vact="fs" title="Plein écran">⛶</button><button class="btn" data-vact="close">✖ Fermer</button></div>
-  <div class="vstagewrap"><div class="vstage" id="vstage">${skin==="vid"?`<video id="vvideo" playsinline muted style="width:100%;height:100%;background:#000;object-fit:contain"></video>`:`<div class="vbgw">${vDecor(B.st,skin)}${skin==="des"?`<img class="vimg" alt="" src="images/barofile-${B.st}.jpg" onerror="this.remove()">`:""}</div><div id="vlayer" class="vlayer"></div>`}</div></div>
+  <div class="vstagewrap"><div class="vstage" id="vstage">${skin==="vid"?`<video id="vvideo" playsinline muted style="width:100%;height:100%;background:#000;object-fit:contain"></video>`:`<div class="vbgw">${vDecor(B.st,skin)}${skin==="des"?`<img class="vimg" alt="" src="images/barofile-${B.st}.png" data-alt="jpg,jpeg,webp" onerror="const l=this.dataset.alt.split(',');if(l[0]){this.dataset.alt=l.slice(1).join(',');this.src='images/barofile-${B.st}.'+l[0]}else this.remove()">`:""}</div><div id="vlayer" class="vlayer"></div>`}</div></div>
   <div class="vcap" id="vcap"></div>
   <div class="vctl"><button class="btn" data-vact="first">⏮</button><button class="btn" data-vact="prev">◀</button><button class="btn primary" data-vact="play" id="vplay">▶ Lecture</button><button class="btn" data-vact="next">▶▶</button>${skin==="ico"?`<button class="btn" data-vact="dice">🎲 Autres nombres</button>${sto.u.length>1?`<button class="btn" data-vact="q">❓ Déplacer le ?</button>`:""}`:""}</div>`;
  vNums();vSize();if(skin!=="vid"){vBuild();vGo(0,true)}else{$("#vcap").textContent="Appuie sur ▶ pour regarder la vidéo.";VV.i=0;VV.tok++}}
