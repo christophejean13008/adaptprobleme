@@ -239,6 +239,9 @@ a.btn{text-decoration:none;display:inline-block}
 .vcloud{animation:vdrift 40s linear infinite}.vcloud.s2{animation-duration:60s}@keyframes vdrift{from{transform:translateX(-120px)}to{transform:translateX(160px)}}
 .vwave{animation:vwave 3s ease-in-out infinite alternate}@keyframes vwave{from{transform:translateY(0)}to{transform:translateY(10px)}}
 .bvids .btn{font-size:17px}
+@keyframes bqf{0%,100%{opacity:1}50%{opacity:.25}}.bqf{animation:bqf .5s ease-in-out 4}
+@keyframes vflash{0%{transform:translate(-50%,-50%) scale(1)}25%{transform:translate(-50%,-50%) scale(1.35)}50%{transform:translate(-50%,-50%) scale(1)}75%{transform:translate(-50%,-50%) scale(1.35)}100%{transform:translate(-50%,-50%) scale(1)}}
+.ve.vflash{animation:vflash 1.2s ease-in-out}.ve.vqm{box-shadow:0 0 0 .06em #fff,0 .05em .2em rgba(0,0,0,.35)}
 #popask{position:fixed;z-index:2100;background:#fff;color:#14202B;border:3px solid #1565C0;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.3);padding:10px 12px;max-width:min(92vw,360px)}
 #popask::before{content:"";position:absolute;top:-11px;left:calc(var(--ax,50%) - 10px);border:10px solid transparent;border-top:0;border-bottom:11px solid #1565C0}
 #popask p{margin:0 0 8px;font-weight:700;font-size:17px}#popask div{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
@@ -357,7 +360,7 @@ a.btn{text-decoration:none;display:inline-block}
   <header class="top">
     <div class="brand">
       <svg viewBox="0 0 104 60" aria-hidden="true"><rect x="4" y="12" width="34" height="34" rx="5" class="zs" style="stroke-width:6"/><polygon class="inkf" points="42,22 62,22 62,14 76,29 62,44 62,36 42,36"/><rect x="72" y="12" width="28" height="34" rx="5" class="zs" style="stroke-width:6;display:none"/><rect x="78" y="12" width="22" height="34" rx="5" class="zs" style="stroke-width:6"/></svg>
-      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 2.20</small>
+      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 2.21</small>
     </div>
     <nav class="steps" id="steps" aria-label="Étapes"></nav>
     <button class="btn" id="reset">Nouveau problème</button>
@@ -581,6 +584,7 @@ const BKW=[["début","tr","Ce que l'on a au départ de l'histoire."],["perdu","t
  ["de moins","bn","Ce qui manque pour être autant que l'autre."],["de plus","bn","Ce qui dépasse quand on aligne les deux quantités."],
  ["gain","bu","Tout ce que l'on gagne (les passagers qui montent)."],["perte","bu","Tout ce que l'on perd (les passagers qui descendent)."],
  ["chaque","pi","Chacun a la même part."],["fois plus","lt","On répète la petite quantité plusieurs fois."],["fois moins","lt","On partage la grande quantité en parts égales."]];
+let BQF=false;
 const BLEV=[["1","Images"],["2","Barres de cubes"],["3","Schéma"]];
 const BSTEP=["J'écoute l'histoire","Ce que je sais","Ce que je cherche","Je vérifie"];
 function bS(){if(!S.baro||!S.baro.st)S.baro={tab:"dec",st:"tr",lev:1,step:0,ui:0,max:10,v:null};return S.baro}
@@ -651,9 +655,9 @@ function bSVG(st,v,u,lev,step,opt){opt=opt||{};const rows=bModel(st,v,u),W=1000,
  let h=`<svg viewBox="0 0 ${W} 470" class="bsvg" role="img" aria-label="schéma">`;
  rows.forEach((r,i)=>{const y=70+i*190;let x=X0;
   h+=`<text x="20" y="${y+H/2-4}" font-size="44">${r.emo}</text><text x="20" y="${y+H/2+30}" font-size="19" font-weight="700" fill="#14202B">${esc(r.lab)}</text>`;
-  r.segs.forEach((s,j)=>{const w=s.n*unit,show=s.unk?step>=2:step>=1,reveal=s.unk&&step>=3,col=BCOL[s.col];
+  r.segs.forEach((s,j)=>{const w=s.n*unit,show=s.unk?true:step>=1,reveal=s.unk&&step>=3,col=BCOL[s.col];
    if(!show){h+=`<rect x="${x+2}" y="${y}" width="${w-4}" height="${H}" rx="6" fill="none" stroke="#C9D2DC" stroke-dasharray="6 6"/>`;x+=w;return}
-   if(s.unk&&!reveal){h+=`<rect x="${x+2}" y="${y}" width="${w-4}" height="${H}" rx="6" fill="#FFF8E1" stroke="#E0A800" stroke-width="3" stroke-dasharray="9 6"/><text x="${x+w/2}" y="${y+H/2+14}" text-anchor="middle" font-size="40" font-weight="900" fill="#B07800">?</text>`}
+   if(s.unk&&!reveal){h+=`<rect class="${BQF?"bqf":""}" x="${x+2}" y="${y}" width="${w-4}" height="${H}" rx="6" fill="#FFF8E1" stroke="#E0A800" stroke-width="3" stroke-dasharray="9 6"/><text x="${x+w/2}" y="${y+H/2+14}" text-anchor="middle" font-size="40" font-weight="900" fill="#B07800">?</text>`}
    else{const stroke=reveal?"#2E9E44":"#14202B",sw=reveal?4:2;
     if(lev===3||s.dash){h+=`<rect x="${x+2}" y="${y}" width="${w-4}" height="${H}" rx="6" fill="${s.dash?"#fff":col}" fill-opacity="${s.dash?1:.28}" stroke="${stroke}" stroke-width="${sw}" ${s.dash?'stroke-dasharray="9 6"':""}/>`;
      if(s.sep)h+=`<line x1="${x}" y1="${y-6}" x2="${x}" y2="${y+H+6}" stroke="#14202B" stroke-width="2" stroke-dasharray="5 5"/>`}
@@ -674,12 +678,12 @@ function bSVG(st,v,u,lev,step,opt){opt=opt||{};const rows=bModel(st,v,u),W=1000,
  return h}
 function bTrScene(v,u,step){const L=v.g<0,cols=[["début","🏠","s0",v.s0],[L?"perdu":"gagné",L?"🌲🌲":"🌲🐺","a",v.a],["fin","🏡👵","s1",v.s1]];
  let h=`<svg viewBox="0 0 1000 470" class="bsvg" role="img" aria-label="images">`;
- cols.forEach(([kw,e,key,n],i)=>{const cx=170+i*330,unk=u===key,show=unk?step>=2:step>=1,rev=unk&&step>=3;
+ cols.forEach(([kw,e,key,n],i)=>{const cx=170+i*330,unk=u===key,show=unk?true:step>=1,rev=unk&&step>=3;
   h+=`<text x="${cx}" y="120" text-anchor="middle" font-size="86">${e}</text>`;if(i===0)h+=`<text x="${cx-110}" y="150" text-anchor="middle" font-size="58">👧</text>`;
   if(i<2)h+=`<text x="${cx+165}" y="100" text-anchor="middle" font-size="40" fill="#8A97A6">➜</text>`;
   if(step>=1)h+=`<rect x="${cx-60}" y="160" width="120" height="36" rx="8" fill="#fff" stroke="#14202B" stroke-width="1.5"/><text x="${cx}" y="186" text-anchor="middle" font-size="22" font-weight="800" fill="#D32F2F">${kw}</text>`;
   if(!show)return;
-  if(unk&&!rev){h+=`<rect x="${cx-55}" y="230" width="110" height="130" rx="12" fill="#FFF8E1" stroke="#E0A800" stroke-width="3" stroke-dasharray="9 6"/><text x="${cx}" y="318" text-anchor="middle" font-size="76" font-weight="900" fill="#B07800">?</text>`;return}
+  if(unk&&!rev){h+=`<rect class="${BQF?"bqf":""}" x="${cx-55}" y="230" width="110" height="130" rx="12" fill="#FFF8E1" stroke="#E0A800" stroke-width="3" stroke-dasharray="9 6"/><text x="${cx}" y="318" text-anchor="middle" font-size="76" font-weight="900" fill="#B07800">?</text>`;return}
   const per=5,sz=40;for(let k=0;k<n;k++){const r=Math.floor(k/per),c=k%per;h+=`<text x="${cx-((Math.min(n,per)-1)*sz)/2+c*sz}" y="${250+r*44}" text-anchor="middle" font-size="36">🍪</text>`}
   h+=`<rect x="${cx-38}" y="${265+Math.ceil(n/per)*44}" width="76" height="62" rx="8" fill="#fff" stroke="${rev?"#2E9E44":"#14202B"}" stroke-width="${rev?4:2}"/><text x="${cx}" y="${310+Math.ceil(n/per)*44}" text-anchor="middle" font-size="40" font-weight="900" fill="${rev?"#1B7A33":"#14202B"}">${n}</text>`});
  return h+`</svg>`}
@@ -710,7 +714,7 @@ function renderBaro(){const B=bS();if(!B.v)B.v=bGen(B.st,B.max);const sto=BSTO[B
    <div class="bstory"><p>${T.t} <span class="bq">${B.step>=2?T.q:""}</span></p></div>
    <div class="bstage">${bSVG(B.st,B.v,u,B.lev,B.step)}</div>
    <div class="bsteps">${BSTEP.map((l,i)=>`<button data-bstep="${i}" aria-current="${B.step===i}">${i+1}. ${l}</button>`).join("")}</div>
-   <div class="bfoot">${B.step===2?`<p class="bhint">✏️ Sur l'ardoise : écris le nombre que tu penses trouver, puis on vérifie.</p>`:""}
+   <div class="bfoot">${B.step<3&&VQM[B.st]&&VQM[B.st][u]?`<p class="bhint bqh">❓ On cherche ${VQM[B.st][u][2]}.</p>`:""}${B.step===2?`<p class="bhint">✏️ Sur l'ardoise : écris le nombre que tu penses trouver, puis on vérifie.</p>`:""}
    ${B.step>=3?`<p class="bcalc">${esc(T.c)}</p><p class="bans">${esc(T.r)}</p>`:""}
    <p class="blike">💬 ${esc(T.like)}</p><p class="brule">📌 ${esc(T.rule)}</p></div></div>`}
  h+=`<p class="bsrc">D'après la démarche Barofile® de Rodolphe Santacru (6 histoires référentes, 13 mots clés, 3 niveaux : images, barres de cubes, schéma). Dessins de l'appli, sans les images Baropix.</p></div>`;
@@ -747,7 +751,7 @@ document.addEventListener("click",e=>{if(S.screen!=="baro")return;const B=bS(),t
  if(d.bstep!=null){B.step=+d.bstep;save();renderBaro();{const sto=BSTO[B.st],T=bText(B.st,B.v,sto.u[B.ui%sto.u.length]);if(B.step===0)bSay(B.st,[T.t,T.q]);else if(B.step===2)bSay(B.st,[T.q]);else if(B.step===3)bSay(B.st,[T.r,T.like])}return}
  const a=d.bact;if(!a)return;
  if(a==="nums"){B.v=bGen(B.st,B.max);B.step=0;save();renderBaro()}
- else if(a==="q"){B.ui++;B.step=Math.min(B.step,1);save();renderBaro()}
+ else if(a==="q"){BQF=true;setTimeout(()=>BQF=false,50);B.ui++;B.step=Math.min(B.step,1);save();renderBaro()}
  else if(a==="say"){const sto=BSTO[B.st],T=bText(B.st,B.v,sto.u[B.ui%sto.u.length]);bSay(B.st,[T.t,T.q])}
  else if(a==="averif"){B.aStep=B.aStep>=3?2:3;save();renderBaro()}
  else if(a==="astory"){STY.inv=null;S.screen="story";save();render()}
@@ -969,10 +973,17 @@ function vFix(st,v){const c=(x,a,b)=>Math.max(a,Math.min(b,Math.round(+x||a)));
  else if(st==="bn"){v.a=c(v.a,2,15);v.b=c(v.b,1,14);if(v.b>=v.a)v.b=v.a-1;v.d=v.a-v.b}else if(st==="lt"){v.a=c(v.a,1,5);v.k=c(v.k,2,5);v.b=v.a*v.k}
  else{["g1","g2","p1","p2"].forEach(k=>v[k]=c(v[k],0,9));if(v.g1+v.g2===v.p1+v.p2)v.g1=Math.min(9,v.g1+1)}return v}
 function vBuild(){const T=bText(VZ.story,VZ.v,VZ.u);VZ.beats=vBeats(VZ.story,VZ.v,VZ.u,T)}
+/* où se trouve le « ? » dans chaque histoire */
+const VQM={tr:{s0:[260,430,"le début"],a:[800,430,"ce qui change"],s1:[1330,430,"la fin"]},pt:{tout:[800,400,"le tout"],p2:[1120,650,"les tigres"]},
+ pi:{m:[1150,650,"la part de chaque pirate"],t:[400,560,"le trésor en tout"],K:[1150,300,"le nombre de pirates"]},bn:{d:[800,150,"l'écart : de plus"],a:[420,240,"les bonbons de Blanche-Neige"],b:[420,600,"les bonbons de Prof"]},
+ lt:{k:[900,560,"combien de fois plus"],b:[700,650,"le temps de la tortue"],a:[700,380,"le temps du lièvre"]},bu:{d:[800,600,"l'écart entre gain et perte"]}};
+function vQShow(flash){const q=(VQM[VZ.story]||{})[VZ.u];if(!q)return;vPut("qm",{h:"?",x:q[0],y:q[1],s:150,c:"vcard vqm",z:20,o:1,d:0});vPut("qml",{h:"On cherche "+q[2],x:q[0],y:q[1]+120,s:38,c:"vtag big vqml",z:20,o:1,d:0});
+ if(flash){const e=document.getElementById("ve-qm");if(e){e.classList.remove("vflash");void e.offsetWidth;e.classList.add("vflash")}}}
+function vQHide(){vDel("qm");vDel("qml")}
 async function vGo(k,stopAfter){VZ.tok++;const tok=VZ.tok;try{if(aEl)aEl.pause()}catch(e){}aTok++;VZ.paused=false;const L=$("#vlayer");if(!L)return;L.innerHTML="";VZ.st={};VG=0;$("#vcap").textContent="";
  vBuild();k=Math.max(0,Math.min(k,VZ.beats.length));VZ.inst=true;try{for(let i=0;i<k;i++)await VZ.beats[i]()}catch(e){}VZ.inst=false;VZ.k=k;
- if(tok!==VZ.tok)return;Object.keys(VZ.st).forEach(vApply);if(stopAfter){VZ.playing=false;vBtn();if(!k)$("#vcap").textContent="Appuie sur ▶ pour regarder l'histoire.";return}vRun()}
-async function vRun(){const tok=VZ.tok;VZ.playing=true;vBtn();try{while(VZ.k<VZ.beats.length){await VZ.beats[VZ.k]();if(tok!==VZ.tok)return;VZ.k++}}catch(e){return}VZ.playing=false;vBtn()}
+ if(tok!==VZ.tok)return;Object.keys(VZ.st).forEach(vApply);if(stopAfter){VZ.playing=false;vBtn();if(!k){$("#vcap").textContent="Appuie sur ▶ pour regarder l'histoire.";vQShow(VZ.qflash);VZ.qflash=false}return}vRun()}
+async function vRun(){vQHide();const tok=VZ.tok;VZ.playing=true;vBtn();try{while(VZ.k<VZ.beats.length){await VZ.beats[VZ.k]();if(tok!==VZ.tok)return;VZ.k++}}catch(e){return}VZ.playing=false;vBtn()}
 function vBtn(){const b=$("#vplay");if(b)b.textContent=VZ.playing?(VZ.paused?"▶ Reprendre":"⏸ Pause"):(VZ.k>=VZ.beats.length?"↺ Revoir":"▶ Lecture")}
 function vSize(){const w=$(".vstagewrap"),s=$("#vstage");if(!w||!s)return;const W=w.clientWidth,H=w.clientHeight,sc=Math.min(W/1600,H/900);s.style.width=1600*sc+"px";s.style.height=900*sc+"px";VZ.vu=sc;
  const t=VZ.inst;VZ.inst=true;Object.keys(VZ.st).forEach(vApply);VZ.inst=t}
@@ -990,7 +1001,7 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-vact],[dat
  else if(a==="next")vGo(Math.min(VZ.beats.length,VZ.k+(VZ.playing?1:1)),true);
  else if(a==="prev")vGo(Math.max(0,VZ.k-1),true);else if(a==="first")vGo(0,true);
  else if(a==="dice"){VZ.v=bGen(VZ.story,bS().max);vNums();vGo(0,true)}
- else if(a==="q"){const sto=BSTO[VZ.story];const i=(sto.u.indexOf(VZ.u)+1)%sto.u.length;VZ.u=sto.u[i];vGo(0,true)}});
+ else if(a==="q"){VZ.qflash=true;const sto=BSTO[VZ.story];const i=(sto.u.indexOf(VZ.u)+1)%sto.u.length;VZ.u=sto.u[i];vGo(0,true)}});
 document.addEventListener("change",e=>{if(!$("#vwrap"))return;const t=e.target;if(t.matches("[data-vn]")){VZ.v[t.dataset.vn]=+t.value;vFix(VZ.story,VZ.v);vNums();vGo(0,true)}else if(t.matches("[data-vg]")){VZ.v.g=+t.value;vFix(VZ.story,VZ.v);vNums();vGo(0,true)}});
 /* vraies vidéos (facultatif) : videos/barofile-xx.mp4 déposées à côté de l'appli */
 /* vraies vidéos (facultatif) : videos/barofile-xx-1.mp4, -2, -3, -4 (ou une seule videos/barofile-xx.mp4) déposées à côté de l'appli */
