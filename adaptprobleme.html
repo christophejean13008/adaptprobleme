@@ -242,6 +242,23 @@ a.btn{text-decoration:none;display:inline-block}
 @keyframes bqf{0%,100%{opacity:1}50%{opacity:.25}}.bqf{animation:bqf .5s ease-in-out 4}
 @keyframes vflash{0%{transform:translate(-50%,-50%) scale(1)}25%{transform:translate(-50%,-50%) scale(1.35)}50%{transform:translate(-50%,-50%) scale(1)}75%{transform:translate(-50%,-50%) scale(1.35)}100%{transform:translate(-50%,-50%) scale(1)}}
 .ve.vflash{animation:vflash 1.2s ease-in-out}.ve.vqm{box-shadow:0 0 0 .06em #fff,0 .05em .2em rgba(0,0,0,.35)}
+.navcls{display:inline-flex;align-items:center;gap:6px;border:2px solid #1565C0;border-radius:12px;padding:2px 4px 2px 8px;margin-right:6px;background:#EEF4FF;font-weight:700;font-size:14px}
+.navcls select{font:inherit;font-size:15px;border-radius:8px;padding:2px 4px}.navcls button{white-space:nowrap}
+.rit .rbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:6px 0 10px}.rit .rbar>b{font-size:20px;margin-right:auto}
+.rsteps{display:flex;gap:4px;flex-wrap:wrap}.rsteps button{border:2px solid var(--line);background:var(--ui);border-radius:999px;padding:4px 10px;font:inherit;font-size:14px;color:var(--ink);cursor:pointer}
+.rsteps button[aria-current="true"]{background:#1565C0;color:#fff;border-color:#1565C0;font-weight:700}
+.rtxt{position:relative;font-size:clamp(26px,3.6vw,52px);font-weight:700;line-height:1.35;background:var(--paper,#fff);border:3px solid #1565C0;border-radius:18px;padding:18px 70px 18px 22px;margin-bottom:12px}
+.rtxt.small{font-size:clamp(18px,2vw,28px);padding:10px 60px 10px 16px}.rsay{position:absolute;right:10px;top:10px;font-size:24px}
+.rq{font-size:clamp(20px,2.4vw,32px);font-weight:800;text-align:center;margin:8px 0 12px}.rcenter{text-align:center}.rbig{font-size:clamp(20px,2.2vw,30px);padding:14px 26px;margin:8px}
+.rgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}.rgrid.r3{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.rcard{display:flex;flex-direction:column;align-items:center;gap:6px;border:3px solid var(--line);background:var(--paper,#fff);border-radius:18px;padding:12px;cursor:pointer;font:inherit;color:var(--ink);text-align:center}
+.rcard b{font-size:clamp(17px,1.6vw,24px)}.rcard small{color:#D32F2F;font-weight:700}.rcard.good{border-color:#2E9E44;box-shadow:0 0 0 4px #2E9E44 inset;background:#EAF7EC}.rcard.bad{border-color:#C62828;opacity:.45}
+.rcard .rqm{font:900 60px Arial;color:#B07800;background:#FFF8E1;border:3px dashed #E0A800;border-radius:12px;padding:0 18px}.rsch .bsvg{width:100%}
+.rfb{text-align:center;font-size:clamp(18px,2vw,26px);font-weight:800;margin:12px 0}.rfb.good{color:#1B7A33}.rfb.bad{color:#C62828}
+.rcalc2{font:800 clamp(22px,3vw,40px) Arial,sans-serif;margin:6px 0;color:#455A64}
+.rcalc{font:900 clamp(40px,7vw,96px) "Arial Black",Arial,sans-serif;margin:20px 0}.rhid{color:#B07800}.rres{color:#1B7A33}.rans{font-size:clamp(22px,2.6vw,36px);font-weight:800}
+.rnav{display:flex;justify-content:space-between;gap:10px;margin:14px 0}.rstage{min-height:50vh}.rend{margin-top:14px}
+details.oldprog{margin-top:12px}details.oldprog summary{cursor:pointer;font-weight:700}
 #popask{position:fixed;z-index:2100;background:#fff;color:#14202B;border:3px solid #1565C0;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.3);padding:10px 12px;max-width:min(92vw,360px)}
 #popask::before{content:"";position:absolute;top:-11px;left:calc(var(--ax,50%) - 10px);border:10px solid transparent;border-top:0;border-bottom:11px solid #1565C0}
 #popask p{margin:0 0 8px;font-weight:700;font-size:17px}#popask div{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
@@ -360,7 +377,7 @@ a.btn{text-decoration:none;display:inline-block}
   <header class="top">
     <div class="brand">
       <svg viewBox="0 0 104 60" aria-hidden="true"><rect x="4" y="12" width="34" height="34" rx="5" class="zs" style="stroke-width:6"/><polygon class="inkf" points="42,22 62,22 62,14 76,29 62,44 62,36 42,36"/><rect x="72" y="12" width="28" height="34" rx="5" class="zs" style="stroke-width:6;display:none"/><rect x="78" y="12" width="22" height="34" rx="5" class="zs" style="stroke-width:6"/></svg>
-      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 2.21</small>
+      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 2.24</small>
     </div>
     <nav class="steps" id="steps" aria-label="Étapes"></nav>
     <button class="btn" id="reset">Nouveau problème</button>
@@ -556,16 +573,19 @@ function renderCat(){
  <div class="kwords"><span class="klab">Mots indices :</span>${K.keys.map(w=>`<span class="kw">${esc(w)}</span>`).join("")}</div>
  <button class="speak" data-sayk="${k}" aria-label="Écouter">🔊</button></div>`}).join("")}</div>
  <p class="lead" style="margin-top:14px">Attention : les mots indices aident à reconnaître l'histoire, pas à choisir l'opération. « Il gagne » peut cacher une soustraction ! Il faut toujours bien comprendre l'histoire.</p>
- <section class="lvlsec"><h2>Suivre une progression : choisis le niveau</h2><p class="lead">Une progression par niveau, de la PS au CM2, issue des programmes 2025, pour garder la même continuité dans toute l'école. Tu peux aussi continuer à utiliser l'application librement avec tes propres problèmes.</p><div class="lvls">${LVGROUPS.map(([g,ls])=>`<div class="lgroup"><h3>${g}</h3>${ls.map(l=>`<button class="lbtn" data-level="${l}" aria-pressed="${S.level===l}">${l}</button>`).join("")}</div>`).join("")}</div></section></div>`;
+ <section class="lvlsec"><h2>🔔 Rituel : un problème par jour</h2><p class="lead">Choisis le niveau de ta classe (il reste en mémoire). Chaque jour, l'ENI affiche un nouveau problème, un peu plus difficile que la veille. On le lit (l'ENI ou toi), puis en collectif : quelle histoire de référence ? où est le « ? » ? quel schéma ? On regarde l'histoire animée, le schéma, puis le calcul.</p>
+ <div class="lvls"><div class="lgroup">${RCLS.map(l=>`<button class="lbtn" data-ritcls="${l}" aria-pressed="${rCls()===l}">${l}</button>`).join("")}</div></div>
+ <p><button class="btn primary mbig" data-go="rit">🔔 Commencer le rituel (${rCls()})</button></p>
+ <details class="oldprog"><summary>Ancienne progression par étapes (programmes 2025)</summary><div class="lvls">${LVGROUPS.map(([g,ls])=>`<div class="lgroup"><h3>${g}</h3>${ls.map(l=>`<button class="lbtn" data-level="${l}" aria-pressed="${S.level===l}">${l}</button>`).join("")}</div>`).join("")}</div></details></section></div>`;
 }
 function renderSteps(){
  const st=[["baro","0 Barofile",true],["cat","1 Le type",true],["choose","2 Le schéma",!!S.cat],["nouns","3 Les objets",!!S.schema],["ws","4 Je représente",!!S.schema&&validNouns()]];
  if(S.prog&&S.level&&!isMat(S.level))st.unshift(["level","↩ Progression "+S.level,true]);
- $("#steps").innerHTML=st.map(([k,l,ok])=>`<button data-go="${k}" ${S.screen===k?'aria-current="step"':""} ${ok?"":"disabled"}>${l}</button>`).join("");
+ $("#steps").innerHTML=`<span class="navcls"><label>Classe <select data-navcls aria-label="Niveau de la classe">${RCLS.map(c=>`<option ${rCls()===c?"selected":""}>${c}</option>`).join("")}</select></label><button data-go="rit" ${S.screen==="rit"?'aria-current="step"':""}>🔔 Rituel</button></span>`+st.map(([k,l,ok])=>`<button data-go="${k}" ${S.screen===k?'aria-current="step"':""} ${ok?"":"disabled"}>${l}</button>`).join("");
 }
 function go(sc){if(sc==="ws"&&!prepNouns())return;S.screen=sc;save();render()}
 function render(){renderSteps();const m=$("#main");m.scrollTop=0;
- if(S.screen==="nouns"&&S.schema)renderNouns();else if(S.screen==="ws"&&S.schema&&validNouns())renderWS();else if(S.screen==="choose"&&S.cat)renderChoose();else if(S.screen==="level"&&S.level)renderLevel();else if(S.screen==="mat"&&MAT.sc)renderMat();else if(S.screen==="story")renderStoryScreen();else if(S.screen==="baro")renderBaro();else{S.screen="cat";renderSteps();renderCat()}}
+ if(S.screen==="nouns"&&S.schema)renderNouns();else if(S.screen==="ws"&&S.schema&&validNouns())renderWS();else if(S.screen==="choose"&&S.cat)renderChoose();else if(S.screen==="level"&&S.level)renderLevel();else if(S.screen==="mat"&&MAT.sc)renderMat();else if(S.screen==="story")renderStoryScreen();else if(S.screen==="baro")renderBaro();else if(S.screen==="rit")renderRit();else{S.screen="cat";renderSteps();renderCat()}}
 
 /* ================= 0 · BAROFILE (démarche de Rodolphe Santacru) =================
    6 histoires référentes, 13 mots clés, 3 niveaux : 1 images · 2 barres de cubes · 3 schéma en barres.
@@ -627,8 +647,10 @@ function bText(st,v,u){const N=n=>`<b>${n}</b>`,pl=(n,s,p)=>n>1?p:s;
    r:u==="k"?`La tortue met ${v.k} fois plus de temps. Le lièvre met ${v.k} fois moins de temps.`:u==="b"?`La tortue met ${v.b} minutes.`:`Le lièvre met ${v.a} minutes.`,
    like:"C'est comme le problème du lièvre et de la tortue : on cherche combien de fois une quantité rentre dans l'autre.",rule:"« 3 fois plus », ce n'est pas « 3 de plus » : on répète 3 fois la petite barre."}}
  const G=v.g1+v.g2,P=v.p1+v.p2,up=G>P;
- return{t:`Le bus fait 2 arrêts. Au premier arrêt, ${N(v.g1)} ${pl(v.g1,"passager monte","passagers montent")} et ${N(v.p1)} ${pl(v.p1,"descend","descendent")}. Au deuxième arrêt, ${N(v.g2)} ${pl(v.g2,"monte","montent")} et ${N(v.p2)} ${pl(v.p2,"descend","descendent")}.`,
-  q:"Y a-t-il plus de passagers qui sont montés ou qui sont descendus ? Combien de plus ?",c:`Gain : ${v.g1} + ${v.g2} = ${G} · Perte : ${v.p1} + ${v.p2} = ${P} · ${Math.max(G,P)} − ${Math.min(G,P)} = ${Math.abs(G-P)}`,
+ const bst=(g,p,first)=>g&&p?`${N(g)} ${first?pl(g,"passager monte","passagers montent"):pl(g,"monte","montent")} et ${N(p)} ${pl(p,"descend","descendent")}`:g?`${N(g)} ${pl(g,"passager monte","passagers montent")}`:`${N(p)} ${pl(p,"passager descend","passagers descendent")}`;
+ const cl=(a,b,l)=>a&&b?`${l} : ${a} + ${b} = ${a+b} · `:"";
+ return{t:`Le bus fait 2 arrêts. Au premier arrêt, ${bst(v.g1,v.p1,1)}. Au deuxième arrêt, ${bst(v.g2,v.p2,!(v.g1&&v.p1))}.`,
+  q:"Y a-t-il plus de passagers qui sont montés ou qui sont descendus ? Combien de plus ?",c:`${cl(v.g1,v.g2,"Gain")}${cl(v.p1,v.p2,"Perte")}${Math.max(G,P)} − ${Math.min(G,P)} = ${Math.abs(G-P)}`,
   r:`Il y a ${Math.abs(G-P)} ${pl(Math.abs(G-P),"passager","passagers")} de plus qui ${up?"sont montés":"sont descendus"} : à la fin, il y a ${Math.abs(G-P)} ${up?"passagers de plus":"passagers de moins"} dans le bus.`,
   like:"C'est comme le problème de l'autobus : on compare tout ce que l'on gagne avec tout ce que l'on perd.",rule:"On met bout à bout tous les gains, puis toutes les pertes, et on compare les deux barres."}}
 /* --- modèle : des lignes de segments (le même pour les 3 niveaux) --- */
@@ -644,8 +666,8 @@ function bModel(st,v,u){const R=[],K=[];const sg=(n,col,tag,emo,key,o)=>Object.a
  else if(st==="lt"){const reps=[];for(let i=0;i<v.k;i++)reps.push(sg(v.a,"y","","⏱️","z",{sep:i>0,nonum:1}));
   R.push({lab:"Le lièvre",emo:"🐇",segs:[sg(v.a,"b","","⏱️","a")]},{lab:"La tortue",emo:"🐢",segs:reps,tot:{n:v.b,unk:u==="b"},br:{t:v.k+" fois plus",unk:u==="k"}})}
  else{const G=v.g1+v.g2,P=v.p1+v.p2,d=Math.abs(G-P);
-  R.push({lab:"GAIN",emo:"⬆️",segs:[sg(v.g1,"g","montent","🧍","g1"),sg(v.g2,"g","montent","🧍","g2")].concat(G<P?[sg(d,"w","écart","","d",{dash:1,unk:true})]:[])},
-   {lab:"PERTE",emo:"⬇️",segs:[sg(v.p1,"r","descendent","🧍","p1"),sg(v.p2,"r","descendent","🧍","p2")].concat(P<G?[sg(d,"w","écart","","d",{dash:1,unk:true})]:[])})}
+  R.push({lab:"GAIN",emo:"⬆️",segs:[sg(v.g1,"g","montent","🧍","g1"),sg(v.g2,"g","montent","🧍","g2")].filter(x=>x.n>0).concat(G<P?[sg(d,"w","écart","","d",{dash:1,unk:true})]:[])},
+   {lab:"PERTE",emo:"⬇️",segs:[sg(v.p1,"r","descendent","🧍","p1"),sg(v.p2,"r","descendent","🧍","p2")].filter(x=>x.n>0).concat(P<G?[sg(d,"w","écart","","d",{dash:1,unk:true})]:[])})}
  return R}
 /* --- dessin SVG --- */
 function bSVG(st,v,u,lev,step,opt){opt=opt||{};const rows=bModel(st,v,u),W=1000,X0=200,AW=760;
@@ -667,13 +689,13 @@ function bSVG(st,v,u,lev,step,opt){opt=opt||{};const rows=bModel(st,v,u),W=1000,
      items.forEach((e,k)=>{h+=`<text x="${x+k*unit+unit/2}" y="${y+H*.72}" text-anchor="middle" font-size="${Math.round(unit*.78)}">${e}</text>`});if(s.sep)h+=`<line x1="${x}" y1="${y-8}" x2="${x}" y2="${y+H+8}" stroke="#14202B" stroke-width="3"/>`}
     const num=lev===3?`<text x="${x+w/2}" y="${y+H/2+11}" text-anchor="middle" font-size="30" font-weight="900" fill="${reveal?"#1B7A33":"#14202B"}">${s.n}</text>`
      :(s.dash&&!s.unk?"":`<text x="${x+w/2}" y="${y-12}" text-anchor="middle" font-size="26" font-weight="900" fill="${reveal?"#1B7A33":"#14202B"}">${s.n}</text>`);
-    if(!s.nonum)h+=num}
+    if(!s.nonum&&!opt.nonum)h+=num}
    if(s.tag&&show){const ty=s.top?y-82:y+H+12,tw=Math.max(70,s.tag.length*12+(s.pl?40:24));
     h+=`<g><rect x="${x+w/2-tw/2}" y="${ty}" width="${tw}" height="32" rx="7" fill="#fff" stroke="#14202B" stroke-width="1.5"/><text x="${x+w/2+(s.pl?14:0)}" y="${ty+23}" text-anchor="middle" font-size="19" font-weight="800" fill="#D32F2F">${esc(s.tag)}</text>${s.pl?`<text x="${x+w/2-tw/2+6}" y="${ty+25}" font-size="22">${s.pl}</text>`:""}</g>`}
    x+=w});
-  if(r.tot&&step>=1){const un=r.tot.unk&&step<3,rv=r.tot.unk&&step>=3;h+=`<text x="${x+14}" y="${y+H/2+12}" font-size="32" font-weight="900" fill="${un?"#B07800":rv?"#1B7A33":"#14202B"}">= ${un?"?":r.tot.n}</text>`}
+  if(r.tot&&step>=1&&!opt.nonum){const un=r.tot.unk&&step<3,rv=r.tot.unk&&step>=3;h+=`<text x="${x+14}" y="${y+H/2+12}" font-size="32" font-weight="900" fill="${un?"#B07800":rv?"#1B7A33":"#14202B"}">= ${un?"?":r.tot.n}</text>`}
   if(r.br&&step>=1){const x1=X0,x2=x,by=y+H+58,un=r.br.unk&&step<3;
-   h+=`<line x1="${x1+6}" y1="${by}" x2="${x2-6}" y2="${by}" stroke="#1E63D6" stroke-width="3" marker-start="url(#bar)" marker-end="url(#bar)"/><text x="${(x1+x2)/2}" y="${by+30}" text-anchor="middle" font-size="22" font-weight="800" fill="${un?"#B07800":r.br.unk?"#1B7A33":"#D32F2F"}">${un?(st==="lt"?"? fois plus / ? fois moins":"? pirates"):esc(r.br.t)+(st==="lt"?" / "+v.k+" fois moins":"")}</text>`}});
+   h+=`<line x1="${x1+6}" y1="${by}" x2="${x2-6}" y2="${by}" stroke="#1E63D6" stroke-width="3" marker-start="url(#bar)" marker-end="url(#bar)"/><text x="${(x1+x2)/2}" y="${by+30}" text-anchor="middle" font-size="22" font-weight="800" fill="${un?"#B07800":r.br.unk?"#1B7A33":"#D32F2F"}">${un?(st==="lt"?"? fois plus / ? fois moins":"? pirates"):opt.nonum?esc(r.br.t.replace(/\d+ /,"")):esc(r.br.t)+(st==="lt"?" / "+v.k+" fois moins":"")}</text>`}});
  h+=`<defs><marker id="bar" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" fill="#1E63D6"/></marker></defs></svg>`;
  return h}
 function bTrScene(v,u,step){const L=v.g<0,cols=[["début","🏠","s0",v.s0],[L?"perdu":"gagné",L?"🌲🌲":"🌲🐺","a",v.a],["fin","🏡👵","s1",v.s1]];
@@ -938,7 +960,7 @@ function vBeats(st,v,u,T){const S=bSents(T.t),Q=T.q,R=T.r,B=[],des=VZ.skin==="de
    vTag("tk",900,560,v.k+" fois plus",{c:"vtag big vgreen"})})})}
  else{const G=v.g1+v.g2,P=v.p1+v.p2,X1=330,X2=1300,SW=470,BY=600,pe=k=>k%2?"🧍‍♀️":"🧍",
   bus=(x,d)=>vPut("bus",{h:"🚌",x,y:BY,s:300,z:5,f:1,d});
-  let gi=0,pi=0,crowd=[];const tally=()=>{vBub("bg",800,70,"GAIN : "+gi+" montés","vgreen2");vBub("bpp",800,150,"PERTE : "+pi+" descendus","vred")};
+  let gi=0,pi=0,crowd=[];const tally=()=>{vBub("bg",800,70,"GAIN : "+gi+(gi<2?" monté":" montés"),"vgreen2");vBub("bpp",800,150,"PERTE : "+pi+(pi<2?" descendu":" descendus"),"vred")};
   const qp=(bx,dir,k)=>({x:bx+dir*(95+(k%5)*62),y:SW-Math.floor(k/5)*58});
   const wait=(n,bx,pre)=>{const ids=[];for(let k=0;k<n;k++){const id=pre+k;ids.push(id);vPut(id,Object.assign({h:pe(k),s:100,o:0,z:6-Math.floor(k/5),d:0},qp(bx,-1,k)));vPut(id,{o:1,d:500})}crowd.push(...ids);return ids};
   const board=async(ids,bx)=>{for(const id of ids){vPut(id,{x:bx-60,y:BY-30,d:800});await vWait(800);vPut(id,{o:0,k:.6,d:350});gi++;tally();await vWait(380)}};
@@ -1019,6 +1041,106 @@ function vVidGo(i){const K=vRK(),L=VVID[K]||[],T=bText(VZ.story,VREF[K][0],VREF[
  vd.src="videos/"+L[i];vd.muted=true;const cap=L.length===1?T.t.replace(/<[^>]+>/g,""):(caps[i]||"");$("#vcap").textContent=cap;
  const pr=vd.play();if(pr&&pr.catch)pr.catch(()=>{});const sp=cap?bSay(VZ.story,[cap]):Promise.resolve();
  vd.onended=()=>{sp.then(()=>{if(tok===VV.tok)setTimeout(()=>{if(tok===VV.tok)vVidGo(i+1)},600)})}}
+
+/* ================= RITUEL : un problème par jour, selon le niveau de la classe ================= */
+const RCLS=["PS","MS","GS","CP","CE1","CE2","CM1","CM2"];
+function rCls(){try{return localStorage.getItem("adaptprobleme-classe")||"CP"}catch(e){return"CP"}}
+function rSetCls(c){try{localStorage.setItem("adaptprobleme-classe",c)}catch(e){}}
+function rIdx(c){try{return(JSON.parse(localStorage.getItem("adaptprobleme-rituel"))||{})[c]||0}catch(e){return 0}}
+function rSetIdx(c,i){try{const o=JSON.parse(localStorage.getItem("adaptprobleme-rituel"))||{};o[c]=i;localStorage.setItem("adaptprobleme-rituel",JSON.stringify(o))}catch(e){}}
+const RB=["Léo","Tom","Hugo","Lucas","Nathan","Adam","Paul","Théo"],RG=["Léa","Emma","Jade","Zoé","Inès","Lina","Chloé","Nina"];
+const RO=[["billes",1],["bonbons",0],["images",1],["cartes",1],["perles",1],["crayons",0],["autocollants",0],["pommes",1]];
+const rr=(a,b)=>a+Math.floor(Math.random()*(b-a+1)),rp=l=>l[Math.floor(Math.random()*l.length)];
+function rRound(n,M){if(M<=100)return n;const q=M>=10000?100:10;return Math.max(q,Math.round(n/q)*q)}
+function rWho(){const g=Math.random()<.5,n=g?rp(RG):rp(RB);return{n,P:g?"Elle":"Il",p:g?"elle":"il",l:g?"elle":"lui"}}
+function rTwo(){const a=rWho();let b;do b=rWho();while(b.n===a.n);return[a,b]}
+const rq=(n,o)=>n+" "+(n<2?nForms(o).sg:o);
+const RT={
+ buT:M=>{const up=Math.random()<.5,s0=up?rr(1,M-1):rr(2,M),a=up?rr(1,M-s0):rr(1,s0-1),pv=up?(a<2?"monte":"montent"):(a<2?"descend":"descendent");
+  return`Dans le bus, il y a ${rq(s0,"personnes")}. À l'arrêt, ${rq(a,"personnes")} ${pv}. Combien de personnes y a-t-il maintenant dans le bus ?`},
+ buD:M=>{const up=Math.random()<.5,s0=up?rr(1,M-1):rr(2,M),a=up?rr(1,M-s0):rr(1,s0-1),s1=up?s0+a:s0-a,pv=up?(a<2?"monte":"montent"):(a<2?"descend":"descendent");
+  return`Dans le bus, il y a des personnes. À l'arrêt, ${rq(a,"personnes")} ${pv}. Maintenant, il y en a ${s1}. Combien de personnes y avait-il au départ ?`},
+ trG:M=>{const A=rWho(),[o]=rp(RO),a=rRound(rr(1,Math.max(1,M-1)),M),b=rRound(rr(1,Math.max(1,M-a)),M),v=rp(["gagne","trouve","reçoit"]);return`${A.n} a ${rq(a,o)}. ${A.P} en ${v} ${b}. Combien en a-t-${A.p} maintenant ?`},
+ trL:M=>{const A=rWho(),[o]=rp(RO),a=rRound(rr(2,M),M),b=rRound(rr(1,a-1),M),v=rp(["perd","donne"]);return`${A.n} a ${rq(a,o)}. ${A.P} en ${v} ${Math.min(b,a-1)||1}. Combien en a-t-${A.p} maintenant ?`},
+ trC:M=>{const A=rWho(),[o,f]=rp(RO),a=rRound(rr(3,M),M),c=rRound(rr(1,a-1),M);return`${A.n} a ${rq(a,o)}. ${A.P} en perd. ${A.P} en a maintenant ${Math.min(c,a-1)}. Combien en a-t-${A.p} perdu${f?"es":"s"} ?`},
+ trS:M=>{const A=rWho(),[o]=rp(RO),b=rRound(rr(1,Math.max(1,Math.floor(M/2))),M),c=rRound(rr(b+1,M),M);return`${A.n} a des ${o}. ${A.P} en gagne ${b}. ${A.P} en a maintenant ${Math.max(c,b+1)}. Combien en avait-${A.p} au départ ?`},
+ ptT:M=>{const a=rRound(rr(1,Math.max(1,M-1)),M),b=rRound(rr(1,Math.max(1,M-a)),M),[o,f]=rp([["billes",1],["perles",1],["cubes",0],["voitures",1]]);
+  return`Dans une boîte, il y a ${rq(a,o+" rouges")} et ${rq(b,o+(f?" bleues":" bleus"))}. Combien de ${o} y a-t-il en tout ?`},
+ ptP:M=>{const t=rRound(rr(Math.min(4,M),M),M),f=rRound(rr(1,t-1),M);return`Dans la classe, il y a ${t} élèves dont ${rq(Math.min(f,t-1),"filles")}. Combien y a-t-il de garçons ?`},
+ bnD:M=>{const[A,B]=rTwo(),[o]=rp(RO),a=rRound(rr(2,M),M),b=rRound(rr(1,a-1),M);return`${A.n} a ${rq(a,o)}. ${B.n} en a ${Math.min(b,a-1)}. Combien ${A.n} en a-t-${A.p} de plus que ${B.n} ?`},
+ bnB:M=>{const[A,B]=rTwo(),[o]=rp(RO),a=rRound(rr(1,Math.max(1,M-1)),M),d=rRound(rr(1,Math.max(1,M-a)),M);return`${A.n} a ${rq(a,o)}. ${B.n} en a ${d} de plus que ${A.l}. Combien ${B.n} en a-t-${B.p} ?`},
+ piS:M=>{const K=rr(2,Math.min(5,Math.max(2,Math.floor(M/2)))),m=rr(1,Math.max(1,Math.floor(M/K))),[o]=rp(RO);return`On partage ${K*m} ${o} entre ${K} enfants. Chacun doit avoir la même part. Combien chacun en reçoit-il ?`},
+ piG:M=>{const m=rr(2,Math.min(10,Math.max(2,Math.floor(M/3)))),g=rr(2,Math.min(10,Math.max(2,Math.floor(M/m)))),o=rp(["œufs","gâteaux","crayons","billes"]);return`On range ${g*m} ${o} dans des boîtes de ${m}. Combien de boîtes faut-il ?`},
+ ltT:M=>{const[A,B]=rTwo(),[o]=rp(RO),k=rr(2,5),a=rr(1,Math.max(1,Math.floor(M/k)));return`${A.n} a ${rq(a,o)}. ${B.n} en a ${k} fois plus. Combien ${B.n} en a-t-${B.p} ?`},
+ ltM:M=>{const[A,B]=rTwo(),[o]=rp(RO),k=rr(2,5),a=rr(1,Math.max(1,Math.floor(M/k)));return`${A.n} a ${a*k} ${o}. ${B.n} en a ${k} fois moins. Combien ${B.n} en a-t-${B.p} ?`}};
+const RPLAN={PS:[["trG",3],["ptT",3],["trL",3]],MS:[["trG",5],["trL",5],["ptT",5],["piS",6],["trG",5]],
+ GS:[["trG",10],["trL",10],["ptT",10],["piS",10],["bnD",10],["ptP",10]],
+ CP:[["trG",20],["buT",10],["trL",20],["ptT",20],["buS",10],["ptP",20],["bnD",20],["buT",20],["trC",20],["piS",20],["buS",15],["bnB",20],["trS",20]],
+ CE1:[["trL",100],["buT",50],["ptP",100],["buS",20],["bnB",100],["trS",100],["buD",30],["piS",50],["piG",50],["buS",50],["ltT",30],["bnD",100],["trC",100]],
+ CE2:[["trS",1000],["bnD",1000],["ptP",1000],["piG",100],["ltT",100],["buG",9],["ltM",100],["trC",1000],["bnB",1000]],
+ CM1:[["trS",10000],["buG",12],["bnD",10000],["ptP",10000],["piG",100],["ltT",1000],["buG",15],["ltM",1000],["trC",10000],["bnB",10000]],
+ CM2:[["trS",20000],["buG",15],["bnD",20000],["ptP",20000],["piG",200],["ltT",2000],["buG",20],["ltM",2000],["trC",20000],["bnB",20000]]};
+const RSTEP=["L'énoncé","Quelle histoire ?","Où est le ?","Quel schéma ?","L'histoire animée","Le schéma","Le calcul"];
+const RQ={st:null,txt:"",R:null,M:null,step:0,ok:{},lev:3,sStep:1,cRev:false,n:0};
+function rParse(txt){const old=S.story;S.story=txt;let R=null;try{R=parseStory()}catch(e){}S.story=old;const M=R&&bFromR(R);return R&&M&&!M.multi?{R,M}:null}
+function rBus(M,simple){let g1,g2,p1,p2;const pm=n=>n<2?"monte":"montent",pd=n=>n<2?"descend":"descendent",Q=" Y a-t-il plus de personnes qui sont montées ou qui sont descendues ? Combien de plus ?";
+ if(simple){let a,b;do{a=rr(1,M);b=rr(1,M)}while(a===b);const up1=Math.random()<.5;g1=up1?a:0;p1=up1?0:a;g2=up1?0:b;p2=up1?b:0;
+  const one=(g,p)=>g?`${rq(g,"personnes")} ${pm(g)}`:`${rq(p,"personnes")} ${pd(p)}`;
+  return{txt:`Le bus fait 2 arrêts. Au 1er arrêt, ${one(g1,p1)}. Au 2e arrêt, ${one(g2,p2)}.`+Q,M:{st:"bu",v:{g1,g2,p1,p2},u:"d"},R:null}}
+ do{g1=rr(1,M);g2=rr(1,M);p1=rr(1,M);p2=rr(1,M)}while(g1+g2===p1+p2);
+ return{txt:`Le bus fait 2 arrêts. Au 1er arrêt, ${rq(g1,"personnes")} ${pm(g1)} et ${rq(p1,"personnes")} ${pd(p1)}. Au 2e arrêt, ${rq(g2,"personnes")} ${pm(g2)} et ${rq(p2,"personnes")} ${pd(p2)}.`+Q,M:{st:"bu",v:{g1,g2,p1,p2},u:"d"},R:null}}
+function rNew(){const c=rCls(),plan=RPLAN[c]||RPLAN.CP,i=rIdx(c),[k,M]=plan[i%plan.length];let got=null,txt="";
+ if(k==="buG"||k==="buS"){const b=rBus(M,k==="buS");Object.assign(RQ,{txt:b.txt,R:null,M:b.M,step:0,ok:{},sStep:1,cRev:false,n:i+1,cls:c,lev:2,opts:null});RQ.opts=rOpts();return}
+ for(let t=0;t<60&&!got;t++){txt=RT[k](M);got=rParse(txt)}
+ if(!got){txt="Léo a 5 billes. Il en gagne 3. Combien en a-t-il maintenant ?";got=rParse(txt)}
+ Object.assign(RQ,{txt,R:got.R,M:got.M,step:0,ok:{},sStep:1,cRev:false,n:i+1,cls:c,lev:Math.max(got.M.v.t||0,got.M.v.s0||0,got.M.v.s1||0,got.M.v.a||0,got.M.v.b||0)<=20?2:3,opts:null});RQ.opts=rOpts()}
+function rOpts(){const M=RQ.M,others=BORD.filter(s=>s!==M.st),o=[{st:M.st,u:M.u,ok:1}];const su=BSTO[M.st].u.filter(x=>x!==M.u);
+ if(su.length)o.push({st:M.st,u:rp(su)});while(o.length<3){const s=rp(others);if(!o.some(x=>x.st===s))o.push({st:s,u:rp(BSTO[s].u)})}
+ return o.sort(()=>Math.random()-.5)}
+function rQOpts(){const M=RQ.M;if(M.st==="bu"){const v=M.v,o=[["d","l'écart entre ceux qui montent et ceux qui descendent"]];
+  [["g1","combien montent au 1er arrêt"],["p1","combien descendent au 1er arrêt"],["g2","combien montent au 2e arrêt"],["p2","combien descendent au 2e arrêt"]].forEach(x=>{if(v[x[0]]>0&&o.length<3)o.push(x)});return o.sort(()=>Math.random()-.5)}return BSTO[M.st].u.map(u=>[u,VQM[M.st][u][2]])}
+function rIcon(n,sz){const k=KITX[n];return k?`<svg viewBox="-8 -8 16 16" width="${sz}" height="${sz}">${k({})}</svg>`:""}
+const RICO={tr:"chaperon",pt:"panda",pi:"pirate",bn:"princesse",lt:"lievre",bu:"bus"};
+function renderRit(){if(!RQ.txt||RQ.cls!==rCls())rNew();const c=rCls(),st=RQ.step,M=RQ.M;
+ let h=`<div class="rit wrap"><div class="rbar"><b>🔔 Rituel · ${c} · problème n°${RQ.n}</b><span class="rsteps">${RSTEP.map((l,i)=>`<button data-rstep="${i}" aria-current="${i===st}">${i+1}. ${l}</button>`).join("")}</span><button class="btn" data-go="cat">✖ Menu</button></div>`;
+ h+=`<div class="rtxt${st?" small":""}">${esc(RQ.txt)}<button class="btn rsay" data-ract="say" title="Lire l'énoncé">🔊</button></div><div class="rbody">`;
+ if(st===0)h+=`<div class="rcenter"><p class="rq">Écoute bien le problème. Qu'est-ce qu'on sait ? Qu'est-ce qu'on cherche ?</p><button class="btn primary rbig" data-ract="next">🧩 Chercher ensemble</button></div>`;
+ else if(st===1){h+=`<p class="rq">À quelle histoire ressemble ce problème ?</p><div class="rgrid">${BORD.map(s=>{const r=RQ.ok.h===s?"good":(RQ.ok.hx||[]).includes(s)?"bad":"";
+   return`<button class="rcard ${r}" data-rh="${s}">${rIcon(RICO[s],84)}<b>${BSTO[s].t}</b><small>${BSTO[s].ty}</small></button>`}).join("")}</div>`;
+  if(RQ.ok.h)h+=`<p class="rfb good">✅ ${esc(bText(M.st,M.v,M.u).like)}</p>`;else if((RQ.ok.hx||[]).length)h+=`<p class="rfb bad">Pas tout à fait… Relis l'histoire : que se passe-t-il ?</p>`}
+ else if(st===2){h+=`<p class="rq">Dans l'histoire ${BSTO[M.st].de}, où est le « ? » ?</p><div class="rgrid">${rQOpts().map(([u,lab])=>{const r=RQ.ok.q===u?"good":(RQ.ok.qx||[]).includes(u)?"bad":"";
+   return`<button class="rcard ${r}" data-rq="${u}"><span class="rqm">?</span><b>On cherche ${lab}</b></button>`}).join("")}</div>`;
+  if(RQ.ok.q)h+=`<p class="rfb good">✅ Oui : on cherche ${VQM[M.st][M.u][2]}.</p>`;else if((RQ.ok.qx||[]).length)h+=`<p class="rfb bad">Non : cette quantité, on la connaît déjà. Cherche ce que demande la question.</p>`}
+ else if(st===3){h+=`<p class="rq">Quel schéma va avec le problème ?</p><div class="rgrid r3">${RQ.opts.map((o,i)=>{const r=RQ.ok.s===i?"good":(RQ.ok.sx||[]).includes(i)?"bad":"";
+   return`<button class="rcard rsch ${r}" data-rs="${i}"><b>${"ABC"[i]}</b>${bSVG(o.st,o.st===M.st?M.v:bGen(o.st,10),o.u,3,2,{nonum:1})}</button>`}).join("")}</div>`;
+  if(RQ.ok.s!=null)h+=`<p class="rfb good">✅ C'est le schéma ${BSTO[M.st].de}, avec le « ? » au bon endroit.</p>`;else if((RQ.ok.sx||[]).length)h+=`<p class="rfb bad">Regarde où est le « ? » et la forme des barres.</p>`}
+ else if(st===4)h+=M.st==="bu"?`<div class="rcenter"><p class="rq">Regardons le bus à ses deux arrêts.</p><button class="btn primary rbig" data-ract="busanim">▶ Voir l'histoire animée</button></div>`:`<div class="stagewrap rstage"><div class="stage" id="stage"></div></div><div class="tools" id="tools"></div>`;
+ else if(st===5){h+=`<div class="bctl"><span class="seg">${BLEV.map(([n,l])=>`<button data-rlev="${n}" aria-pressed="${RQ.lev==n}">Niveau ${n} · ${l}</button>`).join("")}</span>
+   ${RQ.sStep<3?`<button class="btn primary" data-ract="srev">✅ Montrer la réponse</button>`:`<button class="btn" data-ract="sreplay">↺ Revoir</button>`}</div><div class="bstage">${bSVG(M.st,M.v,M.u,RQ.lev,RQ.sStep)}</div>`}
+ else if(st===6){const T=bText(M.st,M.v,M.u),parts=M.st==="bu"?T.c.split(" · "):[T.c.split("   ")[0]],c=parts[parts.length-1],eq=c.lastIndexOf("=");const left=c.slice(0,eq+1),res=c.slice(eq+1).trim();
+  h+=`<div class="rcenter">${parts.slice(0,-1).map(x=>`<div class="rcalc2">${esc(x)}</div>`).join("")}<div class="rcalc">${esc(left)} <span class="${RQ.cRev?"rres":"rhid"}">${RQ.cRev?esc(res):"?"}</span></div>${RQ.cRev?`<p class="rans">${esc(rAnswer())}</p>`:`<button class="btn primary rbig" data-ract="crev">✅ Calculer</button>`}
+   ${RQ.cRev?`<div class="rend"><button class="btn primary rbig" data-ract="again">🔁 Un autre problème</button><button class="btn rbig" data-go="cat">🏠 Retour au menu</button></div>`:""}</div>`}
+ h+=`</div><div class="rnav">${st>0?`<button class="btn" data-ract="prev">◀ Étape précédente</button>`:""}${st>0&&st<6?`<button class="btn primary" data-ract="next">Étape suivante ▶</button>`:""}</div></div>`;
+ $("#main").innerHTML=h;
+ if(st===4&&M.st!=="bu"){S.story=RQ.txt;STY.inv=null;requestAnimationFrame(()=>storyInit())}
+ if(st===5&&RQ.sStep<2){clearTimeout(RQ.tm);RQ.tm=setTimeout(()=>{if(S.screen==="rit"&&RQ.step===5&&RQ.sStep<2){RQ.sStep=2;renderRit()}},1800)}}
+function rAnswer(){if(RQ.M&&RQ.M.st==="bu"){const v=RQ.M.v,G=v.g1+v.g2,P=v.p1+v.p2,d=Math.abs(G-P);return`Il y a ${rq(d,"personnes")} de plus qui ${d<2?"est":"sont"} ${G>P?"montée":"descendue"}${d<2?"":"s"}.`}const old=S.story;S.story=RQ.txt;let r="";try{const B=sBuildX(RQ.R.P,RQ.R.uz,sInfo());r=B.steps[B.steps.length-1].cap}catch(e){}S.story=old;return r}
+document.addEventListener("click",e=>{if(S.screen!=="rit")return;const b=e.target.closest("button");if(!b)return;const d=b.dataset,M=RQ.M;
+ if(d.rstep!=null){RQ.step=+d.rstep;if(RQ.step===5)RQ.sStep=1;renderRit();return}
+ if(d.rh){if(d.rh===M.st){RQ.ok.h=d.rh;say(bText(M.st,M.v,M.u).like)}else{(RQ.ok.hx=RQ.ok.hx||[]).push(d.rh)}renderRit();return}
+ if(d.rq){if(d.rq===M.u)RQ.ok.q=d.rq;else(RQ.ok.qx=RQ.ok.qx||[]).push(d.rq);renderRit();return}
+ if(d.rs!=null){const i=+d.rs;if(RQ.opts[i].ok)RQ.ok.s=i;else(RQ.ok.sx=RQ.ok.sx||[]).push(i);renderRit();return}
+ if(d.rlev){RQ.lev=+d.rlev;renderRit();return}
+ const a=d.ract;if(!a)return;
+ if(a==="say")say(RQ.txt);
+ else if(a==="next"){RQ.step=Math.min(6,RQ.step+1);if(RQ.step===5)RQ.sStep=1;renderRit()}
+ else if(a==="prev"){RQ.step=Math.max(0,RQ.step-1);if(RQ.step===5)RQ.sStep=1;renderRit()}
+ else if(a==="srev"){RQ.sStep=3;renderRit()}else if(a==="sreplay"){RQ.sStep=1;renderRit()}
+ else if(a==="busanim"){const B=bS(),o={st:B.st,v:B.v,ui:B.ui};B.st="bu";B.v=Object.assign({},M.v);B.ui=0;vOpen("ico");Object.assign(B,o);setTimeout(()=>{if($("#vwrap")&&VZ.story==="bu")vGo(0)},400)}
+ else if(a==="crev"){RQ.cRev=true;renderRit();say(rAnswer())}
+ else if(a==="again"){rSetIdx(rCls(),rIdx(rCls())+1);RQ.txt="";renderRit()}});
+document.addEventListener("click",e=>{const b=e.target.closest("[data-ritcls]");if(b){rSetCls(b.dataset.ritcls);RQ.txt="";render()}});
+document.addEventListener("change",e=>{if(e.target.matches("[data-navcls]")){rSetCls(e.target.value);RQ.txt="";if(S.screen==="rit")renderRit();renderSteps()}});
 
 /* ---------- Écran 1 ---------- */
 function backBtn(){const t={choose:["cat","Le type"],nouns:S.prog&&S.level&&!isMat(S.level)?["level","Progression "+S.level]:["choose","Le schéma"],ws:["nouns","Les objets"]}[S.screen];
@@ -1977,13 +2099,13 @@ async function sPlay(dir){if(STY.playing)return;STY.playing=dir;$("#tools").inne
  try{while(STY.playing===dir){const to=STY.k+dir;if(to<0||to>STY.steps.length)break;await sGo(to);await sWait(1400)}}catch(e){if(e!=="stop")throw e}
  STY.playing=0;STY.busy=false;if($("#tools")&&(S.amode==="story"||S.screen==="story"))$("#tools").innerHTML=sToolsHTML();sHud()}
 function sToolsHTML(){const sp=aSpeed(),opts=[["","Personnage : auto"]].concat(PERSOS.map(p=>[p[1],p[1]+" "+p[0]]));
- let h=(S.screen==="ws"?amodeHTML():"");
- if(STY.inv){h+=`<button class="btn" data-inv="new" title="Même type de problème, autres nombres">🎲 Autres nombres</button><button class="btn" data-inv="show" aria-pressed="${!!STY.inv.shown}">${STY.inv.shown?"🙈 Cacher l'énoncé":"👀 Montrer l'énoncé"}</button><button class="btn" data-inv="end">✖ Revenir à mon problème</button>`+(STY.inv.shown?`<div class="sinv">${esc(STY.inv.txt)}</div>`:"")}
+ let h=(S.screen==="ws"?amodeHTML():"");const RIT=S.screen==="rit";
+ if(RIT){}else if(STY.inv){h+=`<button class="btn" data-inv="new" title="Même type de problème, autres nombres">🎲 Autres nombres</button><button class="btn" data-inv="show" aria-pressed="${!!STY.inv.shown}">${STY.inv.shown?"🙈 Cacher l'énoncé":"👀 Montrer l'énoncé"}</button><button class="btn" data-inv="end">✖ Revenir à mon problème</button>`+(STY.inv.shown?`<div class="sinv">${esc(STY.inv.txt)}</div>`:"")}
  else h+=`<button class="btn" data-inv="go" title="Rejouer l'histoire avec d'autres nombres : les élèves inventent l'énoncé">🎭 Histoire à inventer</button>`;
- if(!STY.inv)h+=`<textarea id="sstory" rows="2" placeholder="Écris l'histoire du problème. Ex. : Un garçon a des billes. Il en perd 5. Il en a maintenant 3. Combien en avait-il au départ ?">${esc(S.story||"")}</textarea>
+ if(!STY.inv&&!RIT)h+=`<textarea id="sstory" rows="2" placeholder="Écris l'histoire du problème. Ex. : Un garçon a des billes. Il en perd 5. Il en a maintenant 3. Combien en avait-il au départ ?">${esc(S.story||"")}</textarea>
  <select id="schr" aria-label="Personnage">${opts.map(o=>`<option value="${o[0]}"${(S.storyChr||"")===o[0]?" selected":""}>${o[1]}</option>`).join("")}</select>`;
  if(STY.inv&&STY.inv.err)return h+`<span class="amsg">${esc(STY.inv.err)}</span>`;
- if(STY.err)return S.screen==="story"?h:h+`<span class="amsg">${esc(STY.err)}</span>`;
+ if(STY.err)return S.screen==="story"||RIT?h:h+`<span class="amsg">${esc(STY.err)}</span>`;
  h+=`<span class="sctl"><button class="btn" data-sty="first" title="Début" aria-label="Revenir au début">⏮</button>
  <button class="btn" data-sty="back" title="Lire en reculant" aria-label="Lire en reculant">◀◀</button>
  <button class="btn" data-sty="prev" title="Étape précédente" aria-label="Étape précédente">◀</button>
@@ -2005,7 +2127,7 @@ function storyInitText0(){const R=S.story?parseStory():null;STY.R=R;if(R&&R.noun
  $("#tools").innerHTML=sToolsHTML();sizeStage();
  if(STY.err){STY.states=[];STY.steps=[];return}
  STY.L=layout(R.schema,R.n,false);const B=sBuildX(R.P,R.uz,I);STY.states=B.states;STY.steps=B.steps;STY.P=R.P;sMake();sApply(0)}
-function storyInit(){STY.tok++;STY.playing=0;STY.busy=false;STY.k=0;if(S.screen==="story"||(STY.inv&&STY.inv.txt))return storyInitText();
+function storyInit(){STY.tok++;STY.playing=0;STY.busy=false;STY.k=0;if(S.screen==="story"||S.screen==="rit"||(STY.inv&&STY.inv.txt))return storyInitText();
  if(STY.inv){const st=$("#stage");if(st){st.classList.add("aniempty");st.innerHTML=`<div class="slayer" id="slayer"></div><div class="scap" id="scap"></div><div class="smini" id="smini"></div>`}STY.states=[];STY.steps=[];$("#tools").innerHTML=sToolsHTML();sizeStage();return}
  const I=sInfo();let P=aniPlan();const K=SCH[S.schema];
  STY.L=layout(S.schema,P&&!P.err?(P.nZ||S.n):S.n,true);let uz=(STY.L.Z.find(z=>z.q)||{}).id||null;
@@ -2018,7 +2140,7 @@ function storyInit(){STY.tok++;STY.playing=0;STY.busy=false;STY.k=0;if(S.screen=
  if(uz&&STY.L.Z.find(z=>z.id===uz)&&(S.zones[uz]||[]).length&&!P.fromText){}
  const R=sBuildX(P,uz,I);STY.states=R.states;STY.steps=R.steps;STY.P=P;sMake();sApply(0)}
 document.addEventListener("click",e=>{const am=e.target.closest("[data-amode]");if(am){S.amode=am.dataset.amode;save();ANI.tok++;STY.tok++;STY.playing=0;aniInit();return}
- const b=e.target.closest("[data-sty]");if(!b||(S.amode!=="story"&&S.screen!=="story"))return;const v=b.dataset.sty;
+ const b=e.target.closest("[data-sty]");if(!b||(S.amode!=="story"&&S.screen!=="story"&&S.screen!=="rit"))return;const v=b.dataset.sty;
  if(v==="stop"){STY.playing=0;return}if(STY.busy)return;
  if(v==="next")sGo(STY.k+1).catch(()=>{});else if(v==="prev")sGo(STY.k-1).catch(()=>{});
  else if(v==="first"){STY.tok++;STY.k=0;sApply(0)}else if(v==="play")sPlay(1);else if(v==="back")sPlay(-1)});
@@ -2105,7 +2227,7 @@ function parseStory(){const txt=S.story||"",lo=txt.toLowerCase(),nums=sNums(txt)
  if(/combien[^?]*de\s+(plus|moins)/.test(lo)&&nums.length===2){const i=N.idx(nums[0].w||main);
   return{schema:"k-ecart",n:1,uz:"ecart",nouns:N.list,P:fill({kind:"cmp",mode:"diff",a:nums[0].n,b:nums[1].n,d:Math.abs(nums[1].n-nums[0].n),nZ:1},{_dom:i,p0:i,p1:i,ecart:i}),label:"Comparaison : je cherche la différence"}}
  // Transformation
- const I=sInfo();if(!/(^|[^a-zà-ÿ])(dont|parmi)(?![a-zà-ÿ])|(^|\s)sur \d+/.test(lo)){const Q=parseTransX(I)||(I.v&&nums.length===2?parseTrans(I):null);if(Q){const i=N.idx(main);Object.assign(Q,{nis:()=>Array(400).fill(i),dom:i});
+ const I=sInfo();if(!/(^|[^a-zà-ÿ])(dont|parmi)(?![a-zà-ÿ])|(^|\s)sur \d+/.test(lo)){const Q=parseTransX(I)||(I.v&&nums.length===2&&tvFind(" "+lo+" ")?parseTrans(I):null);if(Q){const i=N.idx(main);Object.assign(Q,{nis:()=>Array(400).fill(i),dom:i});
   const sg={};Q.g.forEach((g,j)=>sg["a"+j]=g<0?"-":"+");const ch=Q.uz[0]==="a";
   return{schema:Q.uz==="s0"?"t-debut":ch?"t-change":"t-fin",n:Q.N,uz:Q.uz,nouns:N.list,P:Q,signs:sg,
    label:"Transformation"+(Q.N>1?` en ${Q.N} étapes`:"")+" : "+(Q.uz==="s0"?"je cherche le début":ch?"je cherche ce qui a changé":"je cherche la fin")}}}
