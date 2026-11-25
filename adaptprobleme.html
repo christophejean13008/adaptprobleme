@@ -254,6 +254,8 @@ a.btn{text-decoration:none;display:inline-block}
 .rcard{display:flex;flex-direction:column;align-items:center;gap:6px;border:3px solid var(--line);background:var(--paper,#fff);border-radius:18px;padding:12px;cursor:pointer;font:inherit;color:var(--ink);text-align:center}
 .rcard b{font-size:clamp(17px,1.6vw,24px)}.rcard small{color:#D32F2F;font-weight:700}.rcard.good{border-color:#2E9E44;box-shadow:0 0 0 4px #2E9E44 inset;background:#EAF7EC}.rcard.bad{border-color:#C62828;opacity:.45}
 .rcard .rqm{font:900 60px Arial;color:#B07800;background:#FFF8E1;border:3px dashed #E0A800;border-radius:12px;padding:0 18px}.rsch .bsvg{width:100%}
+.rgrid.r4{grid-template-columns:repeat(4,1fr)}.rvg svg{width:100%;height:auto;max-height:150px}.rvg b{font-size:clamp(15px,1.6vw,22px)}
+@media(max-width:700px){.rgrid.r4{grid-template-columns:repeat(2,1fr)}}
 .rfb{text-align:center;font-size:clamp(18px,2vw,26px);font-weight:800;margin:12px 0}.rfb.good{color:#1B7A33}.rfb.bad{color:#C62828}
 .rcalc2{font:800 clamp(22px,3vw,40px) Arial,sans-serif;margin:6px 0;color:#455A64}
 .rcalc{font:900 clamp(40px,7vw,96px) "Arial Black",Arial,sans-serif;margin:20px 0}.rhid{color:#B07800}.rres{color:#1B7A33}.rans{font-size:clamp(22px,2.6vw,36px);font-weight:800}
@@ -377,7 +379,7 @@ details.oldprog{margin-top:12px}details.oldprog summary{cursor:pointer;font-weig
   <header class="top">
     <div class="brand">
       <svg viewBox="0 0 104 60" aria-hidden="true"><rect x="4" y="12" width="34" height="34" rx="5" class="zs" style="stroke-width:6"/><polygon class="inkf" points="42,22 62,22 62,14 76,29 62,44 62,36 42,36"/><rect x="72" y="12" width="28" height="34" rx="5" class="zs" style="stroke-width:6;display:none"/><rect x="78" y="12" width="22" height="34" rx="5" class="zs" style="stroke-width:6"/></svg>
-      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 2.24</small>
+      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 2.28</small>
     </div>
     <nav class="steps" id="steps" aria-label="Étapes"></nav>
     <button class="btn" id="reset">Nouveau problème</button>
@@ -1080,7 +1082,7 @@ const RPLAN={PS:[["trG",3],["ptT",3],["trL",3]],MS:[["trG",5],["trL",5],["ptT",5
  CE2:[["trS",1000],["bnD",1000],["ptP",1000],["piG",100],["ltT",100],["buG",9],["ltM",100],["trC",1000],["bnB",1000]],
  CM1:[["trS",10000],["buG",12],["bnD",10000],["ptP",10000],["piG",100],["ltT",1000],["buG",15],["ltM",1000],["trC",10000],["bnB",10000]],
  CM2:[["trS",20000],["buG",15],["bnD",20000],["ptP",20000],["piG",200],["ltT",2000],["buG",20],["ltM",2000],["trC",20000],["bnB",20000]]};
-const RSTEP=["L'énoncé","Quelle histoire ?","Où est le ?","Quel schéma ?","L'histoire animée","Le schéma","Le calcul"];
+const RSTEP=["L'énoncé","Quelle histoire ?","Où est le ?","Quel schéma ?","L'histoire animée","Les barres","Le calcul"],RORD=[0,1,2,3,5,4,6],rPos=s=>RORD.indexOf(s);
 const RQ={st:null,txt:"",R:null,M:null,step:0,ok:{},lev:3,sStep:1,cRev:false,n:0};
 function rParse(txt){const old=S.story;S.story=txt;let R=null;try{R=parseStory()}catch(e){}S.story=old;const M=R&&bFromR(R);return R&&M&&!M.multi?{R,M}:null}
 function rBus(M,simple){let g1,g2,p1,p2;const pm=n=>n<2?"monte":"montent",pd=n=>n<2?"descend":"descendent",Q=" Y a-t-il plus de personnes qui sont montées ou qui sont descendues ? Combien de plus ?";
@@ -1097,12 +1099,19 @@ function rNew(){const c=rCls(),plan=RPLAN[c]||RPLAN.CP,i=rIdx(c),[k,M]=plan[i%pl
 function rOpts(){const M=RQ.M,others=BORD.filter(s=>s!==M.st),o=[{st:M.st,u:M.u,ok:1}];const su=BSTO[M.st].u.filter(x=>x!==M.u);
  if(su.length)o.push({st:M.st,u:rp(su)});while(o.length<3){const s=rp(others);if(!o.some(x=>x.st===s))o.push({st:s,u:rp(BSTO[s].u)})}
  return o.sort(()=>Math.random()-.5)}
-function rQOpts(){const M=RQ.M;if(M.st==="bu"){const v=M.v,o=[["d","l'écart entre ceux qui montent et ceux qui descendent"]];
-  [["g1","combien montent au 1er arrêt"],["p1","combien descendent au 1er arrêt"],["g2","combien montent au 2e arrêt"],["p2","combien descendent au 2e arrêt"]].forEach(x=>{if(v[x[0]]>0&&o.length<3)o.push(x)});return o.sort(()=>Math.random()-.5)}return BSTO[M.st].u.map(u=>[u,VQM[M.st][u][2]])}
+function rSch(){const M=RQ.M,u=M.u,P=RQ.R&&RQ.R.P||{};
+ if(M.st==="tr")return["trans",{s1:"t-fin",s0:"t-debut",a:"t-change"}[u]];
+ if(M.st==="pt")return["comp",u==="tout"?"c-tout":"c-partie"];
+ if(M.st==="pi")return["star",{m:"s-part",K:"s-nombre",t:"s-parts"}[u]||"s-part"];
+ if(M.st==="bn")return["cmp",u==="d"?"k-ecart":P.mode==="build1"?"k-comp":"k-ref"];
+ if(M.st==="lt")return["cmp",u==="k"?"k-ecart":"k-comp"];
+ return["cmp","k-ecart"]}
+function rQOpts(){const M=RQ.M;if(M.st==="bu"){const v=M.v,D=["d","l'écart entre ceux qui montent et ceux qui descendent"];
+  const a=v.g1>0?["g1","combien montent au 1er arrêt"]:["p1","combien descendent au 1er arrêt"],b=v.p2>0?["p2","combien descendent au 2e arrêt"]:["g2","combien montent au 2e arrêt"];return[a,D,b]}return(M.st==="tr"?["s0","a","s1"]:BSTO[M.st].u).map(u=>[u,VQM[M.st][u][2]])}
 function rIcon(n,sz){const k=KITX[n];return k?`<svg viewBox="-8 -8 16 16" width="${sz}" height="${sz}">${k({})}</svg>`:""}
 const RICO={tr:"chaperon",pt:"panda",pi:"pirate",bn:"princesse",lt:"lievre",bu:"bus"};
 function renderRit(){if(!RQ.txt||RQ.cls!==rCls())rNew();const c=rCls(),st=RQ.step,M=RQ.M;
- let h=`<div class="rit wrap"><div class="rbar"><b>🔔 Rituel · ${c} · problème n°${RQ.n}</b><span class="rsteps">${RSTEP.map((l,i)=>`<button data-rstep="${i}" aria-current="${i===st}">${i+1}. ${l}</button>`).join("")}</span><button class="btn" data-go="cat">✖ Menu</button></div>`;
+ let h=`<div class="rit wrap"><div class="rbar"><b>🔔 Rituel · ${c} · problème n°${RQ.n}</b><span class="rsteps">${RORD.map((i,p)=>`<button data-rstep="${i}" aria-current="${i===st}">${p+1}. ${RSTEP[i]}</button>`).join("")}</span><button class="btn" data-go="cat">✖ Menu</button></div>`;
  h+=`<div class="rtxt${st?" small":""}">${esc(RQ.txt)}<button class="btn rsay" data-ract="say" title="Lire l'énoncé">🔊</button></div><div class="rbody">`;
  if(st===0)h+=`<div class="rcenter"><p class="rq">Écoute bien le problème. Qu'est-ce qu'on sait ? Qu'est-ce qu'on cherche ?</p><button class="btn primary rbig" data-ract="next">🧩 Chercher ensemble</button></div>`;
  else if(st===1){h+=`<p class="rq">À quelle histoire ressemble ce problème ?</p><div class="rgrid">${BORD.map(s=>{const r=RQ.ok.h===s?"good":(RQ.ok.hx||[]).includes(s)?"bad":"";
@@ -1111,30 +1120,36 @@ function renderRit(){if(!RQ.txt||RQ.cls!==rCls())rNew();const c=rCls(),st=RQ.ste
  else if(st===2){h+=`<p class="rq">Dans l'histoire ${BSTO[M.st].de}, où est le « ? » ?</p><div class="rgrid">${rQOpts().map(([u,lab])=>{const r=RQ.ok.q===u?"good":(RQ.ok.qx||[]).includes(u)?"bad":"";
    return`<button class="rcard ${r}" data-rq="${u}"><span class="rqm">?</span><b>On cherche ${lab}</b></button>`}).join("")}</div>`;
   if(RQ.ok.q)h+=`<p class="rfb good">✅ Oui : on cherche ${VQM[M.st][M.u][2]}.</p>`;else if((RQ.ok.qx||[]).length)h+=`<p class="rfb bad">Non : cette quantité, on la connaît déjà. Cherche ce que demande la question.</p>`}
- else if(st===3){h+=`<p class="rq">Quel schéma va avec le problème ?</p><div class="rgrid r3">${RQ.opts.map((o,i)=>{const r=RQ.ok.s===i?"good":(RQ.ok.sx||[]).includes(i)?"bad":"";
-   return`<button class="rcard rsch ${r}" data-rs="${i}"><b>${"ABC"[i]}</b>${bSVG(o.st,o.st===M.st?M.v:bGen(o.st,10),o.u,3,2,{nonum:1})}</button>`}).join("")}</div>`;
-  if(RQ.ok.s!=null)h+=`<p class="rfb good">✅ C'est le schéma ${BSTO[M.st].de}, avec le « ? » au bon endroit.</p>`;else if((RQ.ok.sx||[]).length)h+=`<p class="rfb bad">Regarde où est le « ? » et la forme des barres.</p>`}
+ else if(st===3){const [K,I]=rSch();
+  h+=`<p class="rq">Quel type de problème ? Choisis le schéma.</p><div class="rgrid r4">${Object.keys(KINDS).map(k=>{const r=RQ.ok.k===k?"good":(RQ.ok.kx||[]).includes(k)?"bad":"";
+   return`<button class="rcard rvg ${r}" data-rk="${k}">${schemaSVG(KFIRST[k])}<b>${KINDS[k].title}</b></button>`}).join("")}</div>`;
+  if(RQ.ok.k){h+=`<p class="rq">${KINDS[K].title} : où est le « ? » ?</p><div class="rgrid r4">${(K==="trans"?["t-debut","t-change","t-fin"]:ORDER.filter(id=>SCH[id].kind===K)).map(id=>{const r=RQ.ok.s===id?"good":(RQ.ok.sx||[]).includes(id)?"bad":"";
+    return`<button class="rcard rvg ${r}" data-rs="${id}">${schemaSVG(id)}<b>${SCH[id].title}</b></button>`}).join("")}</div>`;
+   if(RQ.ok.s)h+=`<p class="rfb good">✅ C'est le schéma « ${KINDS[K].title} » : ${SCH[I].title.toLowerCase()}.</p><div class="rcenter"><button class="btn primary rbig" data-ract="next">📊 Voir le modèle en barres (Barofile) ▶</button></div>`;else if((RQ.ok.sx||[]).length)h+=`<p class="rfb bad">Regarde bien où se trouve le « ? » dans le problème.</p>`}
+  else if((RQ.ok.kx||[]).length)h+=`<p class="rfb bad">Relis le problème : est-ce que quelque chose change, est-ce qu'on assemble des parties, est-ce qu'on compare, est-ce qu'on partage ?</p>`}
  else if(st===4)h+=M.st==="bu"?`<div class="rcenter"><p class="rq">Regardons le bus à ses deux arrêts.</p><button class="btn primary rbig" data-ract="busanim">▶ Voir l'histoire animée</button></div>`:`<div class="stagewrap rstage"><div class="stage" id="stage"></div></div><div class="tools" id="tools"></div>`;
  else if(st===5){h+=`<div class="bctl"><span class="seg">${BLEV.map(([n,l])=>`<button data-rlev="${n}" aria-pressed="${RQ.lev==n}">Niveau ${n} · ${l}</button>`).join("")}</span>
    ${RQ.sStep<3?`<button class="btn primary" data-ract="srev">✅ Montrer la réponse</button>`:`<button class="btn" data-ract="sreplay">↺ Revoir</button>`}</div><div class="bstage">${bSVG(M.st,M.v,M.u,RQ.lev,RQ.sStep)}</div>`}
  else if(st===6){const T=bText(M.st,M.v,M.u),parts=M.st==="bu"?T.c.split(" · "):[T.c.split("   ")[0]],c=parts[parts.length-1],eq=c.lastIndexOf("=");const left=c.slice(0,eq+1),res=c.slice(eq+1).trim();
   h+=`<div class="rcenter">${parts.slice(0,-1).map(x=>`<div class="rcalc2">${esc(x)}</div>`).join("")}<div class="rcalc">${esc(left)} <span class="${RQ.cRev?"rres":"rhid"}">${RQ.cRev?esc(res):"?"}</span></div>${RQ.cRev?`<p class="rans">${esc(rAnswer())}</p>`:`<button class="btn primary rbig" data-ract="crev">✅ Calculer</button>`}
    ${RQ.cRev?`<div class="rend"><button class="btn primary rbig" data-ract="again">🔁 Un autre problème</button><button class="btn rbig" data-go="cat">🏠 Retour au menu</button></div>`:""}</div>`}
- h+=`</div><div class="rnav">${st>0?`<button class="btn" data-ract="prev">◀ Étape précédente</button>`:""}${st>0&&st<6?`<button class="btn primary" data-ract="next">Étape suivante ▶</button>`:""}</div></div>`;
- $("#main").innerHTML=h;
+ h+=`</div><div class="rnav">${st>0?`<button class="btn" data-ract="prev">◀ Étape précédente</button>`:""}${st>0&&st<6&&!(st===3&&RQ.ok.s)?`<button class="btn primary" data-ract="next">Étape suivante ▶</button>`:""}</div></div>`;
+ $("#main").innerHTML=h;if(RQ.last!==st){RQ.last=st;window.scrollTo(0,0)}
  if(st===4&&M.st!=="bu"){S.story=RQ.txt;STY.inv=null;requestAnimationFrame(()=>storyInit())}
  if(st===5&&RQ.sStep<2){clearTimeout(RQ.tm);RQ.tm=setTimeout(()=>{if(S.screen==="rit"&&RQ.step===5&&RQ.sStep<2){RQ.sStep=2;renderRit()}},1800)}}
 function rAnswer(){if(RQ.M&&RQ.M.st==="bu"){const v=RQ.M.v,G=v.g1+v.g2,P=v.p1+v.p2,d=Math.abs(G-P);return`Il y a ${rq(d,"personnes")} de plus qui ${d<2?"est":"sont"} ${G>P?"montée":"descendue"}${d<2?"":"s"}.`}const old=S.story;S.story=RQ.txt;let r="";try{const B=sBuildX(RQ.R.P,RQ.R.uz,sInfo());r=B.steps[B.steps.length-1].cap}catch(e){}S.story=old;return r}
 document.addEventListener("click",e=>{if(S.screen!=="rit")return;const b=e.target.closest("button");if(!b)return;const d=b.dataset,M=RQ.M;
  if(d.rstep!=null){RQ.step=+d.rstep;if(RQ.step===5)RQ.sStep=1;renderRit();return}
- if(d.rh){if(d.rh===M.st){RQ.ok.h=d.rh;say(bText(M.st,M.v,M.u).like)}else{(RQ.ok.hx=RQ.ok.hx||[]).push(d.rh)}renderRit();return}
- if(d.rq){if(d.rq===M.u)RQ.ok.q=d.rq;else(RQ.ok.qx=RQ.ok.qx||[]).push(d.rq);renderRit();return}
- if(d.rs!=null){const i=+d.rs;if(RQ.opts[i].ok)RQ.ok.s=i;else(RQ.ok.sx=RQ.ok.sx||[]).push(i);renderRit();return}
+ const tg=(k,x,good)=>{const L=RQ.ok[k+"x"]=RQ.ok[k+"x"]||[];if(RQ.ok[k]===x){delete RQ.ok[k];return 0}if(L.includes(x)){L.splice(L.indexOf(x),1);return 0}if(good){RQ.ok[k]=x;return 1}L.push(x);return 0};
+ if(d.rh){if(tg("h",d.rh,d.rh===M.st))say(bText(M.st,M.v,M.u).like);renderRit();return}
+ if(d.rq){tg("q",d.rq,d.rq===M.u);renderRit();return}
+ if(d.rk){if(tg("k",d.rk,d.rk===rSch()[0]))say(KINDS[RQ.ok.k].title);if(!RQ.ok.k){delete RQ.ok.s;RQ.ok.sx=[]}renderRit();return}
+ if(d.rs!=null){const I=rSch()[1];if(tg("s",d.rs,d.rs===I))say(SCH[I].title);renderRit();return}
  if(d.rlev){RQ.lev=+d.rlev;renderRit();return}
  const a=d.ract;if(!a)return;
  if(a==="say")say(RQ.txt);
- else if(a==="next"){RQ.step=Math.min(6,RQ.step+1);if(RQ.step===5)RQ.sStep=1;renderRit()}
- else if(a==="prev"){RQ.step=Math.max(0,RQ.step-1);if(RQ.step===5)RQ.sStep=1;renderRit()}
+ else if(a==="next"){RQ.step=RORD[Math.min(6,rPos(RQ.step)+1)];if(RQ.step===5)RQ.sStep=1;renderRit()}
+ else if(a==="prev"){RQ.step=RORD[Math.max(0,rPos(RQ.step)-1)];if(RQ.step===5)RQ.sStep=1;renderRit()}
  else if(a==="srev"){RQ.sStep=3;renderRit()}else if(a==="sreplay"){RQ.sStep=1;renderRit()}
  else if(a==="busanim"){const B=bS(),o={st:B.st,v:B.v,ui:B.ui};B.st="bu";B.v=Object.assign({},M.v);B.ui=0;vOpen("ico");Object.assign(B,o);setTimeout(()=>{if($("#vwrap")&&VZ.story==="bu")vGo(0)},400)}
  else if(a==="crev"){RQ.cRev=true;renderRit();say(rAnswer())}
