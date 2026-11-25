@@ -379,7 +379,7 @@ details.oldprog{margin-top:12px}details.oldprog summary{cursor:pointer;font-weig
   <header class="top">
     <div class="brand">
       <svg viewBox="0 0 104 60" aria-hidden="true"><rect x="4" y="12" width="34" height="34" rx="5" class="zs" style="stroke-width:6"/><polygon class="inkf" points="42,22 62,22 62,14 76,29 62,44 62,36 42,36"/><rect x="72" y="12" width="28" height="34" rx="5" class="zs" style="stroke-width:6;display:none"/><rect x="78" y="12" width="22" height="34" rx="5" class="zs" style="stroke-width:6"/></svg>
-      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 2.28</small>
+      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 2.30</small>
     </div>
     <nav class="steps" id="steps" aria-label="Étapes"></nav>
     <button class="btn" id="reset">Nouveau problème</button>
@@ -655,8 +655,32 @@ function bText(st,v,u){const N=n=>`<b>${n}</b>`,pl=(n,s,p)=>n>1?p:s;
   q:"Y a-t-il plus de passagers qui sont montés ou qui sont descendus ? Combien de plus ?",c:`${cl(v.g1,v.g2,"Gain")}${cl(v.p1,v.p2,"Perte")}${Math.max(G,P)} − ${Math.min(G,P)} = ${Math.abs(G-P)}`,
   r:`Il y a ${Math.abs(G-P)} ${pl(Math.abs(G-P),"passager","passagers")} de plus qui ${up?"sont montés":"sont descendus"} : à la fin, il y a ${Math.abs(G-P)} ${up?"passagers de plus":"passagers de moins"} dans le bus.`,
   like:"C'est comme le problème de l'autobus : on compare tout ce que l'on gagne avec tout ce que l'on perd.",rule:"On met bout à bout tous les gains, puis toutes les pertes, et on compare les deux barres."}}
+/* --- étiquettes tirées de l'énoncé (Rituel, problème écrit) --- */
+function bCtx(T,M){if(!T||!M)return null;const W="([a-zàâçéèêëîïôûùœ]+)",cap=w=>w?w[0].toUpperCase()+w.slice(1):w,fe=w=>w?(/^fille/i.test(w)?"👧":/^gar[cç]on/i.test(w)?"👦":suggest(w)[0]||""):"";
+ const obj=(T.match(new RegExp("\\d+ "+W,"i"))||[])[1]||"",C={st:M.st,oe:fe(obj)||"●",obj};
+ const nm=[...new Set((T.match(/[A-ZÉÈÀÂÎÔÛÇ][a-zàâçéèêëîïôûùœ]+/g)||[]).filter(x=>RB.includes(x)||RG.includes(x)))],pe=n=>RG.includes(n)?"👧":"👦";
+ const who=(n,o)=>{const[a,b]=nm;if(!a||!b)return null;const val=x=>{const m=T.match(new RegExp(x+" (?:a|en a) (\\d+)(?! fois| de plus| de moins)"));return m?+m[1]:null};
+  const va=val(a),vb=val(b);if(va===n)return a;if(vb===n)return b;if(va===o)return b;if(vb===o)return a;return null};
+ const v=M.v;
+ if(M.st==="tr"){const vb=((T.match(/\b(donne|perd|gagne|trouve|reçoit|montent|monte|descendent|descend|mange|achète)\b/i)||[])[1]||"").toLowerCase();
+  C.ta={donne:"donné",perd:"perdu",gagne:"gagné",trouve:"trouvé",reçoit:"reçu",monte:"montés",montent:"montés",descend:"descendus",descendent:"descendus",mange:"mangé",achète:"acheté"}[vb]||(v.g<0?"perdu":"gagné");
+  C.re=/\bbus\b/i.test(T)?"🚌":nm[0]?pe(nm[0]):C.oe;C.who=nm[0]||""}
+ else if(M.st==="pt"){let m=T.match(new RegExp("\\d+ "+W+" "+W+" et \\d+ "+W+" "+W,"i"));
+  if(m){C.t1=m[2];C.t2=m[4]}else{const d=T.match(new RegExp("dont \\d+ "+W,"i")),q=T.match(new RegExp("Combien (?:y a-t-il )?de "+W,"i"));C.t1=d&&d[1]||"une partie";C.t2=q&&q[1]||"l'autre partie";C.e1=fe(C.t1);C.e2=fe(C.t2)}
+  const qn=T.match(new RegExp("Combien (?:y a-t-il )?de "+W,"i"));C.lab=cap(m&&qn?qn[1]:obj)}
+ else if(M.st==="pi"){const box=T.match(new RegExp("dans des "+W+" de","i")),ppl=T.match(new RegExp("entre \\d+ "+W,"i"));C.grp=box?box[1]:ppl?ppl[1]:"parts";C.ge=fe(C.grp)||(box?"📦":"🧒");C.lab=cap(obj)}
+ else if(M.st==="bn"){const H=who(v.a,v.b),L=H&&nm.find(x=>x!==H);if(H&&L){C.r0=H;C.r1=L;C.e0=pe(H);C.e1=pe(L)}}
+ else if(M.st==="lt"){const Sm=who(v.a,v.b),Bg=Sm&&nm.find(x=>x!==Sm);if(Sm&&Bg){C.r0=Sm;C.r1=Bg;C.e0=pe(Sm);C.e1=pe(Bg)}C.rel="fois plus"}
+ return C}
+function bApplyCtx(R,st,v,u,C){if(!C||C.st!==st)return R;const E=C.oe;
+ R.forEach(r=>r.segs.forEach(g=>{if(g.emo&&g.emo!=="🧍")g.emo=E;delete g.pl;if(g.mix)g.mix=g.mix.map(([e,n],i)=>[(i?C.e2:C.e1)||E,n])}));
+ if(st==="tr"){R.forEach(r=>{r.emo=C.re;r.lab=(r.lab==="Au début"?"Au début":"À la fin");r.segs.forEach(g=>{if(g.tag==="perdu"||g.tag==="gagné")g.tag=C.ta})})}
+ else if(st==="pt"){R[0].lab=C.lab||R[0].lab;R[0].emo=E;R[1].segs[0].tag=C.t1;R[1].segs[1].tag=C.t2;if(C.e1)R[1].segs[0].emo=C.e1;if(C.e2)R[1].segs[1].emo=C.e2}
+ else if(st==="pi"){R[0].lab=C.lab||"En tout";R[0].emo=E;R[1].lab="Les "+C.grp;R[1].emo=C.ge;if(R[1].br)R[1].br.t=u==="K"?"? "+C.grp:v.K+" "+C.grp}
+ else if(st==="bn"||st==="lt"){if(C.r0){R[0].lab=C.r0;R[0].emo=C.e0;R[1].lab=C.r1;R[1].emo=C.e1}if(st==="lt"&&R[1].br)R[1].br.t=v.k+" "+C.rel}
+ return R}
 /* --- modèle : des lignes de segments (le même pour les 3 niveaux) --- */
-function bModel(st,v,u){const R=[],K=[];const sg=(n,col,tag,emo,key,o)=>Object.assign({n,col,tag,emo,unk:u===key},o||{});
+function bModel(st,v,u,C){const R=[],K=[];const sg=(n,col,tag,emo,key,o)=>Object.assign({n,col,tag,emo,unk:u===key},o||{});
  if(st==="tr"){const L=v.g<0,top=L?sg(v.s0,"r","début","🍪","s0",{pl:"🏠"}):sg(v.s1,"r","fin","🍪","s1",{pl:"👵"});
   const b1=L?sg(v.s1,"b","fin","🍪","s1",{pl:"👵"}):sg(v.s0,"b","début","🍪","s0",{pl:"🏠"}),b2=sg(v.a,"w",L?"perdu":"gagné","🍪","a",{pl:L?"🌲":"🐺"});
   R.push({lab:L?"Au début":"À la fin",emo:L?"🏠":"👵",segs:[top]},{lab:L?"À la fin":"Au début",emo:L?"👵":"🏠",segs:[b1,b2]})}
@@ -670,12 +694,12 @@ function bModel(st,v,u){const R=[],K=[];const sg=(n,col,tag,emo,key,o)=>Object.a
  else{const G=v.g1+v.g2,P=v.p1+v.p2,d=Math.abs(G-P);
   R.push({lab:"GAIN",emo:"⬆️",segs:[sg(v.g1,"g","montent","🧍","g1"),sg(v.g2,"g","montent","🧍","g2")].filter(x=>x.n>0).concat(G<P?[sg(d,"w","écart","","d",{dash:1,unk:true})]:[])},
    {lab:"PERTE",emo:"⬇️",segs:[sg(v.p1,"r","descendent","🧍","p1"),sg(v.p2,"r","descendent","🧍","p2")].filter(x=>x.n>0).concat(P<G?[sg(d,"w","écart","","d",{dash:1,unk:true})]:[])})}
- return R}
+ return bApplyCtx(R,st,v,u,C)}
 /* --- dessin SVG --- */
-function bSVG(st,v,u,lev,step,opt){opt=opt||{};const rows=bModel(st,v,u),W=1000,X0=200,AW=760;
+function bSVG(st,v,u,lev,step,opt){opt=opt||{};const rows=bModel(st,v,u,opt.ctx),W=1000,X0=200,AW=760;
  const maxU=Math.max(...rows.map(r=>r.segs.reduce((a,s)=>a+s.n,0)));if(lev<3&&maxU>40)lev=3;
  const unit=Math.min(lev===1?54:48,AW/maxU),H=lev===3?64:Math.min(54,unit*.92);
- if(st==="tr"&&lev===1)return bTrScene(v,u,step);
+ if(st==="tr"&&lev===1&&!opt.ctx)return bTrScene(v,u,step);
  let h=`<svg viewBox="0 0 ${W} 470" class="bsvg" role="img" aria-label="schéma">`;
  rows.forEach((r,i)=>{const y=70+i*190;let x=X0;
   h+=`<text x="20" y="${y+H/2-4}" font-size="44">${r.emo}</text><text x="20" y="${y+H/2+30}" font-size="19" font-weight="700" fill="#14202B">${esc(r.lab)}</text>`;
@@ -697,7 +721,7 @@ function bSVG(st,v,u,lev,step,opt){opt=opt||{};const rows=bModel(st,v,u),W=1000,
    x+=w});
   if(r.tot&&step>=1&&!opt.nonum){const un=r.tot.unk&&step<3,rv=r.tot.unk&&step>=3;h+=`<text x="${x+14}" y="${y+H/2+12}" font-size="32" font-weight="900" fill="${un?"#B07800":rv?"#1B7A33":"#14202B"}">= ${un?"?":r.tot.n}</text>`}
   if(r.br&&step>=1){const x1=X0,x2=x,by=y+H+58,un=r.br.unk&&step<3;
-   h+=`<line x1="${x1+6}" y1="${by}" x2="${x2-6}" y2="${by}" stroke="#1E63D6" stroke-width="3" marker-start="url(#bar)" marker-end="url(#bar)"/><text x="${(x1+x2)/2}" y="${by+30}" text-anchor="middle" font-size="22" font-weight="800" fill="${un?"#B07800":r.br.unk?"#1B7A33":"#D32F2F"}">${un?(st==="lt"?"? fois plus / ? fois moins":"? pirates"):opt.nonum?esc(r.br.t.replace(/\d+ /,"")):esc(r.br.t)+(st==="lt"?" / "+v.k+" fois moins":"")}</text>`}});
+   h+=`<line x1="${x1+6}" y1="${by}" x2="${x2-6}" y2="${by}" stroke="#1E63D6" stroke-width="3" marker-start="url(#bar)" marker-end="url(#bar)"/><text x="${(x1+x2)/2}" y="${by+30}" text-anchor="middle" font-size="22" font-weight="800" fill="${un?"#B07800":r.br.unk?"#1B7A33":"#D32F2F"}">${un?(st==="lt"?"? fois plus / ? fois moins":opt.ctx&&opt.ctx.grp?"? "+opt.ctx.grp:"? pirates"):opt.nonum?esc(r.br.t.replace(/\d+ /,"")):esc(r.br.t)+(st==="lt"?" / "+v.k+" fois moins":"")}</text>`}});
  h+=`<defs><marker id="bar" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" fill="#1E63D6"/></marker></defs></svg>`;
  return h}
 function bTrScene(v,u,step){const L=v.g<0,cols=[["début","🏠","s0",v.s0],[L?"perdu":"gagné",L?"🌲🌲":"🌲🐺","a",v.a],["fin","🏡👵","s1",v.s1]];
@@ -762,7 +786,7 @@ function bAnaHTML(){const B=bS(),txt=S.story||"";let res="";
   else{const sto=BSTO[M.st];B.aStep=B.aStep||2;
    res=`<div class="blike big">${sto.e} C'est comme le problème <b>${sto.de}</b> — ${sto.ty}.</div>`;
    if(M.multi)res+=`<p class="bhint">Ici, il y a plusieurs étapes ou plusieurs parties : on raconte l'histoire morceau par morceau, comme celle ${M.st==="tr"?"du Petit Chaperon rouge":"des animaux du zoo"}.</p>`;
-   else res+=`<div class="bctl"><span class="seg">${BLEV.map(([n,l])=>`<button data-alev="${n}" aria-pressed="${(B.aLev||3)==n}">Niveau ${n} · ${l}</button>`).join("")}</span><button class="btn primary" data-bact="averif">${B.aStep>=3?"🙈 Cacher la réponse":"✅ Vérifier"}</button></div><div class="bstage">${bSVG(M.st,M.v,M.u,+(B.aLev||3),B.aStep)}</div>`;
+   else res+=`<div class="bctl"><span class="seg">${BLEV.map(([n,l])=>`<button data-alev="${n}" aria-pressed="${(B.aLev||3)==n}">Niveau ${n} · ${l}</button>`).join("")}</span><button class="btn primary" data-bact="averif">${B.aStep>=3?"🙈 Cacher la réponse":"✅ Vérifier"}</button></div><div class="bstage">${bSVG(M.st,M.v,M.u,+(B.aLev||3),B.aStep,{ctx:bCtx(txt,M)})}</div>`;
    res+=`<div class="bctl"><button class="btn" data-bact="astory">📖 Voir l'histoire animée</button><button class="btn" data-bact="aschema">Construire le schéma de l'appli</button></div>`}}
  return`<div class="bpanel"><p><b>Écris un nouveau problème</b> : l'appli cherche à quelle histoire il ressemble, puis le raconte avec les barres.</p>
  <textarea id="sstory" rows="2" placeholder="Ex. : Léa a 9 billes. Tom en a 4 de moins qu'elle. Combien Tom a-t-il de billes ?">${esc(txt)}</textarea>${res}</div>`}
@@ -1107,7 +1131,17 @@ function rSch(){const M=RQ.M,u=M.u,P=RQ.R&&RQ.R.P||{};
  if(M.st==="lt")return["cmp",u==="k"?"k-ecart":"k-comp"];
  return["cmp","k-ecart"]}
 function rQOpts(){const M=RQ.M;if(M.st==="bu"){const v=M.v,D=["d","l'écart entre ceux qui montent et ceux qui descendent"];
-  const a=v.g1>0?["g1","combien montent au 1er arrêt"]:["p1","combien descendent au 1er arrêt"],b=v.p2>0?["p2","combien descendent au 2e arrêt"]:["g2","combien montent au 2e arrêt"];return[a,D,b]}return(M.st==="tr"?["s0","a","s1"]:BSTO[M.st].u).map(u=>[u,VQM[M.st][u][2]])}
+  const a=v.g1>0?["g1","combien montent au 1er arrêt"]:["p1","combien descendent au 1er arrêt"],b=v.p2>0?["p2","combien descendent au 2e arrêt"]:["g2","combien montent au 2e arrêt"];return[a,D,b]}const T=RQ.txt,v=M.v,u=M.u;
+ if(M.st==="tr")return[["s0","le début"],["a",v.g<0?"ce qui part (ce qui change)":"ce qui arrive (ce qui change)"],["s1","la fin"]];
+ if(M.st==="pt"){const q=(T.match(/Combien (?:y a-t-il )?de ([a-zàâçéèêëîïôûù]+)/i)||[])[1];return[["p2",u==="p2"&&q?`une partie : les ${q}`:"une partie"],["tout","le tout (en tout)"]]}
+ if(M.st==="pi"){const box=(T.match(/dans des ([a-zàâçéèêëîïôûù]+) de/i)||[])[1],ppl=(T.match(/entre \d+ ([a-zàâçéèêëîïôûù]+)/i)||[])[1],de=w=>/^[aeiouyéèêh]/i.test(w)?"d'"+w:"de "+w,sg=w=>w.replace(/s$/,"");
+  return[["t","le tout"],["K",box?`le nombre ${de(box)}`:ppl?`le nombre ${de(ppl)}`:"le nombre de parts"],["m",box?`ce qu'il y a dans une ${sg(box)}`:ppl?"ce que reçoit chacun":"ce qu'il y a dans une part"]]}
+ const nm=[...new Set((T.match(/\b[A-ZÉÈÀÂÎÔÛÇ][a-zàâçéèêëîïôûùœ]+/g)||[]).filter(w=>RB.includes(w)||RG.includes(w)))];
+ const who=(n,other)=>{const n1=nm[0],n2=nm[1];if(!n1||!n2)return null;const val=x=>{const m=T.match(new RegExp(x+" (?:a|en a) (\\d+)(?! fois| de plus| de moins)"));return m?+m[1]:null};
+  const a1=val(n1),a2=val(n2);if(a1===n)return n1;if(a2===n)return n2;if(a1===other)return n2;if(a2===other)return n1;return null};
+ if(M.st==="bn"){const H=who(v.a,v.b),L=H&&nm.find(x=>x!==H);return[["a",H?`ce qu'a ${H}`:"la plus grande quantité"],["d","l'écart : combien de plus ou de moins"],["b",L?`ce qu'a ${L}`:"la plus petite quantité"]]}
+ if(M.st==="lt"){const Sm=who(v.a,v.b),Bg=Sm&&nm.find(x=>x!==Sm);return[["a",Sm?`ce qu'a ${Sm}`:"la petite quantité"],["k","combien de fois plus"],["b",Bg?`ce qu'a ${Bg}`:"la grande quantité"]]}
+ return BSTO[M.st].u.map(x=>[x,VQM[M.st][x][2]])}
 function rIcon(n,sz){const k=KITX[n];return k?`<svg viewBox="-8 -8 16 16" width="${sz}" height="${sz}">${k({})}</svg>`:""}
 const RICO={tr:"chaperon",pt:"panda",pi:"pirate",bn:"princesse",lt:"lievre",bu:"bus"};
 function renderRit(){if(!RQ.txt||RQ.cls!==rCls())rNew();const c=rCls(),st=RQ.step,M=RQ.M;
@@ -1117,7 +1151,7 @@ function renderRit(){if(!RQ.txt||RQ.cls!==rCls())rNew();const c=rCls(),st=RQ.ste
  else if(st===1){h+=`<p class="rq">À quelle histoire ressemble ce problème ?</p><div class="rgrid">${BORD.map(s=>{const r=RQ.ok.h===s?"good":(RQ.ok.hx||[]).includes(s)?"bad":"";
    return`<button class="rcard ${r}" data-rh="${s}">${rIcon(RICO[s],84)}<b>${BSTO[s].t}</b><small>${BSTO[s].ty}</small></button>`}).join("")}</div>`;
   if(RQ.ok.h)h+=`<p class="rfb good">✅ ${esc(bText(M.st,M.v,M.u).like)}</p>`;else if((RQ.ok.hx||[]).length)h+=`<p class="rfb bad">Pas tout à fait… Relis l'histoire : que se passe-t-il ?</p>`}
- else if(st===2){h+=`<p class="rq">Dans l'histoire ${BSTO[M.st].de}, où est le « ? » ?</p><div class="rgrid">${rQOpts().map(([u,lab])=>{const r=RQ.ok.q===u?"good":(RQ.ok.qx||[]).includes(u)?"bad":"";
+ else if(st===2){h+=`<p class="rq">Dans ce problème, où est le « ? » ?</p><div class="rgrid">${rQOpts().map(([u,lab])=>{const r=RQ.ok.q===u?"good":(RQ.ok.qx||[]).includes(u)?"bad":"";
    return`<button class="rcard ${r}" data-rq="${u}"><span class="rqm">?</span><b>On cherche ${lab}</b></button>`}).join("")}</div>`;
   if(RQ.ok.q)h+=`<p class="rfb good">✅ Oui : on cherche ${VQM[M.st][M.u][2]}.</p>`;else if((RQ.ok.qx||[]).length)h+=`<p class="rfb bad">Non : cette quantité, on la connaît déjà. Cherche ce que demande la question.</p>`}
  else if(st===3){const [K,I]=rSch();
@@ -1129,7 +1163,7 @@ function renderRit(){if(!RQ.txt||RQ.cls!==rCls())rNew();const c=rCls(),st=RQ.ste
   else if((RQ.ok.kx||[]).length)h+=`<p class="rfb bad">Relis le problème : est-ce que quelque chose change, est-ce qu'on assemble des parties, est-ce qu'on compare, est-ce qu'on partage ?</p>`}
  else if(st===4)h+=M.st==="bu"?`<div class="rcenter"><p class="rq">Regardons le bus à ses deux arrêts.</p><button class="btn primary rbig" data-ract="busanim">▶ Voir l'histoire animée</button></div>`:`<div class="stagewrap rstage"><div class="stage" id="stage"></div></div><div class="tools" id="tools"></div>`;
  else if(st===5){h+=`<div class="bctl"><span class="seg">${BLEV.map(([n,l])=>`<button data-rlev="${n}" aria-pressed="${RQ.lev==n}">Niveau ${n} · ${l}</button>`).join("")}</span>
-   ${RQ.sStep<3?`<button class="btn primary" data-ract="srev">✅ Montrer la réponse</button>`:`<button class="btn" data-ract="sreplay">↺ Revoir</button>`}</div><div class="bstage">${bSVG(M.st,M.v,M.u,RQ.lev,RQ.sStep)}</div>`}
+   ${RQ.sStep<3?`<button class="btn primary" data-ract="srev">✅ Montrer la réponse</button>`:`<button class="btn" data-ract="sreplay">↺ Revoir</button>`}</div><div class="bstage">${bSVG(M.st,M.v,M.u,RQ.lev,RQ.sStep,{ctx:bCtx(RQ.txt,M)})}</div>`}
  else if(st===6){const T=bText(M.st,M.v,M.u),parts=M.st==="bu"?T.c.split(" · "):[T.c.split("   ")[0]],c=parts[parts.length-1],eq=c.lastIndexOf("=");const left=c.slice(0,eq+1),res=c.slice(eq+1).trim();
   h+=`<div class="rcenter">${parts.slice(0,-1).map(x=>`<div class="rcalc2">${esc(x)}</div>`).join("")}<div class="rcalc">${esc(left)} <span class="${RQ.cRev?"rres":"rhid"}">${RQ.cRev?esc(res):"?"}</span></div>${RQ.cRev?`<p class="rans">${esc(rAnswer())}</p>`:`<button class="btn primary rbig" data-ract="crev">✅ Calculer</button>`}
    ${RQ.cRev?`<div class="rend"><button class="btn primary rbig" data-ract="again">🔁 Un autre problème</button><button class="btn rbig" data-go="cat">🏠 Retour au menu</button></div>`:""}</div>`}
