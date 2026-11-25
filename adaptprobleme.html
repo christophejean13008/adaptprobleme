@@ -379,7 +379,7 @@ details.oldprog{margin-top:12px}details.oldprog summary{cursor:pointer;font-weig
   <header class="top">
     <div class="brand">
       <svg viewBox="0 0 104 60" aria-hidden="true"><rect x="4" y="12" width="34" height="34" rx="5" class="zs" style="stroke-width:6"/><polygon class="inkf" points="42,22 62,22 62,14 76,29 62,44 62,36 42,36"/><rect x="72" y="12" width="28" height="34" rx="5" class="zs" style="stroke-width:6;display:none"/><rect x="78" y="12" width="22" height="34" rx="5" class="zs" style="stroke-width:6"/></svg>
-      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 2.31</small>
+      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 2.32</small>
     </div>
     <nav class="steps" id="steps" aria-label="Étapes"></nav>
     <button class="btn" id="reset">Nouveau problème</button>
@@ -406,8 +406,8 @@ const SCH={
  "s-part":{kind:"star",q:"part",title:"Je cherche ce qu'il y a dans une part",desc:"Je connais le tout et le nombre de parts pareilles. Je cherche ce qu'il y a dans chaque part."},
  "s-nombre":{kind:"star",q:"nombre",title:"Je cherche le nombre de parts",desc:"Je connais le tout et ce qu'il y a dans une part. Je cherche combien de parts on peut faire."},
  "k-ecart":{kind:"cmp",q:"ecart",title:"Je cherche la différence",desc:"Je connais les deux quantités. Je cherche combien il y en a de plus ou de moins."},
- "k-comp":{kind:"cmp",q:"p1",title:"Je cherche la quantité comparée",desc:"Je connais la première quantité et la différence. Je cherche la deuxième quantité."},
- "k-ref":{kind:"cmp",q:"p0",title:"Je cherche la quantité de départ",desc:"Je connais la deuxième quantité et la différence. Je cherche la première quantité."}
+ "k-comp":{kind:"cmp",q:"p1",title:"Je cherche celui qu'on compare",desc:"Je connais celui à qui on se compare (après « que ») et la différence. Je cherche celui qu'on compare."},
+ "k-ref":{kind:"cmp",q:"p0",title:"Je cherche celui à qui on se compare (après « que »)",desc:"Je connais celui qu'on compare et la différence. Je cherche celui à qui on se compare : celui qui est après « que »."}
 };
 const ORDER=Object.keys(SCH);
 
