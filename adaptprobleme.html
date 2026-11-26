@@ -379,7 +379,7 @@ details.oldprog{margin-top:12px}details.oldprog summary{cursor:pointer;font-weig
   <header class="top">
     <div class="brand">
       <svg viewBox="0 0 104 60" aria-hidden="true"><rect x="4" y="12" width="34" height="34" rx="5" class="zs" style="stroke-width:6"/><polygon class="inkf" points="42,22 62,22 62,14 76,29 62,44 62,36 42,36"/><rect x="72" y="12" width="28" height="34" rx="5" class="zs" style="stroke-width:6;display:none"/><rect x="78" y="12" width="22" height="34" rx="5" class="zs" style="stroke-width:6"/></svg>
-      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 2.32</small>
+      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 2.33</small>
     </div>
     <nav class="steps" id="steps" aria-label="Étapes"></nav>
     <button class="btn" id="reset">Nouveau problème</button>
@@ -1111,7 +1111,7 @@ const RPLAN={PS:[["trG",3],["ptT",3],["trL",3]],MS:[["trG",5],["trL",5],["ptT",5
  CE2:[["trS",1000],["bnD",1000],["ptP",1000],["piG",100],["ltT",100],["buG",9],["ltM",100],["trC",1000],["bnB",1000]],
  CM1:[["trS",10000],["buG",12],["bnD",10000],["ptP",10000],["piG",100],["ltT",1000],["buG",15],["ltM",1000],["trC",10000],["bnB",10000]],
  CM2:[["trS",20000],["buG",15],["bnD",20000],["ptP",20000],["piG",200],["ltT",2000],["buG",20],["ltM",2000],["trC",20000],["bnB",20000]]};
-const RSTEP=["L'énoncé","Quelle histoire ?","Où est le ?","Quel schéma ?","L'histoire animée","Les barres","Le calcul"],RORD=[0,1,2,3,5,4,6],rPos=s=>RORD.indexOf(s);
+const RSTEP=["L'énoncé","Quelle histoire ?","Où est le ?","Quel schéma ?","L'histoire animée","Les barres","Le calcul"],RORD=[0,4,1,2,3,5,6],rPos=s=>RORD.indexOf(s);
 const RQ={st:null,txt:"",R:null,M:null,step:0,ok:{},lev:3,sStep:1,cRev:false,n:0};
 function rParse(txt){const old=S.story;S.story=txt;let R=null;try{R=parseStory()}catch(e){}S.story=old;const M=R&&bFromR(R);return R&&M&&!M.multi?{R,M}:null}
 function rBus(M,simple){let g1,g2,p1,p2;const pm=n=>n<2?"monte":"montent",pd=n=>n<2?"descend":"descendent",Q=" Y a-t-il plus de personnes qui sont montées ou qui sont descendues ? Combien de plus ?";
@@ -1168,7 +1168,7 @@ const RICO={tr:"chaperon",pt:"panda",pi:"pirate",bn:"princesse",lt:"lievre",bu:"
 function renderRit(){if(!RQ.txt||RQ.cls!==rCls())rNew();const c=rCls(),st=RQ.step,M=RQ.M;
  let h=`<div class="rit wrap"><div class="rbar"><b>🔔 Rituel · ${c} · problème n°${RQ.n}</b><span class="rsteps">${RORD.map((i,p)=>`<button data-rstep="${i}" aria-current="${i===st}">${p+1}. ${RSTEP[i]}</button>`).join("")}</span><button class="btn" data-go="cat">✖ Menu</button></div>`;
  h+=`<div class="rtxt${st?" small":""}">${esc(RQ.txt)}<button class="btn rsay" data-ract="say" title="Lire l'énoncé">🔊</button></div><div class="rbody">`;
- if(st===0)h+=`<div class="rcenter"><p class="rq">Écoute bien le problème. Qu'est-ce qu'on sait ? Qu'est-ce qu'on cherche ?</p><button class="btn primary rbig" data-ract="next">🧩 Chercher ensemble</button></div>`;
+ if(st===0)h+=`<div class="rcenter"><p class="rq">Écoute bien le problème. Qu'est-ce qu'on sait ? Qu'est-ce qu'on cherche ?</p><button class="btn primary rbig" data-ract="next">🎬 Voir l'histoire animée</button></div>`;
  else if(st===1){h+=`<p class="rq">À quelle histoire ressemble ce problème ?</p><div class="rgrid">${BORD.map(s=>{const r=RQ.ok.h===s?"good":(RQ.ok.hx||[]).includes(s)?"bad":"";
    return`<button class="rcard ${r}" data-rh="${s}">${rIcon(RICO[s],84)}<b>${BSTO[s].t}</b><small>${BSTO[s].ty}</small></button>`}).join("")}</div>`;
   if(RQ.ok.h)h+=`<p class="rfb good">✅ ${esc(bText(M.st,M.v,M.u).like)}</p>`;else if((RQ.ok.hx||[]).length)h+=`<p class="rfb bad">Pas tout à fait… Relis l'histoire : que se passe-t-il ?</p>`}
