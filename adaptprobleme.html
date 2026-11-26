@@ -204,6 +204,7 @@ a.btn{text-decoration:none;display:inline-block}
 .bmax{font-size:15px;display:inline-flex;gap:6px;align-items:center}
 .bstory p{font-size:21px;line-height:1.45;margin:6px 2px}.bstory .bq{color:#B07800;font-weight:800}
 .bstage{background:#fff;border-radius:12px;border:1px solid var(--line)}.bsvg{width:100%;height:auto;display:block}
+.ve img.vunflip{transform:scaleX(-1)}.ve img.vrot{transform:rotate(90deg)}
 .bsteps{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.bsteps button{border:2px solid var(--line);background:var(--ui);border-radius:999px;padding:6px 14px;font:inherit;font-size:16px;color:var(--ink);cursor:pointer}
 .bsteps button[aria-current="true"]{background:#1565C0;color:#fff;border-color:#1565C0;font-weight:700}
 .bcalc{font:900 26px "Arial Black",Arial,sans-serif;color:#1B7A33;margin:6px 0}.bans{font-size:20px;font-weight:700;margin:4px 0}
@@ -379,7 +380,7 @@ details.oldprog{margin-top:12px}details.oldprog summary{cursor:pointer;font-weig
   <header class="top">
     <div class="brand">
       <svg viewBox="0 0 104 60" aria-hidden="true"><rect x="4" y="12" width="34" height="34" rx="5" class="zs" style="stroke-width:6"/><polygon class="inkf" points="42,22 62,22 62,14 76,29 62,44 62,36 42,36"/><rect x="72" y="12" width="28" height="34" rx="5" class="zs" style="stroke-width:6;display:none"/><rect x="78" y="12" width="22" height="34" rx="5" class="zs" style="stroke-width:6"/></svg>
-      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 2.33</small>
+      Adaptproblème <small style="font-weight:400;font-size:14px;color:var(--muted)">version 2.35</small>
     </div>
     <nav class="steps" id="steps" aria-label="Étapes"></nav>
     <button class="btn" id="reset">Nouveau problème</button>
@@ -491,8 +492,9 @@ function aSegs(t,loose){const w=anorm(String(t).replace(/(\d)[ \u00a0\u202f](?=\
  while(i<w.length){let f=0;for(let j=w.length;j>i;j--){const k=w.slice(i,j).join(" ");if(AUD[k]){out.push(k);i=j;f=1;break}}
   if(!f){if(/^\d+$/.test(w[i])&&+w[i]<1e9){out.push(...nk(+w[i]));i++}else if(loose)i++;else return null}}return out}
 let aEl=null,aTok=0;
-function aPlay(list){const tok=++aTok;let i=0;const next=()=>{if(tok!==aTok||i>=list.length)return;const a=new Audio("data:audio/mpeg;base64,"+AUD[list[i++]]);aEl=a;
- a.onended=()=>setTimeout(next,110);a.onerror=()=>setTimeout(next,0);const pr=a.play();if(pr&&pr.catch)pr.catch(()=>{})};next()}
+const ARATE=1.25;function aFast(a){try{a.preservesPitch=true;a.mozPreservesPitch=true;a.webkitPreservesPitch=true;a.playbackRate=ARATE;a.defaultPlaybackRate=ARATE}catch(e){}return a}
+function aPlay(list){const tok=++aTok;let i=0;const next=()=>{if(tok!==aTok||i>=list.length)return;const a=aFast(new Audio("data:audio/mpeg;base64,"+AUD[list[i++]]));aEl=a;
+ a.onended=()=>setTimeout(next,40);a.onerror=()=>setTimeout(next,0);const pr=a.play();if(pr&&pr.catch)pr.catch(()=>{})};next()}
 function say(t){try{if(aEl)aEl.pause()}catch(e){}aTok++;try{speechSynthesis.cancel()}catch(e){}
  const sg=aSegs(t);if(sg&&sg.length){aPlay(sg);return}
  /* sur l'ENI la synthèse du navigateur est bloquée : on joue les sons enregistrés en sautant les mots inconnus */
@@ -586,6 +588,15 @@ function renderSteps(){
  $("#steps").innerHTML=`<span class="navcls"><label>Classe <select data-navcls aria-label="Niveau de la classe">${RCLS.map(c=>`<option ${rCls()===c?"selected":""}>${c}</option>`).join("")}</select></label><button data-go="rit" ${S.screen==="rit"?'aria-current="step"':""}>🔔 Rituel</button></span>`+st.map(([k,l,ok])=>`<button data-go="${k}" ${S.screen===k?'aria-current="step"':""} ${ok?"":"disabled"}>${l}</button>`).join("");
 }
 function go(sc){if(sc==="ws"&&!prepNouns())return;S.screen=sc;save();render()}
+function bFit(){const app=document.querySelector(".app"),m=$("#main"),hd=document.querySelector("header.top");if(!app||!m)return;
+ const on=S.screen==="rit"||S.screen==="baro"&&!!document.querySelector("#main .bstage"),H=window.innerHeight,useZ=window.CSS&&CSS.supports&&CSS.supports("zoom","1");
+ app.style.zoom="";app.style.transform="";app.style.width="";app.style.height="";
+ document.querySelectorAll(".bstage > .bsvg").forEach(svg=>{svg.style.height="";const r=svg.getBoundingClientRect(),nat=r.height,room=H-r.top-(S.screen==="rit"?78:16),tgt=Math.max(on?330:240,room);if(nat>tgt)svg.style.height=tgt+"px"});
+ if(!on)return;const need=hd.offsetHeight+m.scrollHeight+6;if(need<=H)return;
+ /* la page est légèrement réduite pour que tout tienne sur un écran (ENI) */
+ const k=Math.max(.55,H/need);if(useZ){app.style.zoom=k;app.style.height=(H/k)+"px"}else{app.style.transformOrigin="0 0";app.style.transform=`scale(${k})`;app.style.width=(100/k)+"vw";app.style.height=(H/k)+"px"}}
+(()=>{let t=0;const go=()=>{clearTimeout(t);t=setTimeout(bFit,40)};window.addEventListener("resize",go);document.addEventListener("click",go);
+ const w=()=>{const m=document.getElementById("main");if(m)new MutationObserver(go).observe(m,{childList:true});else setTimeout(w,200)};w()})();
 function render(){renderSteps();const m=$("#main");m.scrollTop=0;
  if(S.screen==="nouns"&&S.schema)renderNouns();else if(S.screen==="ws"&&S.schema&&validNouns())renderWS();else if(S.screen==="choose"&&S.cat)renderChoose();else if(S.screen==="level"&&S.level)renderLevel();else if(S.screen==="mat"&&MAT.sc)renderMat();else if(S.screen==="story")renderStoryScreen();else if(S.screen==="baro")renderBaro();else if(S.screen==="rit")renderRit();else{S.screen="cat";renderSteps();renderCat()}}
 
@@ -705,9 +716,9 @@ function bSVG(st,v,u,lev,step,opt){opt=opt||{};const rows=bModel(st,v,u,opt.ctx)
  const maxU=Math.max(...rows.map(r=>r.segs.reduce((a,s)=>a+s.n,0)));if(lev<3&&maxU>40)lev=3;
  const unit=Math.min(lev===1?54:48,AW/maxU),H=lev===3?64:Math.min(54,unit*.92);
  if(st==="tr"&&lev===1&&!opt.ctx)return bTrScene(v,u,step);
- let h=`<svg viewBox="0 0 ${W} ${rows.length>2?660:470}" class="bsvg" role="img" aria-label="schéma">`;
+ let h=`<svg viewBox="0 0 ${W} ${rows.length>2?680:490}" class="bsvg" role="img" aria-label="schéma">`;
  rows.forEach((r,i)=>{const y=70+i*190;let x=X0;
-  h+=`<text x="20" y="${y+H/2-4}" font-size="44">${r.emo}</text><text x="20" y="${y+H/2+30}" font-size="19" font-weight="700" fill="#14202B">${esc(r.lab)}</text>`;
+  h+=`<text x="20" y="${y+H/2-4}" font-size="44">${r.emo}</text><text x="20" y="${y+H/2+34}" font-size="25" font-weight="800" fill="#14202B">${esc(r.lab)}</text>`;
   r.segs.forEach((s,j)=>{const w=s.n*unit,show=s.unk?true:step>=1,reveal=s.unk&&step>=3,col=BCOL[s.col];
    if(!show){h+=`<rect x="${x+2}" y="${y}" width="${w-4}" height="${H}" rx="6" fill="none" stroke="#C9D2DC" stroke-dasharray="6 6"/>`;x+=w;return}
    if(s.unk&&!reveal){h+=`<rect class="${BQF?"bqf":""}" x="${x+2}" y="${y}" width="${w-4}" height="${H}" rx="6" fill="#FFF8E1" stroke="#E0A800" stroke-width="3" stroke-dasharray="9 6"/><text x="${x+w/2}" y="${y+H/2+14}" text-anchor="middle" font-size="40" font-weight="900" fill="#B07800">?</text>`}
@@ -721,12 +732,12 @@ function bSVG(st,v,u,lev,step,opt){opt=opt||{};const rows=bModel(st,v,u,opt.ctx)
     const num=lev===3?`<text x="${x+w/2}" y="${y+H/2+11}" text-anchor="middle" font-size="30" font-weight="900" fill="${reveal?"#1B7A33":"#14202B"}">${s.n}</text>`
      :(s.dash&&!s.unk?"":`<text x="${x+w/2}" y="${y-12}" text-anchor="middle" font-size="26" font-weight="900" fill="${reveal?"#1B7A33":"#14202B"}">${s.n}</text>`);
     if(!s.nonum&&!opt.nonum&&!(s.mid&&step<3))h+=num}
-   if(s.tag&&show){const ty=s.top?y-82:y+H+12,tw=Math.max(70,s.tag.length*12+(s.pl?40:24));
-    h+=`<g><rect x="${x+w/2-tw/2}" y="${ty}" width="${tw}" height="32" rx="7" fill="#fff" stroke="#14202B" stroke-width="1.5"/><text x="${x+w/2+(s.pl?14:0)}" y="${ty+23}" text-anchor="middle" font-size="19" font-weight="800" fill="#D32F2F">${esc(s.tag)}</text>${s.pl?`<text x="${x+w/2-tw/2+6}" y="${ty+25}" font-size="22">${s.pl}</text>`:""}</g>`}
+   if(s.tag&&show){const ty=s.top?y-90:y+H+10,tw=Math.max(84,s.tag.length*15.5+(s.pl?46:28));
+    h+=`<g><rect x="${x+w/2-tw/2}" y="${ty}" width="${tw}" height="42" rx="8" fill="#fff" stroke="#14202B" stroke-width="2"/><text x="${x+w/2+(s.pl?16:0)}" y="${ty+30}" text-anchor="middle" font-size="26" font-weight="800" fill="#D32F2F">${esc(s.tag)}</text>${s.pl?`<text x="${x+w/2-tw/2+6}" y="${ty+32}" font-size="28">${s.pl}</text>`:""}</g>`}
    x+=w});
   if(r.tot&&step>=1&&!opt.nonum){const un=r.tot.unk&&step<3,rv=r.tot.unk&&step>=3;h+=`<text x="${x+14}" y="${y+H/2+12}" font-size="32" font-weight="900" fill="${un?"#B07800":rv?"#1B7A33":"#14202B"}">= ${un?"?":r.tot.n}</text>`}
   if(r.br&&step>=1){const x1=X0,x2=x,by=y+H+58,un=r.br.unk&&step<3;
-   h+=`<line x1="${x1+6}" y1="${by}" x2="${x2-6}" y2="${by}" stroke="#1E63D6" stroke-width="3" marker-start="url(#bar)" marker-end="url(#bar)"/><text x="${(x1+x2)/2}" y="${by+30}" text-anchor="middle" font-size="22" font-weight="800" fill="${un?"#B07800":r.br.unk?"#1B7A33":"#D32F2F"}">${un?(st==="lt"?"? fois plus / ? fois moins":opt.ctx&&opt.ctx.grp?"? "+opt.ctx.grp:"? pirates"):opt.nonum?esc(r.br.t.replace(/\d+ /,"")):esc(r.br.t)+(st==="lt"?" / "+v.k+" fois moins":"")}</text>`}});
+   h+=`<line x1="${x1+6}" y1="${by}" x2="${x2-6}" y2="${by}" stroke="#1E63D6" stroke-width="3" marker-start="url(#bar)" marker-end="url(#bar)"/><text x="${(x1+x2)/2}" y="${by+34}" text-anchor="middle" font-size="27" font-weight="800" fill="${un?"#B07800":r.br.unk?"#1B7A33":"#D32F2F"}">${un?(st==="lt"?"? fois plus / ? fois moins":opt.ctx&&opt.ctx.grp?"? "+opt.ctx.grp:"? pirates"):opt.nonum?esc(r.br.t.replace(/\d+ /,"")):esc(r.br.t)+(st==="lt"?" / "+v.k+" fois moins":"")}</text>`}});
  h+=`<defs><marker id="bar" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" fill="#1E63D6"/></marker></defs></svg>`;
  return h}
 function bTrScene(v,u,step){const L=v.g<0,cols=[["début","🏠","s0",v.s0],[L?"perdu":"gagné",L?"🌲🌲":"🌲🐺","a",v.a],["fin","🏡👵","s1",v.s1]];
@@ -748,8 +759,8 @@ function bSents(t){return(String(t).replace(/<[^>]+>/g,"").match(/[^.?!]+[.?!]+/
 async function bSay(st,texts){try{if(aEl)aEl.pause()}catch(e){}const tok=++aTok;try{speechSynthesis.cancel()}catch(e){}
  await Promise.race([bLoad(st),new Promise(r=>setTimeout(r,4000))]);if(tok!==aTok)return;
  const P=BSND[st]||{},list=[];for(const t of texts)for(const x of bSents(t)){const k=anorm(x);if(P[k])list.push({b:P[k]});else{const g=aSegs(x,true)||[];g.forEach(c=>list.push({b:AUD[c],p:1}))}}
- return new Promise(res=>{let i=0;const next=()=>{if(tok!==aTok||i>=list.length)return res();const it=list[i++];if(!it.b)return next();const a=new Audio("data:audio/mpeg;base64,"+it.b);aEl=a;
-  a.onended=()=>setTimeout(next,it.p?110:450);a.onerror=()=>setTimeout(next,0);const pr=a.play();if(pr&&pr.catch)pr.catch(()=>setTimeout(next,600))};next()})}
+ return new Promise(res=>{let i=0;const next=()=>{if(tok!==aTok||i>=list.length)return res();const it=list[i++];if(!it.b)return next();const a=aFast(new Audio("data:audio/mpeg;base64,"+it.b));aEl=a;
+  a.onended=()=>setTimeout(next,it.p?40:300);a.onerror=()=>setTimeout(next,0);const pr=a.play();if(pr&&pr.catch)pr.catch(()=>setTimeout(next,600))};next()})}
 /* --- écran --- */
 function renderBaro(){const B=bS();if(!B.v)B.v=bGen(B.st,B.max);const sto=BSTO[B.st],u=sto.u[B.ui%sto.u.length];
  const tabs=[["dec","🔎 Découvrir les 6 histoires"],["kw","🔑 Les 13 mots clés"],["ana","🧩 Résoudre par analogie"]];
@@ -823,7 +834,7 @@ function vApply(id){const p=VZ.st[id],e=document.getElementById("ve-"+id);if(!p|
  e.style.transitionDuration=VZ.inst?"0s":((p.d==null?900:p.d)/1000)+"s";e.className="ve"+(p.c?" "+p.c:"")+(p.mint&&VZ.skin!=="ico"&&!e.querySelector("img")?" vmint":"")}
 function vPut(id,p){let e=document.getElementById("ve-"+id);const L=vLay();if(!L)return;
  if(!e){e=document.createElement("div");e.id="ve-"+id;e.className="ve";L.appendChild(e);const q=Object.assign({},VZ.st[id]||{},p,{d:0});VZ.st[id]=q;vApply(id);void e.offsetWidth}
- VZ.st[id]=Object.assign({},VZ.st[id]||{},p);if(p.h!=null&&e.dataset.h!==p.h){const q=VZ.st[id]||p,sp=VZ.skin==="des"?vSpr(id,p.h,q):null,ki=VZ.skin==="ico"?vKit(id,p.h,q):null;e.innerHTML=ki!=null?ki:sp===""?"":sp?`<img src="images/obj/${sp}.png" alt=""${VBIG.includes(sp)?' class="big"':""}>`:p.h;e.dataset.h=p.h}vApply(id)}
+ VZ.st[id]=Object.assign({},VZ.st[id]||{},p);if(p.h!=null&&e.dataset.h!==p.h){const q=VZ.st[id]||p,sp=VZ.skin==="des"?vSpr(id,p.h,q):null,ki=VZ.skin==="ico"?vKit(id,p.h,q):null;e.innerHTML=ki!=null?ki:sp===""?"":sp?`<img src="images/obj/${sp}.png" alt="" class="${VBIG.includes(sp)?"big":""}${VRIGHT.includes(sp)&&q.f?" vunflip":""}${/^bonbon/.test(sp)?" vrot":""}">`:p.h;e.dataset.h=p.h}vApply(id)}
 /* personnages et objets en 3D (images PNG détourées dans images/obj/) : remplacent les émojis du dessin animé quand elles existent */
 const VSPN={girl:"chaperon",bas:"panier",wolf:"loup",gm:"meregrand",table:"table",ch:"coffre",bn:"princesse",pf:"prof",hare:"lievre",tor:"tortue",bus:"bus"};
 const VSPE={"🍪":"galette","🪙":"piece","⏱️":"chrono","🧍":"passager","🧍‍♀️":"passagere","🐼":"panda","🐯":"tigre"};
@@ -859,8 +870,10 @@ const KITX={
  meregrand:()=>`${PSH("#4E8C7A",`<path d="M-3,3.6 L0,6.4 L3,3.6" fill="#E8D5B5"/>`)}<circle cx="0" cy="-6" r="1.9" fill="#E0E0E0"/><circle cx="0" cy="-.4" r="4.4" fill="${SK}"/><path d="M-4.5,-.6 Q-4.6,-5.4 0,-5.4 Q4.6,-5.4 4.5,-.6 Q4,-3.2 0,-3.4 Q-4,-3.2 -4.5,-.6 Z" fill="#E0E0E0"/><circle cx="-1.7" cy="-.3" r="1.4" fill="#fff" fill-opacity=".35" stroke="#6D4C41" stroke-width=".4"/><circle cx="1.7" cy="-.3" r="1.4" fill="#fff" fill-opacity=".35" stroke="#6D4C41" stroke-width=".4"/><path d="M-.3,-.3 L.3,-.3" stroke="#6D4C41" stroke-width=".4"/><circle cx="-1.7" cy="-.3" r=".45" fill="#2B1B12"/><circle cx="1.7" cy="-.3" r=".45" fill="#2B1B12"/>${PCHEEK(1.4,2.7)}${PSMILE(1.9)}`,
  princesse:()=>`${PSH("#1E63D6",`<path d="M-6.4,8 Q-6.6,4.6 -4.2,4 L-3,5 Z M6.4,8 Q6.6,4.6 4.2,4 L3,5 Z" fill="#E53935"/>`)}<path d="M-4.8,1.6 Q-5.6,-5.8 0,-5.8 Q5.6,-5.8 4.8,1.6 Z" fill="#1B1B1B"/><circle cx="0" cy="-.4" r="4" fill="#FFE0CC"/><path d="M-4.2,-1 Q-3.6,-5 0,-5 Q3.6,-5 4.2,-1 Q2.8,-3.6 .6,-3.2 Q-1.6,-4 -4.2,-1 Z" fill="#1B1B1B"/><path d="M0,-5.4 L-2.8,-7.2 L-2.6,-4.2 Z M0,-5.4 L2.8,-7.2 L2.6,-4.2 Z" fill="#E53935"/><circle cx="0" cy="-5.4" r=".8" fill="#C62828"/>${PEYES(-.4,1.5)}${PCHEEK(1,2.4)}<path d="M-.9,1.6 Q0,2.3 .9,1.6" stroke="#C62828" stroke-width=".5" fill="none" stroke-linecap="round"/>`,
  prof:()=>`${PSH("#43A047",`<rect x="-6" y="6" width="12" height=".9" fill="#C62828"/>`)}<path d="M-4.4,-2.6 L0,-8 L4.4,-2.6 Z" fill="#FBC02D"/><path d="M-3.3,-3.9 L3.3,-3.9 L2.5,-5 L-2.5,-5 Z" fill="#29B6F6"/><rect x="-4.8" y="-3" width="9.6" height="1.2" rx=".6" fill="#F57F17"/><circle cx="0" cy="-.4" r="3.6" fill="${SK}"/><path d="M-3.8,-.4 Q-4.6,6.6 0,7.2 Q4.6,6.6 3.8,-.4 Q2.6,1.6 0,1.4 Q-2.6,1.6 -3.8,-.4 Z" fill="#FAFAFA" stroke="#E0E0E0" stroke-width=".3"/><circle cx="-1.4" cy="-.8" r="1.1" fill="#fff" fill-opacity=".3" stroke="#5D4037" stroke-width=".35"/><circle cx="1.4" cy="-.8" r="1.1" fill="#fff" fill-opacity=".3" stroke="#5D4037" stroke-width=".35"/><circle cx="-1.4" cy="-.8" r=".38" fill="#2B1B12"/><circle cx="1.4" cy="-.8" r=".38" fill="#2B1B12"/><circle cx="0" cy=".7" r=".85" fill="#F48FB1"/>`};
-function vKit(id,h,q){if(/^ph\d+$/.test(id))return"";let n=VKN[id]||(/^p\d+$/.test(id)?"pirate":VKE[h]);if(n&&KITX[n])return`<svg class="vkit" viewBox="-8 -8 16 16">${KITX[n](q)}</svg>`;let k=n&&KITI[n];if(k&&n==="bonbon"&&q&&q.mint)k=[k[0],k[1],"#2E9E6B",k[3]];if(!k)return null;
+function vKit(id,h,q){if(/^ph\d+$/.test(id))return"";let n=VKN[id]||(/^p\d+$/.test(id)?"pirate":VKE[h]);if(n&&KITX[n])return`<svg class="vkit" viewBox="-8 -8 16 16">${n==="bonbon"?`<g transform="rotate(90)">${KITX[n](q)}</g>`:KITX[n](q)}</svg>`;let k=n&&KITI[n];if(k&&n==="bonbon"&&q&&q.mint)k=[k[0],k[1],"#2E9E6B",k[3]];if(!k)return null;
+ if(n==="bonbon")return`<svg class="vkit" viewBox="${k[0]}"><g transform="rotate(90)"><path d="${k[1]}" fill="${k[2]}" fill-rule="evenodd"/></g></svg>`;
  return`<svg class="vkit" viewBox="${k[0]}">${k[3]?`<circle r="7.6" fill="${k[3]}"/>`:""}<path d="${k[1]}" fill="${k[2]}" fill-rule="evenodd"/></svg>`}
+const VRIGHT=["lievre","tortue","bus"];
 const VBIG=["coffre","chaperon","loup","meregrand","princesse","prof","pirate","passager","passagere","lievre","tortue","panda","tigre"];
 const VSP=new Set();
 function vSpr(id,h,q){let n=VSPN[id];if(h==="🍬")n=q&&q.mint?"bonbon_menthe":"bonbon_fraise";if(!n&&/^p\d+$/.test(id))n="pirate";if(/^ph\d+$/.test(id))return VSP.has("pirate")?"":null;if(!n)n=VSPE[h];return n&&VSP.has(n)?n:null}
